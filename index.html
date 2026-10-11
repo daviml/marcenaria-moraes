@@ -103,11 +103,16 @@
   <section class="sec" id="linhas">
     <div class="sec-head">
       <p class="kicker reveal">O catálogo</p>
-      <h2 class="reveal">Três linhas, um mesmo cuidado</h2>
-      <p class="sec-lead reveal">Escolha a linha e toque numa peça para ver os detalhes, as medidas e o vídeo. Todas saem em madeira maciça escura (nogueira ou jatobá) e podem ser feitas em outras madeiras sob consulta.</p>
+      <h2 class="reveal">Todas as peças, num lugar só</h2>
+      <p class="sec-lead reveal">Filtre pela linha ou pelo ambiente da casa e toque numa peça para ver as medidas, os detalhes e o vídeo. Todas saem em madeira maciça escura (nogueira ou jatobá) e podem ser feitas em outras madeiras sob consulta.</p>
     </div>
-    <div class="tabs reveal" role="tablist" aria-label="Linhas" id="lineTabs"><span class="tab-ink" id="tabInk"></span></div>
-    <div id="linePanels"></div>
+    <div class="filters reveal">
+      <div class="tabs" role="group" aria-label="Linha" id="lineTabs"><span class="tab-ink" id="tabInk"></span></div>
+      <div class="rooms" id="rooms" role="group" aria-label="Ambiente"></div>
+    </div>
+    <div class="line-banner" id="lineBanner" hidden></div>
+    <p class="count" id="count" aria-live="polite"></p>
+    <div class="grid" id="grid"></div>
   </section>
 
   <!-- ===== PROVADOR ===== -->
@@ -279,6 +284,12 @@
       </div>
     </div>
   </article>
+</div>
+
+<!-- vídeo da linha -->
+<div class="vbox" id="vbox" role="dialog" aria-modal="true" aria-label="Vídeo da linha" hidden>
+  <div class="sheet-bg" data-vclose></div>
+  <div class="vbox-card"><button class="sheet-x" data-vclose aria-label="Fechar">×</button><video controls playsinline></video></div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

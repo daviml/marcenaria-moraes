@@ -1,4 +1,4 @@
-// Site da Marcenaria Moraes: catálogo por linha, ficha da peça, provador de madeiras em 3D e orçamento pelo WhatsApp.
+// Site da Marcenaria Moraes: catálogo com todas as peças, ficha da peça, provador de madeiras em 3D e orçamento pelo WhatsApp.
 import { LINES, PRODUCTS, WOODS, WHATSAPP, WHATSAPP_TXT } from './data.js';
 import { make as cr } from './models/cr-model.mjs';
 import { make as gr } from './models/gr-model.mjs';
@@ -118,47 +118,76 @@ if (fine && !reduce) {
 const mq = ['Madeira maciça', 'Feito à mão', 'Nogueira', 'Jatobá', 'Sob encomenda', 'Roxinho', 'Uberlândia-MG', 'Imbuia', 'Ferragens de época', 'Tampo de 5 cm', 'Freijó', 'Nada de MDF'];
 $('#marquee').innerHTML = [...mq, ...mq].map(t => `<span>${t}</span>`).join('');
 
-// ---------- catálogo por linha ----------
-const tabs = $('#lineTabs'), panels = $('#linePanels'), ink = $('#tabInk');
-LINES.forEach((L, i) => {
-  const n = PRODUCTS.filter(p => p.line === L.id).length;
-  const t = h('button', { class: 'tab', role: 'tab', id: `tab-${L.id}`, 'aria-controls': `panel-${L.id}`, 'aria-selected': i === 0 }, `${L.name}<small>${n}</small>`);
-  t.onclick = () => selectLine(L.id); tabs.appendChild(t);
-  const P = h('div', { class: 'line-panel' + (i === 0 ? ' on' : ''), id: `panel-${L.id}`, role: 'tabpanel', 'aria-labelledby': `tab-${L.id}` });
-  P.innerHTML = `
-    <div class="line-hero">
-      <div><span class="line-kicker">${L.kicker}</span><span class="line-name">${L.name}</span><p class="line-lead">${L.lead}</p>
-        <div class="marks">${L.marks.map(m => `<span class="mark">${m}</span>`).join('')}</div></div>
-      <div class="line-video"><video muted loop playsinline preload="none" poster="${L.img}" data-src="${L.video}"></video><button class="play" type="button">Som ligado ♪</button></div>
-    </div>
-    <div class="cards">${PRODUCTS.filter(p => p.line === L.id).map(p => `
-      <button class="card" type="button" data-prod="${p.id}" aria-label="${p.name}: ver detalhes">
-        <div class="card-img"><img src="${imgOf(p.variants[0].id)}" alt="" loading="lazy"></div>
-        <div class="card-body"><span class="card-room">${p.room}</span><h3>${p.name}</h3><p>${p.tagline}</p>
-          <div class="card-foot"><span class="card-var">${p.variants.length > 1 ? p.variants.map(v => v.label.split(' · ')[0]).join(' · ') : model(p.variants[0].id).L + ' × ' + model(p.variants[0].id).D + ' cm'}</span><span class="card-go" aria-hidden="true">→</span></div></div>
-      </button>`).join('')}</div>`;
-  panels.appendChild(P);
+// ---------- catálogo: todas as peças num grid, com filtro por linha e por ambiente ----------
+const AMB = { cr: 'Sala de jantar', bf: 'Sala de jantar', mj: 'Sala de jantar', bc: 'Sala de jantar', gr: 'Quarto', rk: 'Sala de estar', mc: 'Sala de estar', es: 'Escritório', ap: 'Hall e entrada', bg: 'Área gourmet' };
+const AMBS = [...new Set(PRODUCTS.map(p => AMB[p.id]))];
+const grid = $('#grid'), tabs = $('#lineTabs'), ink = $('#tabInk'), rooms = $('#rooms'), banner = $('#lineBanner'), count = $('#count');
+const flt = { line: 'all', amb: 'all' };
+const sizeTxt = p => p.variants.length > 1 ? p.variants.map(v => v.label.split(' · ')[0]).join(' · ') : (() => { const M = model(p.variants[0].id); return `${M.L} × ${M.D} × ${M.H} cm`; })();
+[['all', 'Todas', PRODUCTS.length], ...LINES.map(L => [L.id, L.name, PRODUCTS.filter(p => p.line === L.id).length])].forEach(([id, name, n], i) => {
+  const t = h('button', { class: 'tab', type: 'button', 'data-line': id, 'aria-pressed': i === 0 }, `${name}<small>${n}</small>`);
+  t.onclick = () => { flt.line = id; applyFilter(); }; tabs.appendChild(t);
 });
-function selectLine(id) {
-  $$('.tab', tabs).forEach(t => t.setAttribute('aria-selected', t.id === `tab-${id}`));
-  $$('.line-panel', panels).forEach(p => { const on = p.id === `panel-${id}`; p.classList.toggle('on', on); if (!on) $$('video', p).forEach(v => v.pause()); });
-  moveInk(); playVisible();
+['all', ...AMBS].forEach((a, i) => {
+  const b = h('button', { class: 'room', type: 'button', 'data-amb': a, 'aria-pressed': i === 0 }, a === 'all' ? 'Todos os ambientes' : a);
+  b.onclick = () => { flt.amb = a; applyFilter(); }; rooms.appendChild(b);
+});
+grid.innerHTML = PRODUCTS.map(p => { const L = lineById(p.line); return `
+  <article class="card" data-prod="${p.id}" data-line="${p.line}" data-amb="${AMB[p.id]}">
+    <button class="card-hit" type="button" aria-label="${p.name}: ver detalhes"></button>
+    <span class="card-line l-${p.line}">${L.name}</span>
+    <div class="card-img"><img src="${imgOf(p.variants[0].id)}" alt="" loading="lazy"></div>
+    <div class="card-body">
+      <span class="card-room">${AMB[p.id]}</span>
+      <h3>${p.name}</h3>
+      <p>${p.tagline}</p>
+      <div class="card-size">${sizeTxt(p)}</div>
+      <div class="card-actions">
+        <span class="card-more">Ver detalhes <i class="arr">→</i></span>
+        <button class="card-try" type="button" data-try="${p.id}" title="Provar madeiras em 3D">Provar madeiras</button>
+      </div>
+    </div>
+  </article>`; }).join('');
+function applyFilter() {
+  $$('.tab', tabs).forEach(t => t.setAttribute('aria-pressed', t.dataset.line === flt.line));
+  // ambientes sem peça na linha escolhida ficam apagados
+  $$('.room', rooms).forEach(b => { const a = b.dataset.amb, has = a === 'all' || PRODUCTS.some(p => AMB[p.id] === a && (flt.line === 'all' || p.line === flt.line)); b.disabled = !has; b.setAttribute('aria-pressed', a === flt.amb); });
+  if (flt.amb !== 'all' && $(`.room[data-amb="${flt.amb}"]`, rooms).disabled) { flt.amb = 'all'; $$('.room', rooms).forEach(b => b.setAttribute('aria-pressed', b.dataset.amb === 'all')); }
+  moveInk();
+  // FLIP: guarda a posição antes, filtra, anima até a posição nova
+  const cards = $$('.card', grid), before = new Map(cards.map(c => [c, c.getBoundingClientRect()]));
+  let n = 0;
+  cards.forEach(c => { const show = (flt.line === 'all' || c.dataset.line === flt.line) && (flt.amb === 'all' || c.dataset.amb === flt.amb); c.hidden = !show; if (show) n++; });
+  count.textContent = `${n} ${n === 1 ? 'peça' : 'peças'}${flt.line !== 'all' ? ` da linha ${lineById(flt.line).name}` : ''}${flt.amb !== 'all' ? ` para ${flt.amb.toLowerCase()}` : ''}`;
+  if (!reduce) cards.filter(c => !c.hidden).forEach((c, i) => {
+    const a = before.get(c), b = c.getBoundingClientRect();
+    if (a.width) c.animate([{ transform: `translate(${a.left - b.left}px, ${a.top - b.top}px)` }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.2,.7,.1,1)' });
+    else c.animate([{ opacity: 0, transform: 'translateY(24px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: i * 40, easing: 'cubic-bezier(.2,.7,.1,1)', fill: 'backwards' });
+  });
+  // faixa da linha escolhida
+  const L = lineById(flt.line);
+  banner.hidden = !L;
+  if (L) banner.innerHTML = `<div class="lb-txt"><span class="line-kicker">${L.kicker}</span><h3 class="lb-name">Linha ${L.name}</h3><p>${L.lead}</p><div class="marks">${L.marks.map(m => `<span class="mark">${m}</span>`).join('')}</div></div>
+    <button class="lb-video" type="button" data-video="${L.video}" data-poster="${L.img}"><img src="${L.img}" alt=""><span><i>▶</i>Assistir ao vídeo da linha</span></button>`;
 }
-function moveInk() { const t = $('.tab[aria-selected="true"]', tabs); if (!t) return; ink.style.width = t.offsetWidth + 'px'; ink.style.transform = `translateX(${t.offsetLeft}px)`; }
+function moveInk() { const t = $('.tab[aria-pressed="true"]', tabs); if (!t) return; ink.style.width = t.offsetWidth + 'px'; ink.style.transform = `translateX(${t.offsetLeft}px)`; }
 addEventListener('resize', moveInk); setTimeout(moveInk, 60); document.fonts?.ready.then(moveInk);
-// vídeo da linha: toca mudo quando aparece na tela
-const vio = new IntersectionObserver(es => es.forEach(e => { const v = e.target; if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else v.pause(); }), { threshold: 0.35 });
-// pula a abertura com o selo (3,4 s) para mostrar logo as peças
-$$('.line-video video').forEach(v => { v.addEventListener('loadedmetadata', () => { if (v.currentTime < 3.4) v.currentTime = 3.4; }); vio.observe(v); });
-function playVisible() { $$('.line-panel.on video').forEach(v => { vio.unobserve(v); vio.observe(v); }); }
-$$('.line-video .play').forEach(b => b.onclick = () => { const v = b.previousElementSibling; v.muted = !v.muted; if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); b.textContent = v.muted ? 'Som ligado ♪' : 'Sem som'; });
-// cartões: inclinam com o mouse
-$$('.card').forEach(c => {
-  c.addEventListener('click', () => openSheet(c.dataset.prod));
-  if (!fine || reduce) return;
-  c.addEventListener('mousemove', e => { const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height; c.style.setProperty('--ry', (x - 0.5) * 9 + 'deg'); c.style.setProperty('--rx', (0.5 - y) * 7 + 'deg'); c.style.setProperty('--mx', x * 100 + '%'); c.style.setProperty('--my', y * 100 + '%'); });
+applyFilter();
+grid.addEventListener('click', e => {
+  const tr = e.target.closest('[data-try]'); if (tr) { setProvador(tr.dataset.try); document.getElementById('provador').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); return; }
+  const c = e.target.closest('.card'); if (c) openSheet(c.dataset.prod);
+});
+// cartões: inclinam de leve com o mouse
+if (fine && !reduce) $$('.card', grid).forEach(c => {
+  c.addEventListener('mousemove', e => { const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height; c.style.setProperty('--ry', (x - 0.5) * 6 + 'deg'); c.style.setProperty('--rx', (0.5 - y) * 5 + 'deg'); c.style.setProperty('--mx', x * 100 + '%'); c.style.setProperty('--my', y * 100 + '%'); });
   c.addEventListener('mouseleave', () => { c.style.setProperty('--ry', '0deg'); c.style.setProperty('--rx', '0deg'); });
 });
+// vídeo da linha numa janela
+const vbox = $('#vbox');
+banner.addEventListener('click', e => { const b = e.target.closest('[data-video]'); if (!b) return; const v = $('video', vbox); v.poster = b.dataset.poster; v.src = b.dataset.video; vbox.hidden = false; document.body.style.overflow = 'hidden'; v.addEventListener('loadedmetadata', () => { v.currentTime = 3.4; }, { once: true }); v.play().catch(() => {}); $('.sheet-x', vbox).focus(); });
+function closeVideo() { if (vbox.hidden) return; const v = $('video', vbox); v.pause(); v.removeAttribute('src'); v.load(); vbox.hidden = true; document.body.style.overflow = ''; }
+$$('[data-vclose]', vbox).forEach(b => b.addEventListener('click', closeVideo));
+addEventListener('keydown', e => { if (e.key === 'Escape') closeVideo(); });
 
 // ---------- ficha da peça ----------
 const sheet = $('#sheet');

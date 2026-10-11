@@ -35,7 +35,10 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 
 /* ---------- navegação ---------- */
 .nav { position: fixed; inset: 0 0 auto; z-index: 70; display: flex; align-items: center; gap: 24px; padding: 14px var(--pad); transition: background .4s, box-shadow .4s, padding .4s }
-.nav.solid { background: rgba(245, 239, 232, .82); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); box-shadow: 0 1px 0 var(--linha); padding-block: 10px }
+/* o vidro fosco fica num pseudo-elemento: backdrop-filter na própria barra prenderia o menu do celular dentro dela */
+.nav::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(245, 239, 232, .82); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); box-shadow: 0 1px 0 var(--linha); opacity: 0; transition: opacity .4s }
+.nav.solid::before { opacity: 1 }
+.nav.solid { padding-block: 10px }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none }
 .brand img { width: 44px; height: 44px; transition: transform .6s var(--ease) }
 .brand:hover img { transform: rotate(-20deg) }
@@ -123,40 +126,60 @@ body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-in
 .marquee:hover .track { animation-play-state: paused }
 @keyframes slide { to { transform: translateX(-50%) } }
 
-/* ---------- catálogo ---------- */
-.tabs { position: relative; display: inline-flex; gap: 4px; padding: 6px; background: var(--papel2); border-radius: 999px; margin-bottom: 48px; max-width: 100%; overflow-x: auto }
-.tab { position: relative; z-index: 1; border: 0; background: none; padding: 12px 26px; border-radius: 999px; font: 600 16px/1 var(--f-body); cursor: pointer; color: var(--muted); transition: color .35s; white-space: nowrap }
-.tab[aria-selected="true"] { color: var(--creme) }
+/* ---------- catálogo: grid com todas as peças ---------- */
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-bottom: 26px }
+.tabs { position: relative; display: inline-flex; gap: 4px; padding: 6px; background: var(--papel2); border-radius: 999px; max-width: 100%; overflow-x: auto; scrollbar-width: none }
+.tabs::-webkit-scrollbar { display: none }
+.tab { position: relative; z-index: 1; border: 0; background: none; padding: 12px 22px; border-radius: 999px; font: 600 16px/1 var(--f-body); cursor: pointer; color: var(--muted); transition: color .35s; white-space: nowrap }
+.tab[aria-pressed="true"] { color: var(--creme) }
 .tab small { font: 500 11px var(--f-mono); letter-spacing: .1em; opacity: .7; margin-left: 6px }
 .tab-ink { position: absolute; top: 6px; bottom: 6px; left: 0; width: 0; border-radius: 999px; background: var(--amora); transition: transform .5s var(--ease), width .5s var(--ease) }
-.line-panel { display: none }
-.line-panel.on { display: block; animation: panelIn .7s var(--ease) both }
-@keyframes panelIn { from { opacity: 0; transform: translateY(18px) } }
-.line-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(24px, 4vw, 60px); align-items: center; margin-bottom: 48px }
-.line-name { font: 400 clamp(64px, 11vw, 168px)/.9 var(--f-serif); color: var(--amora); letter-spacing: -.03em; display: block }
-.line-kicker { font: 500 13px var(--f-mono); letter-spacing: .3em; text-transform: uppercase; color: var(--ouro) }
-.line-lead { font-size: 18px; color: var(--muted); margin-top: 18px; max-width: 560px }
-.marks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px }
-.mark { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--linha); font-size: 14px; font-weight: 500; background: rgba(255, 255, 255, .5) }
-.line-video { position: relative; border-radius: var(--r); overflow: hidden; aspect-ratio: 4 / 5; max-height: 520px; justify-self: end; width: min(100%, 416px); background: #1d1a1e; box-shadow: 0 40px 70px -40px rgba(43, 15, 37, .6) }
-.line-video video { width: 100%; height: 100%; object-fit: cover }
-.line-video .play { position: absolute; left: 16px; bottom: 16px; padding: 8px 14px; border-radius: 999px; background: rgba(0, 0, 0, .55); color: #fff; border: 0; font-size: 13px; font-weight: 600; cursor: pointer; backdrop-filter: blur(6px) }
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 22px }
-.card { --rx: 0deg; --ry: 0deg; position: relative; border: 0; padding: 0; text-align: left; cursor: pointer; background: linear-gradient(170deg, #FBF7F2, #EADFD2); border-radius: var(--r); overflow: hidden; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .35s var(--ease), box-shadow .35s; box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 20px 40px -30px rgba(43, 15, 37, .5) }
-.card:hover { box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 40px 60px -30px rgba(43, 15, 37, .55) }
-.card::after { content: ""; position: absolute; inset: 0; background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, .45), transparent 45%); opacity: 0; transition: opacity .35s; pointer-events: none }
+.rooms { display: flex; flex-wrap: wrap; gap: 8px }
+.room { border: 1.5px solid var(--linha); background: transparent; padding: 9px 15px; border-radius: 999px; font: 500 14px var(--f-body); cursor: pointer; color: var(--tinta); transition: all .3s var(--ease) }
+.room:hover:not(:disabled) { border-color: var(--amora) }
+.room[aria-pressed="true"] { background: var(--tinta); border-color: var(--tinta); color: var(--papel) }
+.room:disabled { opacity: .35; cursor: default }
+.line-banner { display: grid; grid-template-columns: 1fr auto; gap: 24px 40px; align-items: center; background: linear-gradient(120deg, #FBF7F2, var(--papel2)); border: 1px solid var(--linha); border-radius: 26px; padding: clamp(20px, 3vw, 32px); margin-bottom: 22px; animation: panelIn .6s var(--ease) both }
+.line-banner[hidden] { display: none }
+.line-kicker { font: 500 12.5px var(--f-mono); letter-spacing: .3em; text-transform: uppercase; color: var(--ouro) }
+.lb-name { font-size: clamp(30px, 3.6vw, 46px); color: var(--amora); margin: 6px 0 10px }
+.lb-txt p { color: var(--muted); max-width: 640px }
+.marks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px }
+.mark { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--linha); font-size: 13.5px; font-weight: 500; background: rgba(255, 255, 255, .6) }
+.lb-video { position: relative; width: 260px; aspect-ratio: 16 / 10; border: 0; padding: 0; border-radius: 18px; overflow: hidden; cursor: pointer; background: radial-gradient(110% 90% at 50% 70%, #fff, #E4D6C6) }
+.lb-video img { width: 100%; height: 100%; object-fit: contain; transition: transform .6s var(--ease) }
+.lb-video:hover img { transform: scale(1.06) }
+.lb-video span { position: absolute; inset: auto 10px 10px; display: flex; align-items: center; gap: 10px; background: rgba(43, 15, 37, .85); color: var(--creme); padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: 600 }
+.lb-video i { font-style: normal; width: 24px; height: 24px; border-radius: 50%; background: var(--ouro-l); color: var(--amora-d); display: grid; place-items: center; font-size: 10px }
+.count { font: 500 12.5px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--soft); margin-bottom: 16px }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px }
+@media (min-width: 1281px) { .grid { grid-template-columns: repeat(5, 1fr); gap: 18px } .card h3 { font-size: 21px } .card-actions { flex-wrap: wrap } }
+.card { --rx: 0deg; --ry: 0deg; position: relative; display: flex; flex-direction: column; background: linear-gradient(170deg, #FBF7F2, #EADFD2); border-radius: var(--r); overflow: hidden; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .35s var(--ease), box-shadow .35s; box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 18px 36px -28px rgba(43, 15, 37, .5) }
+.card[hidden] { display: none }
+.card:hover { box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 36px 56px -30px rgba(43, 15, 37, .55) }
+.card::after { content: ""; position: absolute; inset: 0; background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, .5), transparent 45%); opacity: 0; transition: opacity .35s; pointer-events: none }
 .card:hover::after { opacity: 1 }
-.card-img { aspect-ratio: 1; display: grid; place-items: center; padding: 18px }
+.card-hit { position: absolute; inset: 0; z-index: 1; border: 0; background: none; cursor: pointer; border-radius: var(--r) }
+.card-line { position: absolute; left: 14px; top: 14px; z-index: 2; pointer-events: none; font: 500 11px var(--f-mono); letter-spacing: .16em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: rgba(255, 255, 255, .75); backdrop-filter: blur(6px); display: flex; align-items: center; gap: 7px }
+.card-line::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor }
+.l-antique { color: #9A6526 } .l-modern { color: #2D2A2E } .l-raiz { color: #5C6B2E }
+.card-img { aspect-ratio: 1; display: grid; place-items: center; padding: 30px 16px 4px }
 .card-img img { width: 100%; height: 100%; object-fit: contain; transition: transform .7s var(--ease) }
-.card:hover .card-img img { transform: scale(1.05) translateY(-6px) }
-.card-body { padding: 0 22px 22px }
-.card-room { font: 500 11.5px var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--ouro) }
-.card h3 { font-size: 26px; margin: 6px 0 6px }
-.card p { color: var(--muted); font-size: 15px }
-.card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; gap: 10px }
-.card-var { font-size: 13px; font-weight: 600; color: var(--amora) }
-.card-go { width: 40px; height: 40px; border-radius: 50%; background: var(--amora); color: var(--creme); display: grid; place-items: center; transition: transform .35s var(--ease); flex: none }
-.card:hover .card-go { transform: rotate(-45deg) }
+.card:hover .card-img img { transform: scale(1.06) translateY(-6px) }
+.card-body { padding: 0 18px 18px; display: flex; flex-direction: column; flex: 1 }
+.card-room { font: 500 11px var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--ouro) }
+.card h3 { font-size: 23px; margin: 6px 0 6px }
+.card p { color: var(--muted); font-size: 14.5px; line-height: 1.45 }
+.card-size { margin-top: 10px; font-size: 13px; font-weight: 600; color: var(--amora) }
+.card-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 16px }
+.card-more { font-weight: 600; font-size: 14px; color: var(--tinta) }
+.card:hover .card-more .arr { transform: translateX(4px) }
+.card-try { position: relative; z-index: 2; border: 1.5px solid var(--amora); background: transparent; color: var(--amora); padding: 7px 12px; border-radius: 999px; font: 600 12.5px var(--f-body); cursor: pointer; transition: all .3s var(--ease); white-space: nowrap }
+.card-try:hover { background: var(--amora); color: var(--creme) }
+.vbox { position: fixed; inset: 0; z-index: 125; display: grid; place-items: center; padding: 3vh 3vw }
+.vbox[hidden] { display: none }
+.vbox-card { position: relative; width: min(520px, 92vw); aspect-ratio: 4 / 5; max-height: 90vh; border-radius: 24px; overflow: hidden; background: #000; animation: sheetIn .5s var(--ease) both }
+.vbox-card video { width: 100%; height: 100%; object-fit: contain }
 
 /* ---------- provador ---------- */
 .provador { background: radial-gradient(120% 80% at 30% 0%, #3B1631 0%, var(--amora-d) 45%, var(--noite) 100%); color: var(--creme); padding: clamp(80px, 10vw, 140px) var(--pad); position: relative; overflow: hidden }
@@ -350,7 +373,7 @@ textarea { resize: vertical }
   .hero { grid-template-columns: 1fr; padding-top: 110px }
   .hero-art { height: 62vh; max-height: 560px }
   .prov-grid, .line-hero, .why-grid, .quote-grid, .about { grid-template-columns: 1fr }
-  .line-video { justify-self: start }
+  .grid { grid-template-columns: repeat(3, 1fr) }
   .stage-wrap { min-height: 64vh }
   .steps { grid-template-columns: 1fr 1fr; row-gap: 40px }
   .steps-line { display: none }
@@ -364,6 +387,9 @@ textarea { resize: vertical }
   .burger { display: block }
   .nav-cta { display: none }
   .care { grid-template-columns: 1fr }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 12px }
+  .line-banner { grid-template-columns: 1fr }
+  .lb-video { width: 100% }
   .compare { grid-template-columns: 1fr }
   .form { grid-template-columns: 1fr }
   .foot { grid-template-columns: 1fr }
@@ -378,7 +404,22 @@ textarea { resize: vertical }
   .sheet { padding: 0; place-items: end center }
   .sheet-card { border-radius: 26px 26px 0 0; max-height: 92vh }
   .stats { gap: 18px 26px }
-  .tab { padding: 11px 18px; font-size: 15px }
+  .tab { padding: 11px 16px; font-size: 15px }
+  .filters { gap: 12px }
+  .filters .tabs { display: flex; width: 100% }
+  .filters .tab { flex: 1; padding: 11px 6px; font-size: 14.5px }
+  .filters .tab small { margin-left: 3px }
+  .rooms { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad) }
+  .room { flex: none }
+  .card-img { padding: 26px 6px 0 }
+  .card-body { padding: 0 12px 12px }
+  .card h3 { font-size: 18px }
+  .card p { display: none }
+  .card-size { font-size: 12px; margin-top: 6px }
+  .card-line { left: 8px; top: 8px; font-size: 9.5px; padding: 4px 8px }
+  .card-actions { flex-direction: column; align-items: stretch; gap: 8px; padding-top: 10px }
+  .card-more { font-size: 13px }
+  .card-try { text-align: center }
   .scroll-hint { display: none }
   .stage-hint { white-space: normal; text-align: center; width: max-content; max-width: 86%; font-size: 11px }
   .stage-tag { font-size: 21px; max-width: 70% }
