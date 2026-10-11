@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Marcenaria Moraes · Móveis de madeira maciça em Uberlândia</title>
+<meta name="description" content="Móveis de madeira maciça feitos à mão em Uberlândia-MG. Linhas Antique, Modern e Raiz: cristaleiras, guarda-roupas, buffets, mesas, bancos e mais. Experimente as madeiras em 3D e peça seu orçamento.">
+<meta name="theme-color" content="#2B0F25">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Marcenaria Moraes · Móveis de madeira maciça">
+<meta property="og:description" content="Feitos à mão em Uberlândia. Veja as linhas Antique, Modern e Raiz e experimente as madeiras em 3D.">
+<meta property="og:image" content="assets/img/og.jpg">
+<link rel="icon" href="assets/brand/moraes-selo-amora.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">{"imports":{"three":"./js/vendor/three/three.module.js","three/addons/":"./js/vendor/three/addons/"}}</script>
+</head>
+<body>
+<a class="skip" href="#linhas">Pular para o catálogo</a>
+
+<!-- abertura: o selo se desenhando -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-seal"><img src="assets/brand/moraes-selo-cerne-claro.svg" alt=""><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/></svg></div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#topo" aria-label="Marcenaria Moraes, início">
+    <img src="assets/brand/moraes-selo-amora.svg" alt="">
+    <span>Marcenaria<br>Moraes</span>
+  </a>
+  <nav class="menu" id="menu" aria-label="Seções">
+    <a href="#linhas">Catálogo</a>
+    <a href="#provador">Provador de madeiras</a>
+    <a href="#como">Como funciona</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#duvidas">Dúvidas</a>
+  </nav>
+  <a class="btn btn-sm btn-amora nav-cta" href="#orcamento">Pedir orçamento</a>
+  <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+</header>
+
+<main id="topo">
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="hero-txt">
+      <p class="kicker reveal">Marcenaria Moraes · Uberlândia-MG</p>
+      <h1 class="split" data-split>Móveis de madeira maciça, feitos à mão para durar gerações.</h1>
+      <p class="hero-lead reveal">Cada peça é desenhada, cortada e montada aqui, sob encomenda, na madeira que você escolher. Nada de MDF: madeira de verdade, que dá para lixar e renovar daqui a 20 anos.</p>
+      <div class="hero-cta reveal">
+        <a class="btn btn-amora magnet" href="#linhas">Ver o catálogo <i class="arr">→</i></a>
+        <a class="btn btn-ghost magnet" href="#provador">Experimentar madeiras em 3D</a>
+      </div>
+      <ul class="stats reveal">
+        <li><b data-count="3">0</b><span>linhas</span></li>
+        <li><b data-count="10">0</b><span>peças</span></li>
+        <li><b data-count="9">0</b><span>madeiras no provador</span></li>
+        <li><b data-count="100" data-suffix="%">0</b><span>maciça</span></li>
+      </ul>
+    </div>
+    <div class="hero-art" id="heroArt">
+      <div class="hero-card tilt">
+        <div class="hero-slides" id="heroSlides">
+          <figure class="on"><img src="assets/img/pecas/line-raiz.webp" alt="Linha Raiz: bancada gourmet, mesa de jantar e banco"><figcaption><b>Raiz</b>o encaixe à mostra</figcaption></figure>
+          <figure><img src="assets/img/pecas/line-antique.webp" alt="Linha Antique: cristaleira, buffet, guarda-roupa e rack"><figcaption><b>Antique</b>ferragens de época</figcaption></figure>
+          <figure><img src="assets/img/pecas/line-modern.webp" alt="Linha Modern: aparador, escrivaninha e mesa de centro"><figcaption><b>Modern</b>nada à vista</figcaption></figure>
+        </div>
+        <div class="hero-dots" id="heroDots"></div>
+      </div>
+      <div class="chip-float c1"><i class="sw" data-wood="nog"></i>Nogueira</div>
+      <div class="chip-float c2"><i class="sw" data-wood="jat"></i>Jatobá</div>
+      <div class="chip-float c3"><i class="sw" data-wood="rox"></i>Roxinho</div>
+      <div class="badge-rot" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs><text><textPath href="#circ">FEITO À MÃO · SOB ENCOMENDA · MADEIRA MACIÇA · </textPath></text></svg>
+        <img src="assets/brand/moraes-folha-branco.svg" alt="">
+      </div>
+    </div>
+    <a class="scroll-hint" href="#linhas" aria-label="Rolar para o catálogo"><span></span></a>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
+
+  <!-- ===== CATÁLOGO ===== -->
+  <section class="sec" id="linhas">
+    <div class="sec-head">
+      <p class="kicker reveal">O catálogo</p>
+      <h2 class="reveal">Três linhas, um mesmo cuidado</h2>
+      <p class="sec-lead reveal">Escolha a linha e toque numa peça para ver os detalhes, as medidas e o vídeo. Todas saem em madeira maciça escura (nogueira ou jatobá) e podem ser feitas em outras madeiras sob consulta.</p>
+    </div>
+    <div class="tabs reveal" role="tablist" aria-label="Linhas" id="lineTabs"><span class="tab-ink" id="tabInk"></span></div>
+    <div id="linePanels"></div>
+  </section>
+
+  <!-- ===== PROVADOR ===== -->
+  <section class="provador" id="provador">
+    <div class="prov-head">
+      <p class="kicker reveal">Provador de madeiras</p>
+      <h2 class="reveal">Experimente o seu móvel em várias madeiras</h2>
+      <p class="sec-lead reveal">Escolha a peça e a madeira, gire com o dedo ou o mouse, abra as portas e veja como fica. É o mesmo projeto em 3D que vai para a oficina.</p>
+    </div>
+    <div class="prov-grid">
+      <div class="stage-wrap reveal">
+        <div class="stage" id="stage" aria-label="Visualização 3D da peça"></div>
+        <div class="stage-loading" id="stageLoading"><span></span>Montando a peça…</div>
+        <div class="stage-hint" id="stageHint">Arraste para girar · role ou faça pinça para aproximar</div>
+        <div class="stage-tag" id="stageTag"></div>
+        <div class="stage-tools">
+          <button type="button" class="tool" id="tAssemble" title="Montar de novo" aria-label="Montar de novo">↻</button>
+          <button type="button" class="tool" id="tRotate" title="Girar sozinho" aria-label="Girar sozinho" aria-pressed="false">⟳</button>
+          <button type="button" class="tool" id="tShot" title="Salvar imagem" aria-label="Salvar imagem">⤓</button>
+        </div>
+      </div>
+      <div class="panel reveal">
+        <div class="pgroup">
+          <label class="plabel" for="pPiece">Peça</label>
+          <div class="select"><select id="pPiece"></select></div>
+        </div>
+        <div class="pgroup" id="pVarWrap">
+          <span class="plabel">Versão</span>
+          <div class="chips" id="pVar" role="group" aria-label="Versão"></div>
+        </div>
+        <div class="pgroup">
+          <span class="plabel">Madeira <em id="pWoodName">Nogueira</em></span>
+          <div class="swatches" id="pWood" role="radiogroup" aria-label="Madeira"></div>
+          <p class="wood-note" id="pWoodNote"></p>
+        </div>
+        <div class="pgroup toggles">
+          <label class="switch" id="sOpenWrap"><input type="checkbox" id="sOpen"><span class="sl"></span>Abrir portas e gavetas</label>
+          <label class="switch" id="sPretoWrap"><input type="checkbox" id="sPreto"><span class="sl"></span>Detalhes pretos</label>
+          <label class="switch" id="sContraWrap"><input type="checkbox" id="sContra" checked><span class="sl"></span>Cavilhas e gravatas claras</label>
+        </div>
+        <div class="dims" id="pDims"></div>
+        <a class="btn btn-ouro btn-block magnet" id="pQuote" href="#" target="_blank" rel="noopener">Quero assim · pedir orçamento</a>
+        <p class="fine">Simulação em 3D: o tom real muda de tábua para tábua. Nogueira e jatobá são as madeiras da casa; as outras dependem de disponibilidade e mudam o valor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMO FUNCIONA ===== -->
+  <section class="sec" id="como">
+    <div class="sec-head">
+      <p class="kicker reveal">Como funciona</p>
+      <h2 class="reveal">Da conversa à entrega</h2>
+    </div>
+    <ol class="steps" id="steps">
+      <li class="reveal"><i>1</i><h3>Conversa</h3><p>Me chame no WhatsApp com a peça, a medida e a madeira. Se tiver uma foto do lugar, melhor ainda.</p></li>
+      <li class="reveal"><i>2</i><h3>Projeto e orçamento</h3><p>Você recebe o valor, o prazo e o desenho em 3D. Mudou alguma medida? Ajusto o projeto.</p></li>
+      <li class="reveal"><i>3</i><h3>Produção</h3><p>Com o sinal de 50%, a peça entra na oficina. Mando fotos do processo, da tábua bruta ao acabamento.</p></li>
+      <li class="reveal"><i>4</i><h3>Entrega</h3><p>Entrega e montagem em Uberlândia. O restante você paga na entrega.</p></li>
+      <span class="steps-line" aria-hidden="true"><span id="stepsFill"></span></span>
+    </ol>
+  </section>
+
+  <!-- ===== POR QUE MACIÇA ===== -->
+  <section class="sec why" id="porque">
+    <div class="why-grid">
+      <div>
+        <p class="kicker reveal">Por que madeira maciça</p>
+        <h2 class="reveal">Um móvel para a vida inteira, não para a próxima mudança</h2>
+        <p class="sec-lead reveal">O MDF é pó de madeira prensado com cola: incha com água e não tem conserto. A madeira maciça risca, mas lixa; mancha, mas renova. E fica mais bonita com o tempo.</p>
+      </div>
+      <div class="compare reveal">
+        <div class="col good"><h3>Madeira maciça</h3><ul><li>Dura gerações</li><li>Lixa e renova</li><li>Aguenta peso sem embarrigar</li><li>Veio único em cada peça</li><li>Parafuso firma de novo</li></ul></div>
+        <div class="col bad"><h3>MDF</h3><ul><li>Incha com umidade</li><li>Lascou, perdeu</li><li>Prateleira empena</li><li>Padrão impresso</li><li>Rosca espana</li></ul></div>
+      </div>
+    </div>
+    <div class="care">
+      <div class="care-card reveal"><b>Limpeza</b><span>Pano levemente úmido e seque em seguida. Nada de álcool ou lustra-móveis com silicone.</span></div>
+      <div class="care-card reveal"><b>Cera de abelha</b><span>A cada 3 ou 4 meses, uma camada fina, lustrada com pano seco.</span></div>
+      <div class="care-card reveal"><b>Riscou?</b><span>Lixa fina e uma demão de óleo. É a vantagem da madeira de verdade.</span></div>
+    </div>
+  </section>
+
+  <!-- ===== SOBRE ===== -->
+  <section class="about" id="sobre">
+    <div class="about-seal reveal"><img src="assets/brand/moraes-selo-cerne-claro.svg" alt="Selo da Marcenaria Moraes, com a folha de amoreira"></div>
+    <div class="about-txt">
+      <p class="kicker reveal">Sobre</p>
+      <h2 class="reveal">Moraes vem de amoreira</h2>
+      <p class="reveal">O sobrenome nasce de Morais, uma vila no norte de Portugal cujo nome quer dizer "o lugar das amoreiras". Por isso a folha no centro do selo.</p>
+      <p class="reveal">A Marcenaria Moraes é do Davi Moraes, em Uberlândia. Cada peça é feita à mão, uma de cada vez: do desenho em 3D à última demão de cera. Você fala direto com quem faz.</p>
+      <p class="quote reveal">"Da árvore à sua mesa."</p>
+    </div>
+  </section>
+
+  <!-- ===== DÚVIDAS ===== -->
+  <section class="sec" id="duvidas">
+    <div class="sec-head">
+      <p class="kicker reveal">Dúvidas</p>
+      <h2 class="reveal">Perguntas frequentes</h2>
+    </div>
+    <div class="faq" id="faq">
+      <details class="reveal"><summary>Quanto custa?</summary><p>Cada peça é feita sob encomenda, então o valor depende da medida, da madeira e dos detalhes. Me chame no WhatsApp: o orçamento é grátis e sai rápido.</p></details>
+      <details class="reveal"><summary>Qual é o prazo?</summary><p>De 2 a 6 semanas na maioria das peças (o guarda-roupa leva mais). O prazo de cada uma está na ficha do catálogo e é confirmado no orçamento.</p></details>
+      <details class="reveal"><summary>Dá para mudar a medida?</summary><p>Sim. Todos os projetos são feitos em 3D e mudam de medida com facilidade: mais largo, mais baixo, mais fundo. É só dizer o espaço que você tem.</p></details>
+      <details class="reveal"><summary>Quais madeiras vocês usam?</summary><p>As da casa são a nogueira (cambará maciço com tingidor nogueira) e o jatobá (madeira de lei, escura por natureza). Roxinho, imbuia, freijó, cumaru, peroba e outras dependem de disponibilidade e mudam o valor.</p></details>
+      <details class="reveal"><summary>Como é o pagamento?</summary><p>Sinal de 50% para reservar e começar a produção, e o restante na entrega.</p></details>
+      <details class="reveal"><summary>Vocês entregam fora de Uberlândia?</summary><p>A entrega e a montagem são em Uberlândia. Para outras cidades, fale comigo que a gente combina o frete.</p></details>
+      <details class="reveal"><summary>As imagens são fotos?</summary><p>São imagens do projeto em 3D, as mesmas que vão para a oficina. A peça pronta sai com o veio único da sua madeira, então cada uma é diferente.</p></details>
+    </div>
+  </section>
+
+  <!-- ===== ORÇAMENTO ===== -->
+  <section class="quote-sec" id="orcamento">
+    <div class="quote-grid">
+      <div>
+        <p class="kicker reveal">Orçamento grátis</p>
+        <h2 class="reveal">Vamos fazer o seu?</h2>
+        <p class="sec-lead reveal">Preencha e a mensagem vai pronta para o meu WhatsApp. Se preferir, é só chamar direto.</p>
+        <a class="wa-direct reveal" href="#" id="waDirect" target="_blank" rel="noopener"><span class="wa-ico" aria-hidden="true"></span><span><b id="waNum"></b>WhatsApp · Davi Moraes</span></a>
+        <div class="bubble-wrap reveal" aria-live="polite">
+          <p class="plabel">Prévia da mensagem</p>
+          <div class="bubble" id="bubble"></div>
+        </div>
+      </div>
+      <form class="form reveal" id="form" novalidate>
+        <div class="field"><label for="fNome">Seu nome</label><input id="fNome" name="nome" autocomplete="name" required placeholder="Como posso te chamar?"></div>
+        <div class="field"><label for="fCidade">Cidade</label><input id="fCidade" name="cidade" autocomplete="address-level2" value="Uberlândia"></div>
+        <div class="field"><label for="fPeca">Peça</label><div class="select"><select id="fPeca" name="peca"></select></div></div>
+        <div class="field"><label for="fVar">Versão</label><div class="select"><select id="fVar" name="versao"></select></div></div>
+        <div class="field"><label for="fMadeira">Madeira</label><div class="select"><select id="fMadeira" name="madeira"></select></div></div>
+        <div class="field"><label for="fMedida">Medida especial <small>(opcional)</small></label><input id="fMedida" name="medida" placeholder="Ex.: 1,40 m de largura"></div>
+        <div class="field wide"><label for="fMsg">Mensagem <small>(opcional)</small></label><textarea id="fMsg" name="msg" rows="3" placeholder="Conte o que precisa, o espaço, a cor da casa…"></textarea></div>
+        <button class="btn btn-amora btn-block magnet wide" type="submit">Enviar pelo WhatsApp <i class="arr">→</i></button>
+        <p class="fine wide">Seus dados vão só na mensagem do WhatsApp; o site não guarda nada.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-brand"><img src="assets/brand/moraes-selo-cerne-claro.svg" alt=""><div><b>Marcenaria Moraes</b><span>Móveis de madeira maciça feitos à mão · Uberlândia-MG</span></div></div>
+  <div class="foot-links"><a href="#linhas">Catálogo</a><a href="#provador">Provador</a><a href="#orcamento">Orçamento</a><a href="#" id="footWa" target="_blank" rel="noopener">WhatsApp</a></div>
+  <p class="foot-fine">Imagens do projeto em 3D. Valores sob consulta. © <span id="year"></span> Marcenaria Moraes.</p>
+</footer>
+
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><span class="wa-ico" aria-hidden="true"></span><span class="wa-tip">Fale comigo</span></a>
+
+<!-- ficha da peça -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shName" hidden>
+  <div class="sheet-bg" data-close></div>
+  <article class="sheet-card">
+    <button class="sheet-x" data-close aria-label="Fechar">×</button>
+    <div class="sheet-media">
+      <div class="sheet-main" id="shMain"></div>
+      <div class="sheet-thumbs" id="shThumbs"></div>
+    </div>
+    <div class="sheet-info">
+      <p class="kicker" id="shLine"></p>
+      <h2 id="shName"></h2>
+      <p class="sheet-tag" id="shTag"></p>
+      <div class="chips" id="shVar" role="group" aria-label="Versão"></div>
+      <div class="sheet-dims" id="shDims"></div>
+      <p class="sheet-about" id="shAbout"></p>
+      <div class="hl" id="shHl"></div>
+      <dl class="specs" id="shSpecs"></dl>
+      <div class="sheet-cta">
+        <a class="btn btn-amora magnet" id="shQuote" href="#" target="_blank" rel="noopener">Pedir orçamento</a>
+        <button class="btn btn-ghost magnet" id="shTry" type="button">Experimentar madeiras</button>
+      </div>
+    </div>
+  </article>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
