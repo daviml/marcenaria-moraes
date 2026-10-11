@@ -34,3 +34,13 @@ ou `python -m http.server` e abra `http://localhost:8000`.
 
 Peça nova: copie o modelo para `js/models/`, registre o id em `js/engine.js` (MAKE) e em `js/app.js` (MAKE),
 acrescente a peça em `js/data.js` e coloque a imagem em `assets/img/pecas/<id>.webp` e o vídeo em `assets/video/`.
+
+## Prévia ao compartilhar (WhatsApp, Instagram, Facebook)
+
+Os metadados ficam no topo do `index.html` e usam o endereço completo do site
+(`https://daviml.github.io/marcenaria-moraes/`). Se o endereço mudar (por exemplo, um domínio próprio),
+troque esse endereço em todas as linhas `og:` e `twitter:` e no `canonical`. A imagem da prévia é
+`assets/img/og.jpg` (1200 × 630, menos de 300 KB).
+
+Depois de publicar ou mudar algo, peça para o Facebook ler a página de novo em
+https://developers.facebook.com/tools/debug/ (cole o endereço → **Depurar** → **Extrair novamente**).
