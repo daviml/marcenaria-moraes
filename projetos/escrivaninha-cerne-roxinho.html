@@ -142,7 +142,8 @@ footer { font-size: 13px; color: var(--muted); }
     <div class="hint" id="hint" hidden>Arraste para girar · pinça ou rolagem para aproximar</div>
   </div>
   <div class="bar">
-    <button class="b" id="o-L" type="button" aria-pressed="true">Roxinho em L</button>
+    <button class="b" id="o-R" type="button" aria-pressed="true">Cambará + gaveta roxa</button>
+    <button class="b" id="o-L" type="button" aria-pressed="false">Roxinho em L</button>
     <button class="b" id="o-Q" type="button" aria-pressed="false">Cambará maciça</button>
     <span class="sep" aria-hidden="true"></span>
     <button class="b" id="v-tres" type="button">3/4</button>
@@ -417,21 +418,23 @@ footer { font-size: 13px; color: var(--muted); }
   </div>
   <div class="card tbl">
     <table>
-      <thead><tr><th></th><th class="n">Roxinho em L</th><th class="n">Cambará maciça</th></tr></thead>
+      <thead><tr><th></th><th class="n">Roxinho em L</th><th class="n">Cambará maciça</th><th class="n">Cambará + gaveta roxa</th></tr></thead>
       <tbody>
-        <tr><td>Pernas</td><td class="n">3,10 m × R$ 28 = R$ 86,80</td><td class="n">3,10 m × R$ 17,50 = R$ 54,25</td></tr>
-        <tr><td>Saias, guias e gaveta (cambará 30 × 2,5)</td><td class="n">1,90 m = R$ 33,25</td><td class="n">1,80 m = R$ 31,50</td></tr>
-        <tr><td>Madeira da base</td><td class="n">R$ 120,05</td><td class="n">R$ 85,75</td></tr>
-        <tr><td>Fundo da gaveta, compensado 6 mm</td><td class="n">≈ R$ 15</td><td class="n">≈ R$ 15</td></tr>
-        <tr><td>Cola, cavilhas, fixadores, parafusos, lixas, acabamento</td><td class="n">≈ R$ 150</td><td class="n">≈ R$ 150</td></tr>
-        <tr><td>Colagens por perna</td><td class="n">1</td><td class="n">3</td></tr>
-        <tr><td>Peso das 4 pernas</td><td class="n">~7,9 kg</td><td class="n">~10,8 kg</td></tr>
-        <tr><td>Visual</td><td class="n">Contraste roxo × cambará</td><td class="n">Tudo da mesma cor</td></tr>
+        <tr><td>Pernas</td><td class="n">3,10 m × R$ 28 = R$ 86,80</td><td class="n">3,10 m × R$ 17,50 = R$ 54,25</td><td class="n">R$ 54,25</td></tr>
+        <tr><td>Saias, guias e gaveta (cambará 30 × 2,5)</td><td class="n">1,90 m = R$ 33,25</td><td class="n">1,80 m = R$ 31,50</td><td class="n">1,80 m = R$ 31,50</td></tr>
+        <tr><td>Frente da gaveta de roxinho (15 × 2,5)</td><td class="n">—</td><td class="n">—</td><td class="n">0,50 m = R$ 14</td></tr>
+        <tr><td>Madeira da base</td><td class="n">R$ 120,05</td><td class="n">R$ 85,75</td><td class="n">R$ 99,75</td></tr>
+        <tr><td>Fundo da gaveta, compensado 6 mm</td><td class="n">≈ R$ 15</td><td class="n">≈ R$ 15</td><td class="n">≈ R$ 15</td></tr>
+        <tr><td>Cola, cavilhas, fixadores, parafusos, lixas, acabamento</td><td class="n">≈ R$ 150</td><td class="n">≈ R$ 150</td><td class="n">≈ R$ 150</td></tr>
+        <tr><td>Colagens por perna</td><td class="n">1</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr><td>Peso das 4 pernas</td><td class="n">~7,9 kg</td><td class="n">~10,8 kg</td><td class="n">~10,8 kg</td></tr>
+        <tr><td>Visual</td><td class="n">Contraste roxo × cambará</td><td class="n">Tudo da mesma cor</td><td class="n">Cambará com um ponto roxo no meio</td></tr>
       </tbody>
-      <tfoot><tr><td>Total sem o tampo</td><td class="n">≈ R$ 285</td><td class="n">≈ R$ 251</td></tr></tfoot>
+      <tfoot><tr><td>Total sem o tampo</td><td class="n">≈ R$ 285</td><td class="n">≈ R$ 251</td><td class="n">≈ R$ 265</td></tr></tfoot>
     </table>
   </div>
   <p class="callout">A diferença fica em <b>uns R$ 34</b>. A perna maciça usa o dobro de madeira da perna em L, por isso o cambará mais barato economiza menos do que parece. Se for de cambará, a perna em L também funciona e custaria só R$ 28 de madeira, mas a maciça tem mais cara de móvel robusto.</p>
+  <p><b>Tudo de cambará com a frente da gaveta de roxinho:</b> pernas maciças e o resto todo em cambará, e só a frente da gaveta, com a cava, em roxinho. O roxo fica bem no meio, na altura de quem senta, e é a única peça escura do móvel. Para a frente bastam 0,50 m de roxinho 15 × 2,5 (uns R$ 14), ou um retalho de 50 × 7,5 se a madeireira tiver. No 3D, aperte <b>Cambará + gaveta roxa</b>.</p>
 </section>
 
 <section class="two">
@@ -586,22 +589,22 @@ function taperGeo(p) {
   g.computeVertexNormals(); return g;
 }
 // gaveteiro no meio: saia da frente em 2 pedaços, 2 guias (fazem o papel da travessa), trilhos e gaveta com cava
-function gaveteiro(o, fy, by, xf0, xf1) {
+function gaveteiro(o, fy, by, xf0, xf1, ff = 'cla') {
   add('saiaF', 'cla', [xf0, fy, 66.5, 50, fy + 2, 74], { step: 1.6, ex: [0, -1, 0], round: 0.12, ...o });
   add('saiaF', 'cla', [100, fy, 66.5, xf1, fy + 2, 74], { step: 1.6, ex: [0, -1, 0], round: 0.12, ...o });
   for (const [a, b] of [[48, 50], [100, 102]]) add('guia', 'cla', [a, fy + 2, 66.5, b, by, 74], { grain: 'y', step: 2, ex: [0, 0, -1], ...o });
   for (const [a, b] of [[50, 52], [98, 100]]) add('trilho', 'cla', [a, fy + 2, 66.5, b, by, 68.5], { grain: 'y', step: 2.2, ex: [0, 0, -1], ...o });
   const g = { step: 2.6, ex: [0, -1, 0], drawer: 1, ...o };
-  add('gF', 'cla', [50.2, fy, 69.2, 99.8, fy + 2, 73.9], g);
-  add('gF', 'cla', [50.2, fy, 66.6, 68, fy + 2, 69.2], g);
-  add('gF', 'cla', [82, fy, 66.6, 99.8, fy + 2, 69.2], g);
+  add('gF', ff,[50.2, fy, 69.2, 99.8, fy + 2, 73.9], g);
+  add('gF', ff,[50.2, fy, 66.6, 68, fy + 2, 69.2], g);
+  add('gF', ff,[82, fy, 66.6, 99.8, fy + 2, 69.2], g);
   add('gFu', 'cla', [50.3, fy + 2, 68.6, 99.7, fy + 40, 69.2], { ...g, m: 'comp' });
   add('gL', 'cla', [50.3, fy + 2, 69.2, 52.3, fy + 40, 73.4], { ...g, grain: 'y' });
   add('gL', 'cla', [97.7, fy + 2, 69.2, 99.7, fy + 40, 73.4], { ...g, grain: 'y' });
   add('gT', 'cla', [52.3, fy + 38, 69.2, 97.7, fy + 40, 73], g);
 }
 // opção L: pernas de roxinho em L, tira de 7,5 na frente (ou atrás) + tira de 5,3 no lado de fora
-const oL = { opt: 'L' }, oQ = { opt: 'Q' };
+const oL = { opt: 'L' }, oQ = { opt: 'Q' }, oR = { opt: 'R' };
 for (const [xa, xb, xs0, xs1, sx] of [[4, 11.5, 4, 6.2, -1], [L - 11.5, L - 4, L - 6.2, L - 4, 1]])
   for (const [ya, yb, ys0, ys1, sy] of [[6, 8.2, 8.2, 13.5, -1], [55.8, 58, 50.5, 55.8, 1]]) {
     leg('rox', [xa, ya, xb, yb], [-sx, 0], [sx, sy, 0], oL);
@@ -613,14 +616,17 @@ add('saiaD', 'cla', [L - 8.2, 10.2, 66.5, L - 6.2, 53.8, 74], { grain: 'y', step
 add('saiaT', 'cla', [6.2, 53.8, 66.5, L - 6.2, 55.8, 74], { step: 1.6, ex: [0, 1, 0], round: 0.12, ...oL });
 gaveteiro(oL, 8.2, 53.8, 6.2, L - 6.2);
 // opção Q: pernas quadradas de cambará, 4 tiras coladas de frente para trás (a emenda aparece só nas laterais)
-for (const [x0, sx] of [[4, -1], [L - 11.5, 1]])
-  for (const [y0, sy] of [[6, -1], [50.5, 1]])
-    leg('cla', [x0, y0, x0 + 7.5, y0 + 7.5], [-sx, -sy], [sx, sy, 0], oQ);
-// saias entre as pernas, recuadas 1 cm da face de fora
-add('saiaE', 'cla', [5, 13.5, 66.5, 7, 50.5, 74], { grain: 'y', step: 1, ex: [-1, 0, 0], round: 0.12, ...oQ });
-add('saiaD', 'cla', [L - 7, 13.5, 66.5, L - 5, 50.5, 74], { grain: 'y', step: 1, ex: [1, 0, 0], round: 0.12, ...oQ });
-add('saiaT', 'cla', [11.5, 55, 66.5, L - 11.5, 57, 74], { step: 1.6, ex: [0, 1, 0], round: 0.12, ...oQ });
-gaveteiro(oQ, 7, 55, 11.5, L - 11.5);
+// opção R: a mesma, com a frente da gaveta de roxinho
+for (const [o, ff] of [[oQ, 'cla'], [oR, 'rox']]) {
+  for (const [x0, sx] of [[4, -1], [L - 11.5, 1]])
+    for (const [y0, sy] of [[6, -1], [50.5, 1]])
+      leg('cla', [x0, y0, x0 + 7.5, y0 + 7.5], [-sx, -sy], [sx, sy, 0], o);
+  // saias entre as pernas, recuadas 1 cm da face de fora
+  add('saiaE', 'cla', [5, 13.5, 66.5, 7, 50.5, 74], { grain: 'y', step: 1, ex: [-1, 0, 0], round: 0.12, ...o });
+  add('saiaD', 'cla', [L - 7, 13.5, 66.5, L - 5, 50.5, 74], { grain: 'y', step: 1, ex: [1, 0, 0], round: 0.12, ...o });
+  add('saiaT', 'cla', [11.5, 55, 66.5, L - 11.5, 57, 74], { step: 1.6, ex: [0, 1, 0], round: 0.12, ...o });
+  gaveteiro(o, 7, 55, 11.5, L - 11.5, ff);
+}
 
 function boxGeo(p) {
   if (p.tp) return taperGeo(p);
@@ -686,7 +692,7 @@ controls.target.set(0, 36, 0);
 
 // ---------- pose, câmera, animações ----------
 const ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
-let semTampo = false, legOpt = 'L', build = 5, buildAnim = null, camAnim = null, gav = 0, gavAnim = null, gavOpen = false;
+let semTampo = false, legOpt = 'R', build = 5, buildAnim = null, camAnim = null, gav = 0, gavAnim = null, gavOpen = false;
 function pose() {
   meshes.forEach(m => {
     const p = m.userData.p, k = ease(build - p.step);
@@ -742,10 +748,9 @@ const bT = document.getElementById('t-tampo'), bG = document.getElementById('t-g
 bT.addEventListener('click', () => { semTampo = !semTampo; bT.setAttribute('aria-pressed', semTampo); pose(); });
 bG.addEventListener('click', () => { controls.autoRotate = !controls.autoRotate; bG.setAttribute('aria-pressed', controls.autoRotate); });
 document.getElementById('t-monta').addEventListener('click', () => { build = 0; pose(); assemble(); });
-const bL = document.getElementById('o-L'), bQ = document.getElementById('o-Q');
-const setLeg = v => { legOpt = v; bL.setAttribute('aria-pressed', v === 'L'); bQ.setAttribute('aria-pressed', v === 'Q'); pose(); };
-bL.addEventListener('click', () => setLeg('L'));
-bQ.addEventListener('click', () => setLeg('Q'));
+const OPTS = ['L', 'Q', 'R'], bOpt = OPTS.map(k => document.getElementById('o-' + k));
+const setLeg = v => { legOpt = v; bOpt.forEach((b, i) => b.setAttribute('aria-pressed', OPTS[i] === v)); pose(); };
+bOpt.forEach((b, i) => b.addEventListener('click', () => setLeg(OPTS[i])));
 const bGv = document.getElementById('t-gav');
 bGv.addEventListener('click', () => {
   gavOpen = !gavOpen; bGv.setAttribute('aria-pressed', gavOpen); bGv.textContent = gavOpen ? 'Fechar gaveta' : 'Abrir gaveta';
