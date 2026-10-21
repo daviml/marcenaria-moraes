@@ -1,0 +1,16 @@
+LINHA MODERN - Marcenaria Moraes
+Atualizado em 10/10/2026
+
+Móveis de madeira maciça (nogueira ou jatobá) de linhas retas: pernas de painel (tábua inteira em pé),
+tampo com borda engrossada de 4 cm e cantos arredondados, e NADA à vista: nenhum parafuso, cantoneira,
+dobradiça ou puxador. Gavetas abrem pela cava recortada na madeira. Todas têm a opção "detalhes pretos"
+(base em preto fosco e tampo em madeira), pelo mesmo preço.
+
+Escrivaninha Cerne/       150 × 60 × 76 · desmonta em 4 partes (allen em bucha) · 3 a 4 semanas
+Mesa de Centro Modern/    100 × 60 × 40 · prateleira embaixo · a mais fácil · 2 a 3 semanas
+Aparador Modern/          120 × 35 × 80 · 2 gavetas com cava e prateleira · 3 a 4 semanas
+Linha-Modern-Instagram/   post da linha (7 slides + vídeo peça a peça), vídeo para story/Reels, 6 stories e destaque
+arquivos-de-origem/       modelo 3D das três peças (models.mjs) e os scripts de ficha, fotos, post e vídeo
+_antigo/                  a pasta antiga da Escrivaninha Cerne (fotos, vídeos e ficha da primeira versão)
+
+Cada peça tem ficha, vídeo (Reels, 4:5 e horizontal) e post de 6 itens, sem preço.

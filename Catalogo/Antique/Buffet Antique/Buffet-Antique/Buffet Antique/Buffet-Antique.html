@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buffet Antique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: folha de projeto de marcenaria — cabeçalho curto, vista 3D girável, vistas cotadas, lista de corte e montagem em sequência */
+:root{
+  --bg:#FAF7F3; --paper:#FFFFFF; --ink:#1C1519; --muted:#6B5E66; --line:#E4DAD8;
+  --amora:#4A1C3C; --cerne:#B0782C;
+  --mel-top:#E4B474; --mel-front:#CC9351; --mel-side:#A9733B;
+  --nog-top:#7E5234; --nog-front:#5E3A22; --nog-side:#472A17;
+  --jat-top:#7E3A22; --jat-front:#5C2716; --jat-side:#431B0D;
+  --gl-fill:rgba(190,222,230,.28); --gl-stroke:rgba(110,150,160,.75);
+  --comp-top:#E2C69C; --comp-front:#D2B282; --comp-side:#B89667;
+  --stage:#EEE8E3;
+  --stroke:#4A2E22; --dim:#4A1C3C; --hid:#8C7A84; --scr:#B0782C; --scr-vis:#C23B2E;
+  --f-display:"Bitter",Georgia,serif; --f-body:"Instrument Sans",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 56px}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+.wrap{--w-top:var(--nog-top);--w-front:var(--nog-front);--w-side:var(--nog-side)}
+.wrap.jat{--w-top:var(--jat-top);--w-front:var(--jat-front);--w-side:var(--jat-side)}
+h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;color:var(--ink)}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1}
+h2{font-size:22px;line-height:1.2}
+h3{font:600 17px/1.3 var(--f-display);margin:6px 0 0}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--cerne)}
+header{display:flex;flex-direction:column;gap:10px}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+.specs{display:flex;flex-wrap:wrap;gap:8px 20px;font:500 13px var(--f-mono);color:var(--ink);margin-top:6px}
+.specs span b{color:var(--cerne);font-weight:500}
+section{display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.views,.fin,.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fin{font-size:13px;color:var(--muted)}
+.views button,.chips button,.fin button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--amora);border-color:var(--amora);color:var(--paper)}
+.views button.xr[aria-pressed="true"],.fin button[aria-pressed="true"]{background:var(--cerne);border-color:var(--cerne);color:var(--paper)}
+.chips button[aria-pressed="true"]{border-color:var(--cerne);color:var(--cerne)}
+button:focus-visible{outline:2px solid var(--cerne);outline-offset:2px}
+.iso{display:flex;flex-direction:column;gap:12px}
+.iso svg{width:100%;height:auto;display:block;max-height:640px;background:var(--stage);border-radius:4px}
+[hidden]{display:none!important}
+.legend,.xlegend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.xlegend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:3px;margin-right:6px}
+.prod{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.prod{grid-template-columns:1fr 1fr}}
+.prod .sheet{display:flex;flex-direction:column;gap:8px}
+.prod h3{margin:0}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+dl.facts dt{font:500 12px/1.9 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+dl.facts dd{margin:0}
+.price{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline}
+.price b{font:700 26px/1 var(--f-display);color:var(--cerne)}
+.opts{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:620px){.opts{grid-template-columns:1fr 1fr}}
+.opt{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.opt .sw{display:flex;gap:4px}.opt .sw i{display:block;width:26px;height:14px;border-radius:2px;border:1px solid var(--stroke)}
+.copy{white-space:pre-wrap;font:14px/1.6 var(--f-body);background:var(--bg);border:1px dashed var(--line);border-radius:6px;padding:12px;margin:0}
+.cbtn{align-self:flex-start;font:500 13px var(--f-body);border:1px solid var(--cerne);background:transparent;color:var(--cerne);padding:6px 12px;border-radius:999px;cursor:pointer}
+.pinfo{border:1px solid var(--line);border-left:3px solid var(--cerne);border-radius:6px;padding:10px 14px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.pinfo b.pn{font:600 16px var(--f-display)}
+.pinfo .pd{font:500 18px var(--f-mono);color:var(--cerne)}
+.pinfo .pm{font-size:13px;color:var(--muted)}
+.pinfo button{align-self:flex-start;font:500 12px var(--f-body);border:1px solid var(--line);background:transparent;color:var(--muted);padding:4px 10px;border-radius:999px;cursor:pointer;margin-top:4px}
+.note{font-size:13px;color:var(--muted);margin:0}
+.scroll{overflow-x:auto}
+.ortho svg{display:block;width:100%;min-width:520px;height:auto}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.vt{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+svg text{font-family:var(--f-mono)}
+.d-line{stroke:var(--dim);stroke-width:.25}
+.d-text{fill:var(--dim);font-size:3.2px}
+.lbl{fill:var(--muted);font-size:3px}
+.p-w{fill:var(--w-front);stroke:var(--stroke);stroke-width:.25}
+.p-w2{fill:var(--w-side);stroke:var(--stroke);stroke-width:.25}
+.p-gl{fill:var(--gl-fill);stroke:var(--gl-stroke);stroke-width:.2}
+.p-hid{fill:none;stroke:var(--hid);stroke-width:.25;stroke-dasharray:1.2 .8}
+.p-iron{fill:#1D1B1C}
+ul.keep{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+ul.keep.tight{gap:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mat{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;border:1px solid var(--stroke)}
+.mat.w{background:var(--w-top)}.mat.gl{background:var(--gl-fill);border-color:var(--gl-stroke)}.mat.comp{background:var(--comp-top)}.mat.iron{background:#1D1B1C}
+.tag{font:500 11px var(--f-mono);padding:2px 7px;border-radius:999px;white-space:nowrap}
+.tag.sim{background:color-mix(in srgb,var(--cerne) 18%,transparent);color:var(--cerne)}
+.tag.nao{background:color-mix(in srgb,var(--amora) 14%,transparent);color:var(--amora)}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+ol.steps li::marker{font-family:var(--f-mono);color:var(--cerne)}
+.buy{display:flex;flex-wrap:wrap;gap:12px}
+.buy div{flex:1 1 200px;min-width:0;border-top:2px solid var(--cerne);padding-top:8px}
+.buy b{display:block;font:600 20px var(--f-display)}
+.buy span{color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:no-preference){.iso g.piece{transition:opacity .2s}}
+
+.ortho svg{max-height:640px}
+.grid2 .wide{grid-column:1/-1}
+.model{display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line)}
+.model span{font:500 13px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.model button{font:600 15px var(--f-body);border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:9px 18px;border-radius:999px;cursor:pointer}
+.model button small{font-weight:400;color:var(--muted);margin-left:6px}
+.model button[aria-pressed="true"]{background:var(--amora);border-color:var(--amora);color:var(--paper)}
+.model button[aria-pressed="true"] small{color:var(--paper);opacity:.8}
+#content{display:flex;flex-direction:column;gap:40px}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Marcenaria Moraes · catálogo · ficha do produto</div>
+    <h1>Buffet Antique</h1>
+    <p class="lead">Buffet de madeira maciça da linha Antique, para a sala de jantar, em duas larguras: 150 cm (3 gavetas e 3 portas) e 110 cm (2 gavetas e 2 portas), os dois com 90 de altura e 45 de fundo. Mesmas portas almofadadas e ferragens de época do guarda-roupa e da cristaleira. Escolha o modelo abaixo: a ficha inteira muda.</p>
+  </header>
+  <div class="model" role="group" aria-label="Modelo">
+    <span>Modelo</span>
+    <button type="button" data-v="150" aria-pressed="true">150 cm <small>3 portas</small></button>
+    <button type="button" data-v="110" aria-pressed="false">110 cm <small>2 portas</small></button>
+  </div>
+  <div id="content"></div>
+</div>
+<template id="t150">
+  <section id="produto">
+    <h2>O produto · 150 cm</h2>
+    <p class="lead">Buffet de madeira maciça da linha Antique, para a sala de jantar: três gavetas em cima e três portas almofadadas embaixo, com dobradiças rústicas, puxador concha e argola em ferro preto. Pés de 10 cm e topo com beiral. Cabe a louça, as toalhas e os talheres, e o topo vira aparador para servir.</p>
+    <div class="specs"><span><b>C</b> 150 cm (156 no topo)</span><span><b>P</b> 45 cm</span><span><b>A</b> 90 cm</span><span><b>Madeira</b> nogueira ou jatobá</span><span><b>Post</b> sem preço · valor sob consulta</span></div>
+    <div class="prod">
+      <div class="sheet"><h3>Ficha técnica</h3><dl class="facts"><dt>Nome</dt><dd>Buffet Antique 150</dd><dt>Madeira</dt><dd><b>Nogueira (principal):</b> cambará maciço com tingidor nogueira. <b>Jatobá:</b> madeira de lei, escura por natureza, sem tingidor</dd><dt>Medidas</dt><dd>150 cm de largura × 45 de profundidade × 90 de altura. Topo com beiral de 3 cm (156 × 48)</dd><dt>Vãos</dt><dd>3 vãos de 46 cm, cada um com gaveta em cima (45,2 × 10 úteis, 36 de fundo) e armário com porta e prateleira embaixo</dd><dt>Portas</dt><dd>3 portas almofadadas de 44,1 e 42,6 × 54,6 cm, com 2 dobradiças rústicas de ferro, puxador argola e fecho magnético escondido. Montante de 5 cm na frente de cada divisória</dd><dt>Uso</dt><dd>Louça, travessas e taças atrás das portas; talheres e toalhas nas gavetas; o topo serve de aparador na hora do almoço</dd><dt>Peso</dt><dd>~83 kg na nogueira · ~127 kg no jatobá</dd><dt>Fabricação</dt><dd>Sob encomenda, em Uberlândia. Prazo sugerido: 4 a 5 semanas</dd></dl></div>
+      <div class="sheet">
+        <h3>Custo e preço (uso interno)</h3>
+        <div class="price"><span><b>~R$ 1.000</b><br><span class="note">material, versão nogueira</span></span><span><b>R$ 3.000 a 3.400</b><br><span class="note">preço sugerido · jatobá: R$ 3.900 a 4.300</span></span></div>
+        <p class="note"><b>Não vai no post:</b> no Instagram o buffet aparece como "sob encomenda · valor sob consulta". Conta do planejamento: (R$ 1.000 de material + ~44 h × R$ 30) × 1,3 ≈ R$ 3.020. <b>Jatobá:</b> ~R$ 1.520 de material e ~51 h → <b>R$ 3.900 a 4.300</b>. Buffets rústicos de madeira maciça desse tamanho costumam sair de R$ 2.500 a 5.000.</p>
+        <h3>Por que vale</h3>
+        <ul class="keep tight"><li><b>Madeira maciça de verdade,</b> não MDF. Pode ser lixado e renovado daqui a 20 anos.</li><li><b>Ferragens de época:</b> dobradiças rústicas, puxador concha e argola de ferro preto, da mesma família do guarda-roupa e da cristaleira.</li><li><b>Muito espaço:</b> 3 gavetas e 3 armários com prateleira, 45 cm de fundo para as travessas.</li><li><b>Pés altos:</b> 10 cm livres embaixo para limpar.</li><li><b>Linha Antique:</b> faz par com a Cristaleira Antique na sala de jantar.</li></ul>
+      </div>
+    </div>
+    <h3>Madeiras</h3>
+    <div class="opts">
+      <div class="opt"><div class="sw"><i style="background:var(--nog-top)"></i><i style="background:var(--nog-front)"></i></div><b>Nogueira · principal</b><span class="note">Cambará maciço com tingidor nogueira à base d'água, óleo de linhaça e cera de abelha. Tom de chocolate. Mais leve e mais em conta.</span></div>
+      <div class="opt"><div class="sw"><i style="background:var(--jat-top)"></i><i style="background:var(--jat-front)"></i></div><b>Jatobá · madeira de lei</b><span class="note">Jatobá maciço, escuro por natureza: só óleo e cera. Castanho-avermelhado que escurece com o tempo. Mais dura, mais pesada e mais cara.</span></div>
+    </div>
+    <h3>Texto de venda</h3>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:10px"><p class="copy" id="copyTxt">Buffet Antique 150 🌳
+
+Madeira maciça, portas almofadadas e ferragens de época em ferro.
+
+• 150 × 90 × 45 cm · 3 gavetas e 3 portas
+• Madeira maciça escura: cambará nogueira ou jatobá
+• Dobradiças rústicas, puxador concha e argola de ferro
+• Feito sob encomenda em Uberlândia
+
+Valor sob consulta: chame no direct ou no WhatsApp 📲</p><button type="button" class="cbtn" id="copyBtn">Copiar texto</button></div>
+    <h3>Cuidados (para passar ao cliente)</h3>
+    <ul class="keep tight"><li>Limpe com pano levemente úmido e seque em seguida. Nada de álcool ou lustra-móveis com silicone.</li><li>Use descanso para travessa quente e porta-copos no topo.</li><li>Distribua o peso: louça pesada nas prateleiras de baixo, não tudo num lado só.</li><li>Se a gaveta ficar dura, passe vela no piso dela.</li><li>A cada 3 ou 4 meses, uma camada fina de cera de abelha, lustrada com pano seco.</li></ul>
+  </section>
+
+  <section>
+    <h2>Vista 3D</h2>
+    <div class="sheet iso">
+      <div class="fin" role="group" aria-label="Madeira"><span>Madeira:</span><button type="button" data-fin="nog" aria-pressed="true">Nogueira</button><button type="button" data-fin="jat" aria-pressed="false">Jatobá</button></div>
+      <div class="views" role="group" aria-label="Ângulo da vista">
+        <button type="button" data-view="frente" aria-pressed="true">Frente</button><button type="button" data-view="tras" aria-pressed="false">Trás</button>
+        <button type="button" data-view="aberta" aria-pressed="false">Portas e gavetas abertas</button><button type="button" class="xr" id="xray" aria-pressed="false">Ver parafusos (raio-X)</button>
+      </div>
+      <svg id="iso" role="img" aria-label="Desenho 3D do buffet"></svg>
+      <div class="pinfo" id="pinfo" hidden aria-live="polite"></div>
+      <div class="chips" id="chips" role="group" aria-label="Destacar peça"></div>
+      <div class="legend"><span><span class="mat w"></span>Madeira (nogueira ou jatobá)</span><span><span class="mat comp"></span>Compensado 6 mm (fundos das gavetas)</span><span><span class="mat iron"></span>Ferro</span></div>
+      <div class="xlegend" id="xleg" hidden><span><i style="background:var(--scr)"></i>Parafuso escondido (por dentro ou por baixo)</span><span><i style="background:var(--scr-vis)"></i>Aparece só no fundo, contra a parede</span></div>
+      <p class="note">Toque numa peça para ver as medidas dela. No raio-X, a madeira fica transparente para mostrar os 116 parafusos; gire para "Trás" para ver os do fundo. As ~56 cavilhas não aparecem no desenho.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Vistas cotadas</h2>
+    <p class="note">Medidas em centímetros.</p>
+    <div class="sheet scroll"><table><thead><tr><th>Conferência</th><th>Conta</th><th>Fecha com</th></tr></thead><tbody>
+      <tr><td>Largura</td><td class="num">4 coluna + 46 + 2 divisória + 46 + 2 divisória + 46 + 4 coluna</td><td class="num">150 ✓</td></tr><tr><td>Profundidade</td><td class="num">4 coluna + 35 + 4 coluna + 2 fundo</td><td class="num">45 ✓</td></tr><tr><td>Altura</td><td>10 pé + 4 rodapé + 55 porta + 3 travessa + 13 gaveta + 3 travessa + 2 topo</td><td class="num">90 ✓</td></tr><tr><td>Portas</td><td class="num">vão de 46 − 0,4 de folga − 1,5 de cada montante</td><td class="num">44,1 · 42,6 · 44,1 × 54,6 ✓</td></tr><tr><td>Gavetas</td><td class="num">72 → 85 · frente de 12,6 · 10 úteis</td><td class="num">✓</td></tr><tr><td>Topo</td><td class="num">colunas até 88 + 2; beiral de 3 na frente e nos lados</td><td class="num">156 × 48 ✓</td></tr>
+    </tbody></table></div>
+    <div class="grid2">
+      <div class="sheet ortho wide"><p class="vt">Frente</p><div class="scroll"><svg id="vFront" role="img" aria-label="Vista de frente cotada"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Lateral (lado direito)</p><div class="scroll"><svg id="vSide" role="img" aria-label="Vista lateral cotada"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Uma porta, vista de frente</p><div class="scroll"><svg id="vDoor" role="img" aria-label="Porta cotada"></svg></div></div>
+      <div class="sheet ortho wide"><p class="vt">Corte por cima, logo acima das prateleiras dos armários</p><div class="scroll"><svg id="vPlan" role="img" aria-label="Corte horizontal"></svg></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lista de corte</h2>
+    <div class="sheet scroll"><table><thead><tr><th>Peça</th><th>Qtd</th><th>Medida final</th><th>Material</th><th>Observação</th></tr></thead><tbody>
+<tr><td>Colunas</td><td class="num">4</td><td class="num">88 × 4 × 4</td><td><span class="mat w"></span>Madeira</td><td>Cada uma com 2 ripas de 88 × 4 × 2 coladas. Os 10 cm de baixo são os pés. <b>Veio em pé</b></td></tr>
+<tr><td>Laterais</td><td class="num">2</td><td class="num">78 × 35 × 2</td><td><span class="mat w"></span>Madeira</td><td>Painel inteiro com <b>veio em pé</b> (tábua de 30 + 5 coladas), colado nas duas colunas com cola e 3 cavilhas de cada lado</td></tr>
+<tr><td>Rodapé da frente</td><td class="num">1</td><td class="num">142 × 4 × 2</td><td><span class="mat w"></span>Madeira</td><td>De 10 a 14 cm do chão, de coluna a coluna. 1 cavilha por ponta</td></tr>
+<tr><td>Travessa de cima (frente)</td><td class="num">1</td><td class="num">142 × 3 × 2</td><td><span class="mat w"></span>Madeira</td><td>De 85 a 88 cm, de coluna a coluna. As divisórias encaixam embaixo dela com 1 cavilha</td></tr>
+<tr><td>Travessa de baixo (trás)</td><td class="num">1</td><td class="num">142 × 4 × 2</td><td><span class="mat w"></span>Madeira</td><td>Rente à face de trás das colunas. Segura o piso e o fundo</td></tr>
+<tr><td>Travessa de cima (trás)</td><td class="num">1</td><td class="num">142 × 3 × 2</td><td><span class="mat w"></span>Madeira</td><td>Segura o fundo e o sarrafo do topo</td></tr>
+<tr><td>Montantes da frente</td><td class="num">2</td><td class="num">71 × 5 × 2</td><td><span class="mat w"></span>Madeira</td><td>5 cm de largura, colados na frente de cada divisória (veio em pé). A dobradiça da porta e o batente da vizinha se apoiam nele</td></tr>
+<tr><td>Travessas das gavetas</td><td class="num">3</td><td class="num">46 × 3 × 2</td><td><span class="mat w"></span>Madeira</td><td>Uma por vão, de 69 a 72 cm, entre a gaveta e a porta. 1 cavilha em cada ponta</td></tr>
+<tr><td>Piso</td><td class="num">1</td><td class="num">146 × 39 × 2</td><td><span class="mat w"></span>Madeira</td><td>Inteiro, de lateral a lateral: tábua de 30 + 9 coladas. Recorte de 2 × 2 nas colunas. Furo oval nos lados</td></tr>
+<tr><td>Divisórias</td><td class="num">2</td><td class="num">71 × 41 × 2</td><td><span class="mat w"></span>Madeira</td><td>Em pé sobre o piso, <b>veio em pé</b> (tábua de 30 + 9). A borda da frente aparece entre as portas: lixe bem e arredonde de leve</td></tr>
+<tr><td>Pisos das gavetas</td><td class="num">3</td><td class="num">46 × 39 × 2</td><td><span class="mat w"></span>Madeira</td><td>Um por vão, sobre 2 apoios. A gaveta corre em cima dele (passe vela)</td></tr>
+<tr><td>Prateleiras</td><td class="num">2</td><td class="num">47,3 × 33 × 2</td><td><span class="mat w"></span>Madeira</td><td>Uma por vão, tábua de 30 + 3. Soltas, sobre os apoios, a 40 cm do chão</td></tr>
+<tr><td>Prateleira</td><td class="num">1</td><td class="num">45,6 × 33 × 2</td><td><span class="mat w"></span>Madeira</td><td>Uma por vão, tábua de 30 + 3. Soltas, sobre os apoios, a 40 cm do chão</td></tr>
+<tr><td>Tábuas do fundo</td><td class="num">6</td><td class="num">78 × 24,8 × 2</td><td><span class="mat w"></span>Madeira</td><td>Refile 5,2 cm de cada tábua. <b>Veio em pé</b></td></tr>
+<tr><td>Topo</td><td class="num">1</td><td class="num">156 × 48 × 2</td><td><span class="mat w"></span>Madeira</td><td>Tábua de 30 + 18 coladas, 156 × 48. Beiral de 3 cm na frente e nos lados, bordas arredondadas</td></tr>
+<tr><td>Montantes das portas</td><td class="num">6</td><td class="num">54,6 × 7 × 2</td><td><span class="mat w"></span>Madeira</td><td>Veio em pé</td></tr>
+<tr><td>Travessas das portas</td><td class="num">4</td><td class="num">30,1 × 7 × 2</td><td><span class="mat w"></span>Madeira</td><td>Em cima e embaixo. 2 cavilhas por ponta</td></tr>
+<tr><td>Travessas das portas</td><td class="num">2</td><td class="num">28,6 × 7 × 2</td><td><span class="mat w"></span>Madeira</td><td>Em cima e embaixo. 2 cavilhas por ponta</td></tr>
+<tr><td>Almofadas</td><td class="num">2</td><td class="num">43,6 × 33,1 × 2</td><td><span class="mat w"></span>Madeira</td><td><b>Veio em pé.</b> Tábua inteira atrás do vão, 1,5 cm maior em volta, presa por trás com presilhas, sem cola</td></tr>
+<tr><td>Almofada</td><td class="num">1</td><td class="num">43,6 × 31,6 × 2</td><td><span class="mat w"></span>Madeira</td><td><b>Veio em pé.</b> Tábua inteira atrás do vão, 1,5 cm maior em volta, presa por trás com presilhas, sem cola</td></tr>
+<tr><td>Frentes das gavetas</td><td class="num">2</td><td class="num">44,1 × 12,6 × 2</td><td><span class="mat w"></span>Madeira</td><td>Embutidas, 2 mm de folga. Puxador concha no centro</td></tr>
+<tr><td>Frente da gaveta</td><td class="num">1</td><td class="num">42,6 × 12,6 × 2</td><td><span class="mat w"></span>Madeira</td><td>Embutidas, 2 mm de folga. Puxador concha no centro</td></tr>
+<tr><td>Laterais das gavetas</td><td class="num">6</td><td class="num">36 × 11 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Ripa de 1,5 de espessura. Cola + 2 cavilhas de 6 mm na frente</td></tr>
+<tr><td>Traseiras das gavetas</td><td class="num">2</td><td class="num">40,7 × 10 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Entre as laterais, 1 cm mais baixa</td></tr>
+<tr><td>Traseira da gaveta</td><td class="num">1</td><td class="num">39,2 × 10 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Entre as laterais, 1 cm mais baixa</td></tr>
+<tr><td>Fundos das gavetas</td><td class="num">2</td><td class="num">43,7 × 36 × 0,6</td><td><span class="mat comp"></span>Compensado 6 mm</td><td>Pregado e colado por baixo</td></tr>
+<tr><td>Fundo da gaveta</td><td class="num">1</td><td class="num">42,2 × 36 × 0,6</td><td><span class="mat comp"></span>Compensado 6 mm</td><td>Pregado e colado por baixo</td></tr>
+<tr><td>Apoios do piso (laterais)</td><td class="num">2</td><td class="num">35 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Colados e parafusados nas laterais</td></tr>
+<tr><td>Apoio do piso (frente)</td><td class="num">1</td><td class="num">142 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Atrás do rodapé</td></tr>
+<tr><td>Apoios das prateleiras e das gavetas</td><td class="num">6</td><td class="num">35 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Nas laterais e nas divisórias, 2 parafusos 4 × 30 cada</td></tr>
+<tr><td>Apoios das prateleiras e das gavetas</td><td class="num">6</td><td class="num">33 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Nas laterais e nas divisórias, 2 parafusos 4 × 30 cada</td></tr>
+<tr><td>Batentes das portas</td><td class="num">3</td><td class="num">50 × 3 × 1</td><td><span class="mat w"></span>Madeira</td><td>Colado atrás do montante, na borda livre de cada porta: ela fecha rente. O fecho magnético vai aqui</td></tr>
+<tr><td>Sarrafos do topo</td><td class="num">2</td><td class="num">142 × 3 × 3</td><td><span class="mat w"></span>Sarrafo 3 × 3</td><td>Por dentro das travessas de cima. O topo é parafusado neles por baixo</td></tr>
+<tr><td>Moldura das almofadas</td><td class="num">~4 m</td><td class="num">1 × 1</td><td><span class="mat w"></span>Baguete</td><td>Compre 5 m. Em volta de cada vão das portas, colada só no quadro, com cantos a 45°</td></tr>
+    </tbody></table></div>
+    <p class="note">Ripas e sarrafos escondidos podem ser de pinus com o mesmo tingidor. As portas e gavetas são todas iguais: corte em série, com batente na serra.</p>
+  </section>
+
+  <section>
+    <h2>Como cada peça se prende</h2>
+    <div class="sheet scroll"><table><thead><tr><th>Ligação</th><th>Cola</th><th>Como</th></tr></thead><tbody>
+      <tr><td>Ripas das colunas</td><td><span class="tag sim">sim</span></td><td>Cola nas duas faces, alicates a cada 20 cm. Espere 24 h</td></tr><tr><td>Laterais → colunas</td><td><span class="tag sim">sim</span></td><td>Cola e 3 cavilhas <b>8 × 40</b> em cada coluna. Lateral e coluna têm veio em pé e mexem juntas</td></tr><tr><td>Travessas → colunas</td><td><span class="tag sim">sim</span></td><td>Cavilhas <b>8 × 40</b>, 1 por ponta</td></tr><tr><td>Divisórias</td><td><span class="tag sim">parte</span></td><td>3 parafusos <b>4 × 40</b> por baixo, pelo piso, e 1 cavilha seca em cima, na travessa da frente. Não cole no piso</td></tr><tr><td>Travessas e pisos das gavetas</td><td><span class="tag sim">sim</span></td><td>Travessa com 1 cavilha em cada lado; piso sobre 2 apoios parafusados</td></tr><tr><td>Piso → apoios</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 30</b> de cima para baixo, furo oval nos lados</td></tr><tr><td>Topo → sarrafos</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 40</b> de baixo para cima; furo oval no sarrafo de trás</td></tr><tr><td>Fundo</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 30</b> nas travessas de trás e 4 × 40 nas colunas, por fora. Fresta de 2 mm</td></tr><tr><td>Portas</td><td><span class="tag sim">sim</span></td><td>Quadro com cola e 2 cavilhas por ponta; almofada presa por trás com 4 presilhas, sem cola; moldura colada só no quadro</td></tr><tr><td>Ferragens</td><td><span class="tag nao">não</span></td><td>2 dobradiças por porta (a 22 e 61 cm do chão), puxador argola a 44 cm, entre as dobradiças, e fecho magnético no batente</td></tr><tr><td>Gavetas</td><td><span class="tag sim">sim</span></td><td>Laterais na frente com cola e cavilha de 6 mm, traseira com parafuso 4 × 30, fundo pregado. Vela no piso</td></tr>
+    </tbody></table></div>
+    <p class="note">Furo oval: dois furos de 5 mm encostados, unidos com a broca inclinada, no sentido em que a madeira se mexe (atravessado ao veio). Parafuso: furo-guia de 3 mm e furo de passagem de 5 mm na peça de cima. Cavilha: broca de 8 mm com fita marcando 21 mm de fundo, e marcador de cavilha para os furos baterem.</p>
+  </section>
+
+  <section>
+    <h2>Como esconder os parafusos</h2>
+    <p class="note" style="font-size:14px;color:var(--ink)">São 116 parafusos de madeira e ~56 cavilhas. Na frente e nos lados <b>não aparece nenhum</b>: a estrutura é em cavilha, e os parafusos de apoios, guias, base, frisos e topo entram por dentro ou por baixo.</p>
+    <ul class="keep">
+      <li><b>O que aparece de propósito:</b> dobradiças rústicas, puxadores concha e argolas de ferro preto.</li>
+      <li><b>O fundo</b> leva 22 parafusos por fora, contra a parede.</li>
+      <li><b>Nunca tape os parafusos em furo oval</b> (pisos, topo, fundo): eles precisam deslizar quando a madeira se mexe.</li>
+      <li><b>As presilhas das almofadas</b> ficam por dentro da porta e só aparecem com ela aberta.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Ordem de montagem</h2>
+    <ol class="steps"><li><b>Cole as colunas, as laterais, o piso, as divisórias e o topo</b> (tábuas emendadas). Espere 24 h.</li><li><b>Corte tudo na medida</b> e no esquadro. Lixe antes de montar (80 → 120 → 180).</li><li><b>Monte as duas laterais</b> (coluna + lateral + coluna) e cole os apoios.</li><li><b>Una as laterais</b> com as 4 travessas da frente e de trás. Confira as diagonais e espere 24 h.</li><li><b>Piso, divisórias, travessas e pisos das gavetas</b>, com os parafusos por baixo.</li><li><b>Sarrafos e topo</b>, com os furos ovais. <b>Fundo.</b></li><li><b>Portas:</b> as 3 em série, quadro, almofada e moldura; prove e ajuste até 2 mm de folga. Faça as 3 gavetas.</li><li><b>Acabamento:</b> nogueira = tingidor + 3 demãos de óleo de linhaça + cera; jatobá = só óleo e cera. Por dentro também.</li><li><b>Ferragens:</b> dobradiças, puxadores, fechos magnéticos e feltros nos pés.</li></ol>
+  </section>
+
+  <section>
+    <h2>O que comprar</h2>
+    <p class="note">Para um buffet de 150 cm, versão nogueira.</p>
+    <div class="buy"><div><b>~28 m de cambará</b><span>tábua de 30 × 2 cm · ~R$ 495. Topo, piso, laterais, divisórias, fundo, portas, gavetas e colunas (versão nogueira)</span></div><div><b>ou ~28 m de jatobá</b><span>mesma tábua, para a versão jatobá · ~R$ 1065 no lugar do cambará</span></div><div><b>Ripas e sarrafos</b><span>~8 m de ripa 2 × 2 e 3,5 m de sarrafo 3 × 3 (pinus serve, por dentro) · ~R$ 40</span></div><div><b>5 m de moldura 1 × 1</b><span>baguete em volta das almofadas · ~R$ 10</span></div><div><b>Ferragens de época</b><span>6 dobradiças rústicas de ferro preto (chapa de ~10 cm), 3 puxadores concha e 3 puxadores argola, + 4 feltros para os pés · ~R$ 215</span></div><div><b>Fixação</b><span>56 cavilhas 8 × 40 + 85 parafusos 4 × 30 + 50 de 4 × 40 + 12 presilhas para as almofadas + 3 fechos magnéticos · ~R$ 45</span></div><div><b>Compensado 6 mm</b><span>fundos das 3 gavetas, 43,7 × 36 cada · ~R$ 30</span></div><div><b>Acabamento</b><span>óleo de linhaça cozido 900 ml e cera de abelha (~R$ 80). Nogueira: + tingidor (~R$ 45); no jatobá não precisa</span></div><div><b>Consumo</b><span>lixas 80, 120, 180 e 220 · ~R$ 35</span></div></div>
+    <p class="note"><b>Custo total: ~R$ 1.000 (nogueira) ou ~R$ 1.520 (jatobá).</b> Você já tem cola, alicates e tico-tico. A plaina manual ajuda muito no ajuste das portas.</p>
+  </section></template>
+<template id="t110">
+  <section id="produto">
+    <h2>O produto · 110 cm</h2>
+    <p class="lead">A versão menor do Buffet Antique, para salas e apartamentos compactos: duas gavetas e duas portas almofadadas, com as mesmas ferragens de época. Também serve como cômoda baixa ou aparador de hall.</p>
+    <div class="specs"><span><b>C</b> 110 cm (116 no topo)</span><span><b>P</b> 45 cm</span><span><b>A</b> 90 cm</span><span><b>Madeira</b> nogueira ou jatobá</span><span><b>Post</b> sem preço · valor sob consulta</span></div>
+    <div class="prod">
+      <div class="sheet"><h3>Ficha técnica</h3><dl class="facts"><dt>Nome</dt><dd>Buffet Antique 110</dd><dt>Madeira</dt><dd><b>Nogueira (principal):</b> cambará maciço com tingidor nogueira. <b>Jatobá:</b> madeira de lei, escura por natureza, sem tingidor</dd><dt>Medidas</dt><dd>110 cm de largura × 45 de profundidade × 90 de altura. Topo com beiral de 3 cm (116 × 48)</dd><dt>Vãos</dt><dd>2 vãos de 50 cm, cada um com gaveta em cima (49,2 × 10 úteis, 36 de fundo) e armário com porta e prateleira embaixo</dd><dt>Portas</dt><dd>2 portas almofadadas de 48,1 × 54,6 cm, com 2 dobradiças rústicas de ferro, puxador argola e fecho magnético escondido. Montante de 5 cm na frente de cada divisória</dd><dt>Uso</dt><dd>Louça, travessas e taças atrás das portas; talheres e toalhas nas gavetas; o topo serve de aparador na hora do almoço</dd><dt>Peso</dt><dd>~62 kg na nogueira · ~94 kg no jatobá</dd><dt>Fabricação</dt><dd>Sob encomenda, em Uberlândia. Prazo sugerido: 3 a 4 semanas</dd></dl></div>
+      <div class="sheet">
+        <h3>Custo e preço (uso interno)</h3>
+        <div class="price"><span><b>~R$ 750</b><br><span class="note">material, versão nogueira</span></span><span><b>R$ 2.300 a 2.700</b><br><span class="note">preço sugerido · jatobá: R$ 2.900 a 3.300</span></span></div>
+        <p class="note"><b>Não vai no post:</b> no Instagram o buffet aparece como "sob encomenda · valor sob consulta". Conta do planejamento: (R$ 750 de material + ~34 h × R$ 30) × 1,3 ≈ R$ 2.300. <b>Jatobá:</b> ~R$ 1.130 de material e ~39 h → <b>R$ 2.900 a 3.300</b>. Buffets rústicos de madeira maciça desse tamanho costumam sair de R$ 2.500 a 5.000.</p>
+        <h3>Por que vale</h3>
+        <ul class="keep tight"><li><b>Madeira maciça de verdade,</b> não MDF. Pode ser lixado e renovado daqui a 20 anos.</li><li><b>Ferragens de época:</b> dobradiças rústicas, puxador concha e argola de ferro preto, da mesma família do guarda-roupa e da cristaleira.</li><li><b>Muito espaço:</b> 2 gavetas e 2 armários com prateleira, 45 cm de fundo para as travessas.</li><li><b>Pés altos:</b> 10 cm livres embaixo para limpar.</li><li><b>Linha Antique:</b> faz par com a Cristaleira Antique na sala de jantar.</li></ul>
+      </div>
+    </div>
+    <h3>Madeiras</h3>
+    <div class="opts">
+      <div class="opt"><div class="sw"><i style="background:var(--nog-top)"></i><i style="background:var(--nog-front)"></i></div><b>Nogueira · principal</b><span class="note">Cambará maciço com tingidor nogueira à base d'água, óleo de linhaça e cera de abelha. Tom de chocolate. Mais leve e mais em conta.</span></div>
+      <div class="opt"><div class="sw"><i style="background:var(--jat-top)"></i><i style="background:var(--jat-front)"></i></div><b>Jatobá · madeira de lei</b><span class="note">Jatobá maciço, escuro por natureza: só óleo e cera. Castanho-avermelhado que escurece com o tempo. Mais dura, mais pesada e mais cara.</span></div>
+    </div>
+    <h3>Texto de venda</h3>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:10px"><p class="copy" id="copyTxt">Buffet Antique 110 🌳
+
+Madeira maciça, portas almofadadas e ferragens de época em ferro.
+
+• 110 × 90 × 45 cm · 2 gavetas e 2 portas
+• Madeira maciça escura: cambará nogueira ou jatobá
+• Dobradiças rústicas, puxador concha e argola de ferro
+• Feito sob encomenda em Uberlândia
+
+Valor sob consulta: chame no direct ou no WhatsApp 📲</p><button type="button" class="cbtn" id="copyBtn">Copiar texto</button></div>
+    <h3>Cuidados (para passar ao cliente)</h3>
+    <ul class="keep tight"><li>Limpe com pano levemente úmido e seque em seguida. Nada de álcool ou lustra-móveis com silicone.</li><li>Use descanso para travessa quente e porta-copos no topo.</li><li>Distribua o peso: louça pesada nas prateleiras de baixo, não tudo num lado só.</li><li>Se a gaveta ficar dura, passe vela no piso dela.</li><li>A cada 3 ou 4 meses, uma camada fina de cera de abelha, lustrada com pano seco.</li></ul>
+  </section>
+
+  <section>
+    <h2>Vista 3D</h2>
+    <div class="sheet iso">
+      <div class="fin" role="group" aria-label="Madeira"><span>Madeira:</span><button type="button" data-fin="nog" aria-pressed="true">Nogueira</button><button type="button" data-fin="jat" aria-pressed="false">Jatobá</button></div>
+      <div class="views" role="group" aria-label="Ângulo da vista">
+        <button type="button" data-view="frente" aria-pressed="true">Frente</button><button type="button" data-view="tras" aria-pressed="false">Trás</button>
+        <button type="button" data-view="aberta" aria-pressed="false">Portas e gavetas abertas</button><button type="button" class="xr" id="xray" aria-pressed="false">Ver parafusos (raio-X)</button>
+      </div>
+      <svg id="iso" role="img" aria-label="Desenho 3D do buffet"></svg>
+      <div class="pinfo" id="pinfo" hidden aria-live="polite"></div>
+      <div class="chips" id="chips" role="group" aria-label="Destacar peça"></div>
+      <div class="legend"><span><span class="mat w"></span>Madeira (nogueira ou jatobá)</span><span><span class="mat comp"></span>Compensado 6 mm (fundos das gavetas)</span><span><span class="mat iron"></span>Ferro</span></div>
+      <div class="xlegend" id="xleg" hidden><span><i style="background:var(--scr)"></i>Parafuso escondido (por dentro ou por baixo)</span><span><i style="background:var(--scr-vis)"></i>Aparece só no fundo, contra a parede</span></div>
+      <p class="note">Toque numa peça para ver as medidas dela. No raio-X, a madeira fica transparente para mostrar os 85 parafusos; gire para "Trás" para ver os do fundo. As ~44 cavilhas não aparecem no desenho.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Vistas cotadas</h2>
+    <p class="note">Medidas em centímetros.</p>
+    <div class="sheet scroll"><table><thead><tr><th>Conferência</th><th>Conta</th><th>Fecha com</th></tr></thead><tbody>
+      <tr><td>Largura</td><td class="num">4 coluna + 50 + 2 divisória + 50 + 4 coluna</td><td class="num">110 ✓</td></tr><tr><td>Profundidade</td><td class="num">4 coluna + 35 + 4 coluna + 2 fundo</td><td class="num">45 ✓</td></tr><tr><td>Altura</td><td>10 pé + 4 rodapé + 55 porta + 3 travessa + 13 gaveta + 3 travessa + 2 topo</td><td class="num">90 ✓</td></tr><tr><td>Portas</td><td class="num">vão de 50 − 0,4 de folga − 1,5 de cada montante</td><td class="num">48,1 · 48,1 × 54,6 ✓</td></tr><tr><td>Gavetas</td><td class="num">72 → 85 · frente de 12,6 · 10 úteis</td><td class="num">✓</td></tr><tr><td>Topo</td><td class="num">colunas até 88 + 2; beiral de 3 na frente e nos lados</td><td class="num">116 × 48 ✓</td></tr>
+    </tbody></table></div>
+    <div class="grid2">
+      <div class="sheet ortho wide"><p class="vt">Frente</p><div class="scroll"><svg id="vFront" role="img" aria-label="Vista de frente cotada"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Lateral (lado direito)</p><div class="scroll"><svg id="vSide" role="img" aria-label="Vista lateral cotada"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Uma porta, vista de frente</p><div class="scroll"><svg id="vDoor" role="img" aria-label="Porta cotada"></svg></div></div>
+      <div class="sheet ortho wide"><p class="vt">Corte por cima, logo acima das prateleiras dos armários</p><div class="scroll"><svg id="vPlan" role="img" aria-label="Corte horizontal"></svg></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lista de corte</h2>
+    <div class="sheet scroll"><table><thead><tr><th>Peça</th><th>Qtd</th><th>Medida final</th><th>Material</th><th>Observação</th></tr></thead><tbody>
+<tr><td>Colunas</td><td class="num">4</td><td class="num">88 × 4 × 4</td><td><span class="mat w"></span>Madeira</td><td>Cada uma com 2 ripas de 88 × 4 × 2 coladas. Os 10 cm de baixo são os pés. <b>Veio em pé</b></td></tr>
+<tr><td>Laterais</td><td class="num">2</td><td class="num">78 × 35 × 2</td><td><span class="mat w"></span>Madeira</td><td>Painel inteiro com <b>veio em pé</b> (tábua de 30 + 5 coladas), colado nas duas colunas com cola e 3 cavilhas de cada lado</td></tr>
+<tr><td>Rodapé da frente</td><td class="num">1</td><td class="num">102 × 4 × 2</td><td><span class="mat w"></span>Madeira</td><td>De 10 a 14 cm do chão, de coluna a coluna. 1 cavilha por ponta</td></tr>
+<tr><td>Travessa de cima (frente)</td><td class="num">1</td><td class="num">102 × 3 × 2</td><td><span class="mat w"></span>Madeira</td><td>De 85 a 88 cm, de coluna a coluna. As divisórias encaixam embaixo dela com 1 cavilha</td></tr>
+<tr><td>Travessa de baixo (trás)</td><td class="num">1</td><td class="num">102 × 4 × 2</td><td><span class="mat w"></span>Madeira</td><td>Rente à face de trás das colunas. Segura o piso e o fundo</td></tr>
+<tr><td>Travessa de cima (trás)</td><td class="num">1</td><td class="num">102 × 3 × 2</td><td><span class="mat w"></span>Madeira</td><td>Segura o fundo e o sarrafo do topo</td></tr>
+<tr><td>Montante da frente</td><td class="num">1</td><td class="num">71 × 5 × 2</td><td><span class="mat w"></span>Madeira</td><td>5 cm de largura, colados na frente de cada divisória (veio em pé). A dobradiça da porta e o batente da vizinha se apoiam nele</td></tr>
+<tr><td>Travessas das gavetas</td><td class="num">2</td><td class="num">50 × 3 × 2</td><td><span class="mat w"></span>Madeira</td><td>Uma por vão, de 69 a 72 cm, entre a gaveta e a porta. 1 cavilha em cada ponta</td></tr>
+<tr><td>Piso</td><td class="num">1</td><td class="num">106 × 39 × 2</td><td><span class="mat w"></span>Madeira</td><td>Inteiro, de lateral a lateral: tábua de 30 + 9 coladas. Recorte de 2 × 2 nas colunas. Furo oval nos lados</td></tr>
+<tr><td>Divisória</td><td class="num">1</td><td class="num">71 × 41 × 2</td><td><span class="mat w"></span>Madeira</td><td>Em pé sobre o piso, <b>veio em pé</b> (tábua de 30 + 9). A borda da frente aparece entre as portas: lixe bem e arredonde de leve</td></tr>
+<tr><td>Pisos das gavetas</td><td class="num">2</td><td class="num">50 × 39 × 2</td><td><span class="mat w"></span>Madeira</td><td>Um por vão, sobre 2 apoios. A gaveta corre em cima dele (passe vela)</td></tr>
+<tr><td>Prateleiras</td><td class="num">2</td><td class="num">51,3 × 33 × 2</td><td><span class="mat w"></span>Madeira</td><td>Uma por vão, tábua de 30 + 3. Soltas, sobre os apoios, a 40 cm do chão</td></tr>
+<tr><td>Tábuas do fundo</td><td class="num">3</td><td class="num">78 × 27,4 × 2</td><td><span class="mat w"></span>Madeira</td><td>Refile 2,6 cm de cada tábua. <b>Veio em pé</b></td></tr>
+<tr><td>Tábua do fundo</td><td class="num">1</td><td class="num">78 × 27,3 × 2</td><td><span class="mat w"></span>Madeira</td><td>Refile 2,6 cm de cada tábua. <b>Veio em pé</b></td></tr>
+<tr><td>Topo</td><td class="num">1</td><td class="num">116 × 48 × 2</td><td><span class="mat w"></span>Madeira</td><td>Tábua de 30 + 18 coladas, 116 × 48. Beiral de 3 cm na frente e nos lados, bordas arredondadas</td></tr>
+<tr><td>Montantes das portas</td><td class="num">4</td><td class="num">54,6 × 7 × 2</td><td><span class="mat w"></span>Madeira</td><td>Veio em pé</td></tr>
+<tr><td>Travessas das portas</td><td class="num">4</td><td class="num">34,1 × 7 × 2</td><td><span class="mat w"></span>Madeira</td><td>Em cima e embaixo. 2 cavilhas por ponta</td></tr>
+<tr><td>Almofadas</td><td class="num">2</td><td class="num">43,6 × 37,1 × 2</td><td><span class="mat w"></span>Madeira</td><td><b>Veio em pé.</b> Tábua inteira atrás do vão, 1,5 cm maior em volta, presa por trás com presilhas, sem cola</td></tr>
+<tr><td>Frentes das gavetas</td><td class="num">2</td><td class="num">48,1 × 12,6 × 2</td><td><span class="mat w"></span>Madeira</td><td>Embutidas, 2 mm de folga. Puxador concha no centro</td></tr>
+<tr><td>Laterais das gavetas</td><td class="num">4</td><td class="num">36 × 11 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Ripa de 1,5 de espessura. Cola + 2 cavilhas de 6 mm na frente</td></tr>
+<tr><td>Traseiras das gavetas</td><td class="num">2</td><td class="num">44,7 × 10 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Entre as laterais, 1 cm mais baixa</td></tr>
+<tr><td>Fundos das gavetas</td><td class="num">2</td><td class="num">47,7 × 36 × 0,6</td><td><span class="mat comp"></span>Compensado 6 mm</td><td>Pregado e colado por baixo</td></tr>
+<tr><td>Apoios do piso (laterais)</td><td class="num">2</td><td class="num">35 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Colados e parafusados nas laterais</td></tr>
+<tr><td>Apoio do piso (frente)</td><td class="num">1</td><td class="num">102 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Atrás do rodapé</td></tr>
+<tr><td>Apoios das prateleiras e das gavetas</td><td class="num">4</td><td class="num">35 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Nas laterais e nas divisórias, 2 parafusos 4 × 30 cada</td></tr>
+<tr><td>Apoios das prateleiras e das gavetas</td><td class="num">4</td><td class="num">33 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Nas laterais e nas divisórias, 2 parafusos 4 × 30 cada</td></tr>
+<tr><td>Batentes das portas</td><td class="num">2</td><td class="num">50 × 3 × 1</td><td><span class="mat w"></span>Madeira</td><td>Colado atrás do montante, na borda livre de cada porta: ela fecha rente. O fecho magnético vai aqui</td></tr>
+<tr><td>Sarrafos do topo</td><td class="num">2</td><td class="num">102 × 3 × 3</td><td><span class="mat w"></span>Sarrafo 3 × 3</td><td>Por dentro das travessas de cima. O topo é parafusado neles por baixo</td></tr>
+<tr><td>Moldura das almofadas</td><td class="num">~3 m</td><td class="num">1 × 1</td><td><span class="mat w"></span>Baguete</td><td>Compre 4 m. Em volta de cada vão das portas, colada só no quadro, com cantos a 45°</td></tr>
+    </tbody></table></div>
+    <p class="note">Ripas e sarrafos escondidos podem ser de pinus com o mesmo tingidor. As portas e gavetas são todas iguais: corte em série, com batente na serra.</p>
+  </section>
+
+  <section>
+    <h2>Como cada peça se prende</h2>
+    <div class="sheet scroll"><table><thead><tr><th>Ligação</th><th>Cola</th><th>Como</th></tr></thead><tbody>
+      <tr><td>Ripas das colunas</td><td><span class="tag sim">sim</span></td><td>Cola nas duas faces, alicates a cada 20 cm. Espere 24 h</td></tr><tr><td>Laterais → colunas</td><td><span class="tag sim">sim</span></td><td>Cola e 3 cavilhas <b>8 × 40</b> em cada coluna. Lateral e coluna têm veio em pé e mexem juntas</td></tr><tr><td>Travessas → colunas</td><td><span class="tag sim">sim</span></td><td>Cavilhas <b>8 × 40</b>, 1 por ponta</td></tr><tr><td>Divisórias</td><td><span class="tag sim">parte</span></td><td>3 parafusos <b>4 × 40</b> por baixo, pelo piso, e 1 cavilha seca em cima, na travessa da frente. Não cole no piso</td></tr><tr><td>Travessas e pisos das gavetas</td><td><span class="tag sim">sim</span></td><td>Travessa com 1 cavilha em cada lado; piso sobre 2 apoios parafusados</td></tr><tr><td>Piso → apoios</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 30</b> de cima para baixo, furo oval nos lados</td></tr><tr><td>Topo → sarrafos</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 40</b> de baixo para cima; furo oval no sarrafo de trás</td></tr><tr><td>Fundo</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 30</b> nas travessas de trás e 4 × 40 nas colunas, por fora. Fresta de 2 mm</td></tr><tr><td>Portas</td><td><span class="tag sim">sim</span></td><td>Quadro com cola e 2 cavilhas por ponta; almofada presa por trás com 4 presilhas, sem cola; moldura colada só no quadro</td></tr><tr><td>Ferragens</td><td><span class="tag nao">não</span></td><td>2 dobradiças por porta (a 22 e 61 cm do chão), puxador argola a 44 cm, entre as dobradiças, e fecho magnético no batente</td></tr><tr><td>Gavetas</td><td><span class="tag sim">sim</span></td><td>Laterais na frente com cola e cavilha de 6 mm, traseira com parafuso 4 × 30, fundo pregado. Vela no piso</td></tr>
+    </tbody></table></div>
+    <p class="note">Furo oval: dois furos de 5 mm encostados, unidos com a broca inclinada, no sentido em que a madeira se mexe (atravessado ao veio). Parafuso: furo-guia de 3 mm e furo de passagem de 5 mm na peça de cima. Cavilha: broca de 8 mm com fita marcando 21 mm de fundo, e marcador de cavilha para os furos baterem.</p>
+  </section>
+
+  <section>
+    <h2>Como esconder os parafusos</h2>
+    <p class="note" style="font-size:14px;color:var(--ink)">São 85 parafusos de madeira e ~44 cavilhas. Na frente e nos lados <b>não aparece nenhum</b>: a estrutura é em cavilha, e os parafusos de apoios, guias, base, frisos e topo entram por dentro ou por baixo.</p>
+    <ul class="keep">
+      <li><b>O que aparece de propósito:</b> dobradiças rústicas, puxadores concha e argolas de ferro preto.</li>
+      <li><b>O fundo</b> leva 16 parafusos por fora, contra a parede.</li>
+      <li><b>Nunca tape os parafusos em furo oval</b> (pisos, topo, fundo): eles precisam deslizar quando a madeira se mexe.</li>
+      <li><b>As presilhas das almofadas</b> ficam por dentro da porta e só aparecem com ela aberta.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Ordem de montagem</h2>
+    <ol class="steps"><li><b>Cole as colunas, as laterais, o piso, as divisórias e o topo</b> (tábuas emendadas). Espere 24 h.</li><li><b>Corte tudo na medida</b> e no esquadro. Lixe antes de montar (80 → 120 → 180).</li><li><b>Monte as duas laterais</b> (coluna + lateral + coluna) e cole os apoios.</li><li><b>Una as laterais</b> com as 4 travessas da frente e de trás. Confira as diagonais e espere 24 h.</li><li><b>Piso, divisórias, travessas e pisos das gavetas</b>, com os parafusos por baixo.</li><li><b>Sarrafos e topo</b>, com os furos ovais. <b>Fundo.</b></li><li><b>Portas:</b> as 2 em série, quadro, almofada e moldura; prove e ajuste até 2 mm de folga. Faça as 2 gavetas.</li><li><b>Acabamento:</b> nogueira = tingidor + 3 demãos de óleo de linhaça + cera; jatobá = só óleo e cera. Por dentro também.</li><li><b>Ferragens:</b> dobradiças, puxadores, fechos magnéticos e feltros nos pés.</li></ol>
+  </section>
+
+  <section>
+    <h2>O que comprar</h2>
+    <p class="note">Para um buffet de 110 cm, versão nogueira.</p>
+    <div class="buy"><div><b>~21 m de cambará</b><span>tábua de 30 × 2 cm · ~R$ 370. Topo, piso, laterais, divisórias, fundo, portas, gavetas e colunas (versão nogueira)</span></div><div><b>ou ~21 m de jatobá</b><span>mesma tábua, para a versão jatobá · ~R$ 800 no lugar do cambará</span></div><div><b>Ripas e sarrafos</b><span>~6 m de ripa 2 × 2 e 2,5 m de sarrafo 3 × 3 (pinus serve, por dentro) · ~R$ 30</span></div><div><b>4 m de moldura 1 × 1</b><span>baguete em volta das almofadas · ~R$ 5</span></div><div><b>Ferragens de época</b><span>4 dobradiças rústicas de ferro preto (chapa de ~10 cm), 2 puxadores concha e 2 puxadores argola, + 4 feltros para os pés · ~R$ 140</span></div><div><b>Fixação</b><span>44 cavilhas 8 × 40 + 60 parafusos 4 × 30 + 35 de 4 × 40 + 8 presilhas para as almofadas + 2 fechos magnéticos · ~R$ 35</span></div><div><b>Compensado 6 mm</b><span>fundos das 2 gavetas, 47,7 × 36 cada · ~R$ 20</span></div><div><b>Acabamento</b><span>óleo de linhaça cozido 900 ml e cera de abelha (~R$ 65). Nogueira: + tingidor (~R$ 45); no jatobá não precisa</span></div><div><b>Consumo</b><span>lixas 80, 120, 180 e 220 · ~R$ 35</span></div></div>
+    <p class="note"><b>Custo total: ~R$ 750 (nogueira) ou ~R$ 1.130 (jatobá).</b> Você já tem cola, alicates e tico-tico. A plaina manual ajuda muito no ajuste das portas.</p>
+  </section></template>
+<script>
+const DATA={150:{"PARTS":[{"id":"colFE","g":"colunas","b":[0,0,0,4,4,88],"m":"madeira","u":"col"},{"id":"colFD","g":"colunas","b":[146,0,0,150,4,88],"m":"madeira","u":"col"},{"id":"colTE","g":"colunas","b":[0,39,0,4,43,88],"m":"madeira","u":"col"},{"id":"colTD","g":"colunas","b":[146,39,0,150,43,88],"m":"madeira","u":"col"},{"id":"latE","g":"laterais","b":[0,4,10,2,39,88],"m":"madeira","u":"lat"},{"id":"latD","g":"laterais","b":[148,4,10,150,39,88],"m":"madeira","u":"lat"},{"id":"tfInf","g":"travessas","b":[4,0,10,146,2,14],"m":"madeira","u":"tfInf"},{"id":"tfSup","g":"travessas","b":[4,0,85,146,2,88],"m":"madeira","u":"tfSup"},{"id":"ttInf","g":"travessas","b":[4,41,10,146,43,14],"m":"madeira","u":"ttInf"},{"id":"ttSup","g":"travessas","b":[4,41,85,146,43,88],"m":"madeira","u":"ttSup"},{"id":"piso","g":"pisos","b":[2,2,12,148,41,14],"m":"madeira","u":"piso"},{"id":"div0","g":"divisorias","b":[50,0,14,52,41,85],"m":"madeira","u":"div"},{"id":"div1","g":"divisorias","b":[98,0,14,100,41,85],"m":"madeira","u":"div"},{"id":"mont0","g":"travessas","b":[48.5,0,14,53.5,2,85],"m":"madeira","u":"mont"},{"id":"mont1","g":"travessas","b":[96.5,0,14,101.5,2,85],"m":"madeira","u":"mont"},{"id":"apPE","g":"apoios","b":[2,4,10,4,39,12],"m":"madeira","u":"apPiso"},{"id":"apPD","g":"apoios","b":[146,4,10,148,39,12],"m":"madeira","u":"apPiso"},{"id":"apPF","g":"apoios","b":[4,2,10,146,4,12],"m":"madeira","u":"apPisoF"},{"id":"tfG1","g":"travessas","b":[4,0,69,50,2,72],"m":"madeira","u":"tfGav"},{"id":"pisoG1","g":"pisos","b":[4,2,70,50,41,72],"m":"madeira","u":"pisoG"},{"id":"apGE1","g":"apoios","b":[2,4,68,4,39,70],"m":"madeira","u":"apPr"},{"id":"apGD1","g":"apoios","b":[48,4,68,50,39,70],"m":"madeira","u":"apPr"},{"id":"apLE1","g":"apoios","b":[2,6,38,4,39,40],"m":"madeira","u":"apPr"},{"id":"apLD1","g":"apoios","b":[48,6,38,50,39,40],"m":"madeira","u":"apPr"},{"id":"pr1","g":"prateleiras","b":[2.5,6,40,49.8,39,42],"m":"madeira","u":"prat"},{"id":"pMontE1","g":"porta","b":[4.2,0,14.2,11.2,2,68.8],"m":"madeira","u":"pMont","door":1},{"id":"pMontD1","g":"porta","b":[41.3,0,14.2,48.3,2,68.8],"m":"madeira","u":"pMont","door":1},{"id":"pTrInf1","g":"porta","b":[11.2,0,14.2,41.3,2,21.2],"m":"madeira","u":"pTr","door":1},{"id":"pTrSup1","g":"porta","b":[11.2,0,61.8,41.3,2,68.8],"m":"madeira","u":"pTr","door":1},{"id":"alm1","g":"porta","b":[9.7,2,19.7,42.8,4,63.3],"m":"madeira","u":"alm","door":1},{"id":"mo11","g":"moldura","b":[11.2,1,21.2,41.3,2,22.2],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"mo12","g":"moldura","b":[11.2,1,60.8,41.3,2,61.8],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"mo13","g":"moldura","b":[11.2,1,22.2,12.2,2,60.8],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"mo14","g":"moldura","b":[40.3,1,22.2,41.3,2,60.8],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"bat1","g":"apoios","b":[47,2,16,50,3,66],"m":"madeira","u":"bat"},{"id":"gF1","g":"gaveta","b":[4.2,0,72.2,48.3,2,84.8],"m":"madeira","u":"gF","drawer":1},{"id":"gLE1","g":"gaveta","b":[4.4,2,72.6,5.9,38,83.6],"m":"madeira","u":"gL","drawer":1},{"id":"gLD1","g":"gaveta","b":[46.6,2,72.6,48.1,38,83.6],"m":"madeira","u":"gL","drawer":1},{"id":"gT1","g":"gaveta","b":[5.9,36.5,72.6,46.6,38,82.6],"m":"madeira","u":"gT","drawer":1},{"id":"gFu1","g":"gaveta","b":[4.4,2,72,48.1,38,72.6],"m":"comp","u":"gFu","drawer":1},{"id":"tfG2","g":"travessas","b":[52,0,69,98,2,72],"m":"madeira","u":"tfGav"},{"id":"pisoG2","g":"pisos","b":[52,2,70,98,41,72],"m":"madeira","u":"pisoG"},{"id":"apGE2","g":"apoios","b":[52,4,68,54,39,70],"m":"madeira","u":"apPr"},{"id":"apGD2","g":"apoios","b":[96,4,68,98,39,70],"m":"madeira","u":"apPr"},{"id":"apLE2","g":"apoios","b":[52,6,38,54,39,40],"m":"madeira","u":"apPr"},{"id":"apLD2","g":"apoios","b":[96,6,38,98,39,40],"m":"madeira","u":"apPr"},{"id":"pr2","g":"prateleiras","b":[52.2,6,40,97.8,39,42],"m":"madeira","u":"prat"},{"id":"pMontE2","g":"porta","b":[53.7,0,14.2,60.7,2,68.8],"m":"madeira","u":"pMont","door":2},{"id":"pMontD2","g":"porta","b":[89.3,0,14.2,96.3,2,68.8],"m":"madeira","u":"pMont","door":2},{"id":"pTrInf2","g":"porta","b":[60.7,0,14.2,89.3,2,21.2],"m":"madeira","u":"pTr","door":2},{"id":"pTrSup2","g":"porta","b":[60.7,0,61.8,89.3,2,68.8],"m":"madeira","u":"pTr","door":2},{"id":"alm2","g":"porta","b":[59.2,2,19.7,90.8,4,63.3],"m":"madeira","u":"alm","door":2},{"id":"mo21","g":"moldura","b":[60.7,1,21.2,89.3,2,22.2],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"mo22","g":"moldura","b":[60.7,1,60.8,89.3,2,61.8],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"mo23","g":"moldura","b":[60.7,1,22.2,61.7,2,60.8],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"mo24","g":"moldura","b":[88.3,1,22.2,89.3,2,60.8],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"bat2","g":"apoios","b":[52,2,16,55,3,66],"m":"madeira","u":"bat"},{"id":"gF2","g":"gaveta","b":[53.7,0,72.2,96.3,2,84.8],"m":"madeira","u":"gF","drawer":2},{"id":"gLE2","g":"gaveta","b":[53.9,2,72.6,55.4,38,83.6],"m":"madeira","u":"gL","drawer":2},{"id":"gLD2","g":"gaveta","b":[94.6,2,72.6,96.1,38,83.6],"m":"madeira","u":"gL","drawer":2},{"id":"gT2","g":"gaveta","b":[55.4,36.5,72.6,94.6,38,82.6],"m":"madeira","u":"gT","drawer":2},{"id":"gFu2","g":"gaveta","b":[53.9,2,72,96.1,38,72.6],"m":"comp","u":"gFu","drawer":2},{"id":"tfG3","g":"travessas","b":[100,0,69,146,2,72],"m":"madeira","u":"tfGav"},{"id":"pisoG3","g":"pisos","b":[100,2,70,146,41,72],"m":"madeira","u":"pisoG"},{"id":"apGE3","g":"apoios","b":[100,4,68,102,39,70],"m":"madeira","u":"apPr"},{"id":"apGD3","g":"apoios","b":[146,4,68,148,39,70],"m":"madeira","u":"apPr"},{"id":"apLE3","g":"apoios","b":[100,6,38,102,39,40],"m":"madeira","u":"apPr"},{"id":"apLD3","g":"apoios","b":[146,6,38,148,39,40],"m":"madeira","u":"apPr"},{"id":"pr3","g":"prateleiras","b":[100.2,6,40,147.5,39,42],"m":"madeira","u":"prat"},{"id":"pMontE3","g":"porta","b":[101.7,0,14.2,108.7,2,68.8],"m":"madeira","u":"pMont","door":3},{"id":"pMontD3","g":"porta","b":[138.8,0,14.2,145.8,2,68.8],"m":"madeira","u":"pMont","door":3},{"id":"pTrInf3","g":"porta","b":[108.7,0,14.2,138.8,2,21.2],"m":"madeira","u":"pTr","door":3},{"id":"pTrSup3","g":"porta","b":[108.7,0,61.8,138.8,2,68.8],"m":"madeira","u":"pTr","door":3},{"id":"alm3","g":"porta","b":[107.2,2,19.7,140.3,4,63.3],"m":"madeira","u":"alm","door":3},{"id":"mo31","g":"moldura","b":[108.7,1,21.2,138.8,2,22.2],"m":"madeira","u":"mold","door":3,"thin":1},{"id":"mo32","g":"moldura","b":[108.7,1,60.8,138.8,2,61.8],"m":"madeira","u":"mold","door":3,"thin":1},{"id":"mo33","g":"moldura","b":[108.7,1,22.2,109.7,2,60.8],"m":"madeira","u":"mold","door":3,"thin":1},{"id":"mo34","g":"moldura","b":[137.8,1,22.2,138.8,2,60.8],"m":"madeira","u":"mold","door":3,"thin":1},{"id":"bat3","g":"apoios","b":[100,2,16,103,3,66],"m":"madeira","u":"bat"},{"id":"gF3","g":"gaveta","b":[101.7,0,72.2,145.8,2,84.8],"m":"madeira","u":"gF","drawer":3},{"id":"gLE3","g":"gaveta","b":[101.9,2,72.6,103.4,38,83.6],"m":"madeira","u":"gL","drawer":3},{"id":"gLD3","g":"gaveta","b":[144.1,2,72.6,145.6,38,83.6],"m":"madeira","u":"gL","drawer":3},{"id":"gT3","g":"gaveta","b":[103.4,36.5,72.6,144.1,38,82.6],"m":"madeira","u":"gT","drawer":3},{"id":"gFu3","g":"gaveta","b":[101.9,2,72,145.6,38,72.6],"m":"comp","u":"gFu","drawer":3},{"id":"sfF","g":"apoios","b":[4,2,85,146,5,88],"m":"madeira","u":"sfTopo"},{"id":"sfT","g":"apoios","b":[4,38,85,146,41,88],"m":"madeira","u":"sfTopo"},{"id":"fundo0","g":"fundo","b":[0,43,10,24.8,45,88],"m":"madeira","u":"fundo"},{"id":"fundo1","g":"fundo","b":[25,43,10,49.9,45,88],"m":"madeira","u":"fundo"},{"id":"fundo2","g":"fundo","b":[50.1,43,10,74.9,45,88],"m":"madeira","u":"fundo"},{"id":"fundo3","g":"fundo","b":[75.1,43,10,99.9,45,88],"m":"madeira","u":"fundo"},{"id":"fundo4","g":"fundo","b":[100.1,43,10,125,45,88],"m":"madeira","u":"fundo"},{"id":"fundo5","g":"fundo","b":[125.2,43,10,150,45,88],"m":"madeira","u":"fundo"},{"id":"topo","g":"chapeu","b":[-3,-3,88,153,45,90],"m":"madeira"}],"SCREWS":[{"a":[4,10,11],"b":[0.5,10,11],"t":"m30"},{"a":[4,10,39],"b":[0.5,10,39],"t":"m30"},{"a":[4,10,69],"b":[0.5,10,69],"t":"m30"},{"a":[4,22,11],"b":[0.5,22,11],"t":"m30"},{"a":[4,22,39],"b":[0.5,22,39],"t":"m30"},{"a":[4,22,69],"b":[0.5,22,69],"t":"m30"},{"a":[4,34,11],"b":[0.5,34,11],"t":"m30"},{"a":[4,34,39],"b":[0.5,34,39],"t":"m30"},{"a":[4,34,69],"b":[0.5,34,69],"t":"m30"},{"a":[146,10,11],"b":[149.5,10,11],"t":"m30"},{"a":[146,10,39],"b":[149.5,10,39],"t":"m30"},{"a":[146,10,69],"b":[149.5,10,69],"t":"m30"},{"a":[146,22,11],"b":[149.5,22,11],"t":"m30"},{"a":[146,22,39],"b":[149.5,22,39],"t":"m30"},{"a":[146,22,69],"b":[149.5,22,69],"t":"m30"},{"a":[146,34,11],"b":[149.5,34,11],"t":"m30"},{"a":[146,34,39],"b":[149.5,34,39],"t":"m30"},{"a":[146,34,69],"b":[149.5,34,69],"t":"m30"},{"a":[12.9,4,11],"b":[12.9,0.5,11],"t":"m30"},{"a":[12.9,3,14],"b":[12.9,3,11],"t":"m30"},{"a":[12.9,5,86.5],"b":[12.9,1,86.5],"t":"m40"},{"a":[12.9,38,86.5],"b":[12.9,42,86.5],"t":"m40"},{"a":[12.9,3.5,85],"b":[12.9,3.5,89],"t":"m40"},{"a":[12.9,39.5,85],"b":[12.9,39.5,89],"t":"m40"},{"a":[30.6,4,11],"b":[30.6,0.5,11],"t":"m30"},{"a":[30.6,3,14],"b":[30.6,3,11],"t":"m30"},{"a":[30.6,5,86.5],"b":[30.6,1,86.5],"t":"m40"},{"a":[30.6,38,86.5],"b":[30.6,42,86.5],"t":"m40"},{"a":[30.6,3.5,85],"b":[30.6,3.5,89],"t":"m40"},{"a":[30.6,39.5,85],"b":[30.6,39.5,89],"t":"m40"},{"a":[48.4,4,11],"b":[48.4,0.5,11],"t":"m30"},{"a":[48.4,3,14],"b":[48.4,3,11],"t":"m30"},{"a":[48.4,5,86.5],"b":[48.4,1,86.5],"t":"m40"},{"a":[48.4,38,86.5],"b":[48.4,42,86.5],"t":"m40"},{"a":[48.4,3.5,85],"b":[48.4,3.5,89],"t":"m40"},{"a":[48.4,39.5,85],"b":[48.4,39.5,89],"t":"m40"},{"a":[66.1,4,11],"b":[66.1,0.5,11],"t":"m30"},{"a":[66.1,3,14],"b":[66.1,3,11],"t":"m30"},{"a":[66.1,5,86.5],"b":[66.1,1,86.5],"t":"m40"},{"a":[66.1,38,86.5],"b":[66.1,42,86.5],"t":"m40"},{"a":[66.1,3.5,85],"b":[66.1,3.5,89],"t":"m40"},{"a":[66.1,39.5,85],"b":[66.1,39.5,89],"t":"m40"},{"a":[83.9,4,11],"b":[83.9,0.5,11],"t":"m30"},{"a":[83.9,3,14],"b":[83.9,3,11],"t":"m30"},{"a":[83.9,5,86.5],"b":[83.9,1,86.5],"t":"m40"},{"a":[83.9,38,86.5],"b":[83.9,42,86.5],"t":"m40"},{"a":[83.9,3.5,85],"b":[83.9,3.5,89],"t":"m40"},{"a":[83.9,39.5,85],"b":[83.9,39.5,89],"t":"m40"},{"a":[101.6,4,11],"b":[101.6,0.5,11],"t":"m30"},{"a":[101.6,3,14],"b":[101.6,3,11],"t":"m30"},{"a":[101.6,5,86.5],"b":[101.6,1,86.5],"t":"m40"},{"a":[101.6,38,86.5],"b":[101.6,42,86.5],"t":"m40"},{"a":[101.6,3.5,85],"b":[101.6,3.5,89],"t":"m40"},{"a":[101.6,39.5,85],"b":[101.6,39.5,89],"t":"m40"},{"a":[119.4,4,11],"b":[119.4,0.5,11],"t":"m30"},{"a":[119.4,3,14],"b":[119.4,3,11],"t":"m30"},{"a":[119.4,5,86.5],"b":[119.4,1,86.5],"t":"m40"},{"a":[119.4,38,86.5],"b":[119.4,42,86.5],"t":"m40"},{"a":[119.4,3.5,85],"b":[119.4,3.5,89],"t":"m40"},{"a":[119.4,39.5,85],"b":[119.4,39.5,89],"t":"m40"},{"a":[137.1,4,11],"b":[137.1,0.5,11],"t":"m30"},{"a":[137.1,3,14],"b":[137.1,3,11],"t":"m30"},{"a":[137.1,5,86.5],"b":[137.1,1,86.5],"t":"m40"},{"a":[137.1,38,86.5],"b":[137.1,42,86.5],"t":"m40"},{"a":[137.1,3.5,85],"b":[137.1,3.5,89],"t":"m40"},{"a":[137.1,39.5,85],"b":[137.1,39.5,89],"t":"m40"},{"a":[51,8,12],"b":[51,8,17],"t":"m40"},{"a":[51,22,12],"b":[51,22,17],"t":"m40"},{"a":[51,36,12],"b":[51,36,17],"t":"m40"},{"a":[48,12,39],"b":[50.5,12,39],"t":"m30"},{"a":[48,12,69],"b":[50.5,12,69],"t":"m30"},{"a":[48,30,39],"b":[50.5,30,39],"t":"m30"},{"a":[48,30,69],"b":[50.5,30,69],"t":"m30"},{"a":[54,12,39],"b":[51.5,12,39],"t":"m30"},{"a":[54,12,69],"b":[51.5,12,69],"t":"m30"},{"a":[54,30,39],"b":[51.5,30,39],"t":"m30"},{"a":[54,30,69],"b":[51.5,30,69],"t":"m30"},{"a":[99,8,12],"b":[99,8,17],"t":"m40"},{"a":[99,22,12],"b":[99,22,17],"t":"m40"},{"a":[99,36,12],"b":[99,36,17],"t":"m40"},{"a":[96,12,39],"b":[98.5,12,39],"t":"m30"},{"a":[96,12,69],"b":[98.5,12,69],"t":"m30"},{"a":[96,30,39],"b":[98.5,30,39],"t":"m30"},{"a":[96,30,69],"b":[98.5,30,69],"t":"m30"},{"a":[102,12,39],"b":[99.5,12,39],"t":"m30"},{"a":[102,12,69],"b":[99.5,12,69],"t":"m30"},{"a":[102,30,39],"b":[99.5,30,39],"t":"m30"},{"a":[102,30,69],"b":[99.5,30,69],"t":"m30"},{"a":[4.4,37,78],"b":[8.4,37,78],"t":"m30"},{"a":[48.1,37,78],"b":[44.1,37,78],"t":"m30"},{"a":[53.9,37,78],"b":[57.9,37,78],"t":"m30"},{"a":[96.1,37,78],"b":[92.1,37,78],"t":"m30"},{"a":[101.9,37,78],"b":[105.9,37,78],"t":"m30"},{"a":[145.6,37,78],"b":[141.6,37,78],"t":"m30"},{"a":[12.4,45,12],"b":[12.4,41,12],"t":"vis30"},{"a":[12.4,45,50],"b":[12.4,41,50],"t":"vis30"},{"a":[12.4,45,86],"b":[12.4,41,86],"t":"vis30"},{"a":[37.5,45,12],"b":[37.5,41,12],"t":"vis30"},{"a":[37.5,45,50],"b":[37.5,41,50],"t":"vis30"},{"a":[37.5,45,86],"b":[37.5,41,86],"t":"vis30"},{"a":[62.5,45,12],"b":[62.5,41,12],"t":"vis30"},{"a":[62.5,45,50],"b":[62.5,41,50],"t":"vis30"},{"a":[62.5,45,86],"b":[62.5,41,86],"t":"vis30"},{"a":[87.5,45,12],"b":[87.5,41,12],"t":"vis30"},{"a":[87.5,45,50],"b":[87.5,41,50],"t":"vis30"},{"a":[87.5,45,86],"b":[87.5,41,86],"t":"vis30"},{"a":[112.6,45,12],"b":[112.6,41,12],"t":"vis30"},{"a":[112.6,45,50],"b":[112.6,41,50],"t":"vis30"},{"a":[112.6,45,86],"b":[112.6,41,86],"t":"vis30"},{"a":[137.6,45,12],"b":[137.6,41,12],"t":"vis30"},{"a":[137.6,45,50],"b":[137.6,41,50],"t":"vis30"},{"a":[137.6,45,86],"b":[137.6,41,86],"t":"vis30"},{"a":[2,45,25],"b":[2,40,25],"t":"vis40"},{"a":[2,45,60],"b":[2,40,60],"t":"vis40"},{"a":[148,45,25],"b":[148,40,25],"t":"vis40"},{"a":[148,45,60],"b":[148,40,60],"t":"vis40"}],"CFG":{"L":150,"D":45,"H":90,"LT":156,"ZC":88,"ZD":[14.2,68.8],"ST":7,"DOOR_OPEN":[[21.2,61.8]],"HINGES":[22,61],"DOORS":[{"x0":4.2,"x1":48.3,"side":"L","hinge":4.1},{"x0":53.7,"x1":96.3,"side":"R","hinge":96.4},{"x0":101.7,"x1":145.8,"side":"R","hinge":145.9}],"LATCHES":[],"PULLS":[{"x":27,"z":78.5,"drawer":1},{"x":75,"z":78.5,"drawer":2},{"x":123,"z":78.5,"drawer":3}],"DOOR_PULLS":[{"door":1,"x":44.8,"z":44},{"door":2,"x":57.2,"z":44},{"door":3,"x":105.2,"z":44}],"bays":[{"x0":4,"x1":50,"w":46,"cx":27},{"x0":52,"x1":98,"w":46,"cx":75},{"x0":100,"x1":146,"w":46,"cx":123}],"GROUPS":[["colunas","Colunas"],["laterais","Laterais"],["travessas","Travessas"],["divisorias","Divisórias"],["pisos","Pisos"],["prateleiras","Prateleiras"],["fundo","Fundo"],["apoios","Apoios e sarrafos"],["chapeu","Topo"],["porta","Portas"],["moldura","Molduras"],["gaveta","Gavetas"]],"PINFO":{"col":["Coluna","88 × 4 × 4","4","Cada uma com 2 ripas de 88 × 4 × 2 coladas. Os 10 cm de baixo são os pés. Veio em pé"],"lat":["Lateral","78 × 35 × 2","2","Painel inteiro com veio em pé (tábua de 30 + 5 coladas), colado nas duas colunas com cola e 3 cavilhas de cada lado"],"tfInf":["Rodapé da frente","142 × 4 × 2","1","De 10 a 14 cm do chão, de coluna a coluna. 1 cavilha por ponta"],"tfSup":["Travessa de cima (frente)","142 × 3 × 2","1","De 85 a 88 cm, de coluna a coluna. As divisórias encaixam embaixo dela com 1 cavilha"],"ttInf":["Travessa de baixo (trás)","142 × 4 × 2","1","Rente à face de trás das colunas. Segura o piso e o fundo"],"ttSup":["Travessa de cima (trás)","142 × 3 × 2","1","Segura o fundo e o sarrafo do topo"],"mont":["Montante da frente","71 × 5 × 2","2","5 cm de largura, colados na frente de cada divisória (veio em pé). A dobradiça da porta e o batente da vizinha se apoiam nele"],"tfGav":["Travessa da gaveta","46 × 3 × 2","3","Uma por vão, de 69 a 72 cm, entre a gaveta e a porta. 1 cavilha em cada ponta"],"piso":["Piso","146 × 39 × 2","1","Inteiro, de lateral a lateral: tábua de 30 + 9 coladas. Recorte de 2 × 2 nas colunas. Furo oval nos lados"],"div":["Divisória","71 × 41 × 2","2","Em pé sobre o piso, veio em pé (tábua de 30 + 9). A borda da frente aparece entre as portas: lixe bem e arredonde de leve"],"pisoG":["Piso da gaveta","46 × 39 × 2","3","Um por vão, sobre 2 apoios. A gaveta corre em cima dele (passe vela)"],"prat":["Prateleira","47,3 × 33 × 2 ou 45,6 × 33 × 2","3","Uma por vão, tábua de 30 + 3. Soltas, sobre os apoios, a 40 cm do chão"],"fundo":["Tábua do fundo","78 × 24,8 × 2","6","Refile 5,2 cm de cada tábua. Veio em pé"],"topo":["Topo","156 × 48 × 2","1","Tábua de 30 + 18 coladas, 156 × 48. Beiral de 3 cm na frente e nos lados, bordas arredondadas"],"pMont":["Montante da porta","54,6 × 7 × 2","6","Veio em pé"],"pTr":["Travessa da porta","30,1 × 7 × 2 ou 28,6 × 7 × 2","6","Em cima e embaixo. 2 cavilhas por ponta"],"alm":["Almofada","43,6 × 33,1 × 2 ou 43,6 × 31,6 × 2","3","Veio em pé. Tábua inteira atrás do vão, 1,5 cm maior em volta, presa por trás com presilhas, sem cola"],"gF":["Frente da gaveta","44,1 × 12,6 × 2 ou 42,6 × 12,6 × 2","3","Embutidas, 2 mm de folga. Puxador concha no centro"],"gL":["Lateral da gaveta","36 × 11 × 1,5","6","Ripa de 1,5 de espessura. Cola + 2 cavilhas de 6 mm na frente"],"gT":["Traseira da gaveta","40,7 × 10 × 1,5 ou 39,2 × 10 × 1,5","3","Entre as laterais, 1 cm mais baixa"],"gFu":["Fundo da gaveta","43,7 × 36 × 0,6 ou 42,2 × 36 × 0,6","3","Pregado e colado por baixo"],"apPiso":["Apoio do piso","35 × 2 × 2","2","Colados e parafusados nas laterais"],"apPisoF":["Apoio do piso (frente)","142 × 2 × 2","1","Atrás do rodapé"],"apPr":["Apoio","35 × 2 × 2 ou 33 × 2 × 2","12","Nas laterais e nas divisórias, 2 parafusos 4 × 30 cada"],"bat":["Batente da porta","50 × 3 × 1","3","Colado atrás do montante, na borda livre de cada porta: ela fecha rente. O fecho magnético vai aqui"],"sfTopo":["Sarrafo do topo","142 × 3 × 3","2","Por dentro das travessas de cima. O topo é parafusado neles por baixo"],"mold":["Moldura","1 × 1","~4 m","Em volta dos vãos das portas, colada só no quadro"]},"zcut":45,"planLbl":"armários"}},110:{"PARTS":[{"id":"colFE","g":"colunas","b":[0,0,0,4,4,88],"m":"madeira","u":"col"},{"id":"colFD","g":"colunas","b":[106,0,0,110,4,88],"m":"madeira","u":"col"},{"id":"colTE","g":"colunas","b":[0,39,0,4,43,88],"m":"madeira","u":"col"},{"id":"colTD","g":"colunas","b":[106,39,0,110,43,88],"m":"madeira","u":"col"},{"id":"latE","g":"laterais","b":[0,4,10,2,39,88],"m":"madeira","u":"lat"},{"id":"latD","g":"laterais","b":[108,4,10,110,39,88],"m":"madeira","u":"lat"},{"id":"tfInf","g":"travessas","b":[4,0,10,106,2,14],"m":"madeira","u":"tfInf"},{"id":"tfSup","g":"travessas","b":[4,0,85,106,2,88],"m":"madeira","u":"tfSup"},{"id":"ttInf","g":"travessas","b":[4,41,10,106,43,14],"m":"madeira","u":"ttInf"},{"id":"ttSup","g":"travessas","b":[4,41,85,106,43,88],"m":"madeira","u":"ttSup"},{"id":"piso","g":"pisos","b":[2,2,12,108,41,14],"m":"madeira","u":"piso"},{"id":"div0","g":"divisorias","b":[54,0,14,56,41,85],"m":"madeira","u":"div"},{"id":"mont0","g":"travessas","b":[52.5,0,14,57.5,2,85],"m":"madeira","u":"mont"},{"id":"apPE","g":"apoios","b":[2,4,10,4,39,12],"m":"madeira","u":"apPiso"},{"id":"apPD","g":"apoios","b":[106,4,10,108,39,12],"m":"madeira","u":"apPiso"},{"id":"apPF","g":"apoios","b":[4,2,10,106,4,12],"m":"madeira","u":"apPisoF"},{"id":"tfG1","g":"travessas","b":[4,0,69,54,2,72],"m":"madeira","u":"tfGav"},{"id":"pisoG1","g":"pisos","b":[4,2,70,54,41,72],"m":"madeira","u":"pisoG"},{"id":"apGE1","g":"apoios","b":[2,4,68,4,39,70],"m":"madeira","u":"apPr"},{"id":"apGD1","g":"apoios","b":[52,4,68,54,39,70],"m":"madeira","u":"apPr"},{"id":"apLE1","g":"apoios","b":[2,6,38,4,39,40],"m":"madeira","u":"apPr"},{"id":"apLD1","g":"apoios","b":[52,6,38,54,39,40],"m":"madeira","u":"apPr"},{"id":"pr1","g":"prateleiras","b":[2.5,6,40,53.8,39,42],"m":"madeira","u":"prat"},{"id":"pMontE1","g":"porta","b":[4.2,0,14.2,11.2,2,68.8],"m":"madeira","u":"pMont","door":1},{"id":"pMontD1","g":"porta","b":[45.3,0,14.2,52.3,2,68.8],"m":"madeira","u":"pMont","door":1},{"id":"pTrInf1","g":"porta","b":[11.2,0,14.2,45.3,2,21.2],"m":"madeira","u":"pTr","door":1},{"id":"pTrSup1","g":"porta","b":[11.2,0,61.8,45.3,2,68.8],"m":"madeira","u":"pTr","door":1},{"id":"alm1","g":"porta","b":[9.7,2,19.7,46.8,4,63.3],"m":"madeira","u":"alm","door":1},{"id":"mo11","g":"moldura","b":[11.2,1,21.2,45.3,2,22.2],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"mo12","g":"moldura","b":[11.2,1,60.8,45.3,2,61.8],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"mo13","g":"moldura","b":[11.2,1,22.2,12.2,2,60.8],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"mo14","g":"moldura","b":[44.3,1,22.2,45.3,2,60.8],"m":"madeira","u":"mold","door":1,"thin":1},{"id":"bat1","g":"apoios","b":[51,2,16,54,3,66],"m":"madeira","u":"bat"},{"id":"gF1","g":"gaveta","b":[4.2,0,72.2,52.3,2,84.8],"m":"madeira","u":"gF","drawer":1},{"id":"gLE1","g":"gaveta","b":[4.4,2,72.6,5.9,38,83.6],"m":"madeira","u":"gL","drawer":1},{"id":"gLD1","g":"gaveta","b":[50.6,2,72.6,52.1,38,83.6],"m":"madeira","u":"gL","drawer":1},{"id":"gT1","g":"gaveta","b":[5.9,36.5,72.6,50.6,38,82.6],"m":"madeira","u":"gT","drawer":1},{"id":"gFu1","g":"gaveta","b":[4.4,2,72,52.1,38,72.6],"m":"comp","u":"gFu","drawer":1},{"id":"tfG2","g":"travessas","b":[56,0,69,106,2,72],"m":"madeira","u":"tfGav"},{"id":"pisoG2","g":"pisos","b":[56,2,70,106,41,72],"m":"madeira","u":"pisoG"},{"id":"apGE2","g":"apoios","b":[56,4,68,58,39,70],"m":"madeira","u":"apPr"},{"id":"apGD2","g":"apoios","b":[106,4,68,108,39,70],"m":"madeira","u":"apPr"},{"id":"apLE2","g":"apoios","b":[56,6,38,58,39,40],"m":"madeira","u":"apPr"},{"id":"apLD2","g":"apoios","b":[106,6,38,108,39,40],"m":"madeira","u":"apPr"},{"id":"pr2","g":"prateleiras","b":[56.2,6,40,107.5,39,42],"m":"madeira","u":"prat"},{"id":"pMontE2","g":"porta","b":[57.7,0,14.2,64.7,2,68.8],"m":"madeira","u":"pMont","door":2},{"id":"pMontD2","g":"porta","b":[98.8,0,14.2,105.8,2,68.8],"m":"madeira","u":"pMont","door":2},{"id":"pTrInf2","g":"porta","b":[64.7,0,14.2,98.8,2,21.2],"m":"madeira","u":"pTr","door":2},{"id":"pTrSup2","g":"porta","b":[64.7,0,61.8,98.8,2,68.8],"m":"madeira","u":"pTr","door":2},{"id":"alm2","g":"porta","b":[63.2,2,19.7,100.3,4,63.3],"m":"madeira","u":"alm","door":2},{"id":"mo21","g":"moldura","b":[64.7,1,21.2,98.8,2,22.2],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"mo22","g":"moldura","b":[64.7,1,60.8,98.8,2,61.8],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"mo23","g":"moldura","b":[64.7,1,22.2,65.7,2,60.8],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"mo24","g":"moldura","b":[97.8,1,22.2,98.8,2,60.8],"m":"madeira","u":"mold","door":2,"thin":1},{"id":"bat2","g":"apoios","b":[56,2,16,59,3,66],"m":"madeira","u":"bat"},{"id":"gF2","g":"gaveta","b":[57.7,0,72.2,105.8,2,84.8],"m":"madeira","u":"gF","drawer":2},{"id":"gLE2","g":"gaveta","b":[57.9,2,72.6,59.4,38,83.6],"m":"madeira","u":"gL","drawer":2},{"id":"gLD2","g":"gaveta","b":[104.1,2,72.6,105.6,38,83.6],"m":"madeira","u":"gL","drawer":2},{"id":"gT2","g":"gaveta","b":[59.4,36.5,72.6,104.1,38,82.6],"m":"madeira","u":"gT","drawer":2},{"id":"gFu2","g":"gaveta","b":[57.9,2,72,105.6,38,72.6],"m":"comp","u":"gFu","drawer":2},{"id":"sfF","g":"apoios","b":[4,2,85,106,5,88],"m":"madeira","u":"sfTopo"},{"id":"sfT","g":"apoios","b":[4,38,85,106,41,88],"m":"madeira","u":"sfTopo"},{"id":"fundo0","g":"fundo","b":[0,43,10,27.4,45,88],"m":"madeira","u":"fundo"},{"id":"fundo1","g":"fundo","b":[27.6,43,10,54.9,45,88],"m":"madeira","u":"fundo"},{"id":"fundo2","g":"fundo","b":[55.1,43,10,82.5,45,88],"m":"madeira","u":"fundo"},{"id":"fundo3","g":"fundo","b":[82.7,43,10,110,45,88],"m":"madeira","u":"fundo"},{"id":"topo","g":"chapeu","b":[-3,-3,88,113,45,90],"m":"madeira"}],"SCREWS":[{"a":[4,10,11],"b":[0.5,10,11],"t":"m30"},{"a":[4,10,39],"b":[0.5,10,39],"t":"m30"},{"a":[4,10,69],"b":[0.5,10,69],"t":"m30"},{"a":[4,22,11],"b":[0.5,22,11],"t":"m30"},{"a":[4,22,39],"b":[0.5,22,39],"t":"m30"},{"a":[4,22,69],"b":[0.5,22,69],"t":"m30"},{"a":[4,34,11],"b":[0.5,34,11],"t":"m30"},{"a":[4,34,39],"b":[0.5,34,39],"t":"m30"},{"a":[4,34,69],"b":[0.5,34,69],"t":"m30"},{"a":[106,10,11],"b":[109.5,10,11],"t":"m30"},{"a":[106,10,39],"b":[109.5,10,39],"t":"m30"},{"a":[106,10,69],"b":[109.5,10,69],"t":"m30"},{"a":[106,22,11],"b":[109.5,22,11],"t":"m30"},{"a":[106,22,39],"b":[109.5,22,39],"t":"m30"},{"a":[106,22,69],"b":[109.5,22,69],"t":"m30"},{"a":[106,34,11],"b":[109.5,34,11],"t":"m30"},{"a":[106,34,39],"b":[109.5,34,39],"t":"m30"},{"a":[106,34,69],"b":[109.5,34,69],"t":"m30"},{"a":[12.5,4,11],"b":[12.5,0.5,11],"t":"m30"},{"a":[12.5,3,14],"b":[12.5,3,11],"t":"m30"},{"a":[12.5,5,86.5],"b":[12.5,1,86.5],"t":"m40"},{"a":[12.5,38,86.5],"b":[12.5,42,86.5],"t":"m40"},{"a":[12.5,3.5,85],"b":[12.5,3.5,89],"t":"m40"},{"a":[12.5,39.5,85],"b":[12.5,39.5,89],"t":"m40"},{"a":[29.5,4,11],"b":[29.5,0.5,11],"t":"m30"},{"a":[29.5,3,14],"b":[29.5,3,11],"t":"m30"},{"a":[29.5,5,86.5],"b":[29.5,1,86.5],"t":"m40"},{"a":[29.5,38,86.5],"b":[29.5,42,86.5],"t":"m40"},{"a":[29.5,3.5,85],"b":[29.5,3.5,89],"t":"m40"},{"a":[29.5,39.5,85],"b":[29.5,39.5,89],"t":"m40"},{"a":[46.5,4,11],"b":[46.5,0.5,11],"t":"m30"},{"a":[46.5,3,14],"b":[46.5,3,11],"t":"m30"},{"a":[46.5,5,86.5],"b":[46.5,1,86.5],"t":"m40"},{"a":[46.5,38,86.5],"b":[46.5,42,86.5],"t":"m40"},{"a":[46.5,3.5,85],"b":[46.5,3.5,89],"t":"m40"},{"a":[46.5,39.5,85],"b":[46.5,39.5,89],"t":"m40"},{"a":[63.5,4,11],"b":[63.5,0.5,11],"t":"m30"},{"a":[63.5,3,14],"b":[63.5,3,11],"t":"m30"},{"a":[63.5,5,86.5],"b":[63.5,1,86.5],"t":"m40"},{"a":[63.5,38,86.5],"b":[63.5,42,86.5],"t":"m40"},{"a":[63.5,3.5,85],"b":[63.5,3.5,89],"t":"m40"},{"a":[63.5,39.5,85],"b":[63.5,39.5,89],"t":"m40"},{"a":[80.5,4,11],"b":[80.5,0.5,11],"t":"m30"},{"a":[80.5,3,14],"b":[80.5,3,11],"t":"m30"},{"a":[80.5,5,86.5],"b":[80.5,1,86.5],"t":"m40"},{"a":[80.5,38,86.5],"b":[80.5,42,86.5],"t":"m40"},{"a":[80.5,3.5,85],"b":[80.5,3.5,89],"t":"m40"},{"a":[80.5,39.5,85],"b":[80.5,39.5,89],"t":"m40"},{"a":[97.5,4,11],"b":[97.5,0.5,11],"t":"m30"},{"a":[97.5,3,14],"b":[97.5,3,11],"t":"m30"},{"a":[97.5,5,86.5],"b":[97.5,1,86.5],"t":"m40"},{"a":[97.5,38,86.5],"b":[97.5,42,86.5],"t":"m40"},{"a":[97.5,3.5,85],"b":[97.5,3.5,89],"t":"m40"},{"a":[97.5,39.5,85],"b":[97.5,39.5,89],"t":"m40"},{"a":[55,8,12],"b":[55,8,17],"t":"m40"},{"a":[55,22,12],"b":[55,22,17],"t":"m40"},{"a":[55,36,12],"b":[55,36,17],"t":"m40"},{"a":[52,12,39],"b":[54.5,12,39],"t":"m30"},{"a":[52,12,69],"b":[54.5,12,69],"t":"m30"},{"a":[52,30,39],"b":[54.5,30,39],"t":"m30"},{"a":[52,30,69],"b":[54.5,30,69],"t":"m30"},{"a":[58,12,39],"b":[55.5,12,39],"t":"m30"},{"a":[58,12,69],"b":[55.5,12,69],"t":"m30"},{"a":[58,30,39],"b":[55.5,30,39],"t":"m30"},{"a":[58,30,69],"b":[55.5,30,69],"t":"m30"},{"a":[4.4,37,78],"b":[8.4,37,78],"t":"m30"},{"a":[52.1,37,78],"b":[48.1,37,78],"t":"m30"},{"a":[57.9,37,78],"b":[61.9,37,78],"t":"m30"},{"a":[105.6,37,78],"b":[101.6,37,78],"t":"m30"},{"a":[13.7,45,12],"b":[13.7,41,12],"t":"vis30"},{"a":[13.7,45,50],"b":[13.7,41,50],"t":"vis30"},{"a":[13.7,45,86],"b":[13.7,41,86],"t":"vis30"},{"a":[41.2,45,12],"b":[41.2,41,12],"t":"vis30"},{"a":[41.2,45,50],"b":[41.2,41,50],"t":"vis30"},{"a":[41.2,45,86],"b":[41.2,41,86],"t":"vis30"},{"a":[68.8,45,12],"b":[68.8,41,12],"t":"vis30"},{"a":[68.8,45,50],"b":[68.8,41,50],"t":"vis30"},{"a":[68.8,45,86],"b":[68.8,41,86],"t":"vis30"},{"a":[96.3,45,12],"b":[96.3,41,12],"t":"vis30"},{"a":[96.3,45,50],"b":[96.3,41,50],"t":"vis30"},{"a":[96.3,45,86],"b":[96.3,41,86],"t":"vis30"},{"a":[2,45,25],"b":[2,40,25],"t":"vis40"},{"a":[2,45,60],"b":[2,40,60],"t":"vis40"},{"a":[108,45,25],"b":[108,40,25],"t":"vis40"},{"a":[108,45,60],"b":[108,40,60],"t":"vis40"}],"CFG":{"L":110,"D":45,"H":90,"LT":116,"ZC":88,"ZD":[14.2,68.8],"ST":7,"DOOR_OPEN":[[21.2,61.8]],"HINGES":[22,61],"DOORS":[{"x0":4.2,"x1":52.3,"side":"L","hinge":4.1},{"x0":57.7,"x1":105.8,"side":"R","hinge":105.9}],"LATCHES":[],"PULLS":[{"x":29,"z":78.5,"drawer":1},{"x":81,"z":78.5,"drawer":2}],"DOOR_PULLS":[{"door":1,"x":48.8,"z":44},{"door":2,"x":61.2,"z":44}],"bays":[{"x0":4,"x1":54,"w":50,"cx":29},{"x0":56,"x1":106,"w":50,"cx":81}],"GROUPS":[["colunas","Colunas"],["laterais","Laterais"],["travessas","Travessas"],["divisorias","Divisórias"],["pisos","Pisos"],["prateleiras","Prateleiras"],["fundo","Fundo"],["apoios","Apoios e sarrafos"],["chapeu","Topo"],["porta","Portas"],["moldura","Molduras"],["gaveta","Gavetas"]],"PINFO":{"col":["Coluna","88 × 4 × 4","4","Cada uma com 2 ripas de 88 × 4 × 2 coladas. Os 10 cm de baixo são os pés. Veio em pé"],"lat":["Lateral","78 × 35 × 2","2","Painel inteiro com veio em pé (tábua de 30 + 5 coladas), colado nas duas colunas com cola e 3 cavilhas de cada lado"],"tfInf":["Rodapé da frente","102 × 4 × 2","1","De 10 a 14 cm do chão, de coluna a coluna. 1 cavilha por ponta"],"tfSup":["Travessa de cima (frente)","102 × 3 × 2","1","De 85 a 88 cm, de coluna a coluna. As divisórias encaixam embaixo dela com 1 cavilha"],"ttInf":["Travessa de baixo (trás)","102 × 4 × 2","1","Rente à face de trás das colunas. Segura o piso e o fundo"],"ttSup":["Travessa de cima (trás)","102 × 3 × 2","1","Segura o fundo e o sarrafo do topo"],"mont":["Montante da frente","71 × 5 × 2","1","5 cm de largura, colados na frente de cada divisória (veio em pé). A dobradiça da porta e o batente da vizinha se apoiam nele"],"tfGav":["Travessa da gaveta","50 × 3 × 2","2","Uma por vão, de 69 a 72 cm, entre a gaveta e a porta. 1 cavilha em cada ponta"],"piso":["Piso","106 × 39 × 2","1","Inteiro, de lateral a lateral: tábua de 30 + 9 coladas. Recorte de 2 × 2 nas colunas. Furo oval nos lados"],"div":["Divisória","71 × 41 × 2","1","Em pé sobre o piso, veio em pé (tábua de 30 + 9). A borda da frente aparece entre as portas: lixe bem e arredonde de leve"],"pisoG":["Piso da gaveta","50 × 39 × 2","2","Um por vão, sobre 2 apoios. A gaveta corre em cima dele (passe vela)"],"prat":["Prateleira","51,3 × 33 × 2","2","Uma por vão, tábua de 30 + 3. Soltas, sobre os apoios, a 40 cm do chão"],"fundo":["Tábua do fundo","78 × 27,4 × 2 ou 78 × 27,3 × 2","4","Refile 2,6 cm de cada tábua. Veio em pé"],"topo":["Topo","116 × 48 × 2","1","Tábua de 30 + 18 coladas, 116 × 48. Beiral de 3 cm na frente e nos lados, bordas arredondadas"],"pMont":["Montante da porta","54,6 × 7 × 2","4","Veio em pé"],"pTr":["Travessa da porta","34,1 × 7 × 2","4","Em cima e embaixo. 2 cavilhas por ponta"],"alm":["Almofada","43,6 × 37,1 × 2","2","Veio em pé. Tábua inteira atrás do vão, 1,5 cm maior em volta, presa por trás com presilhas, sem cola"],"gF":["Frente da gaveta","48,1 × 12,6 × 2","2","Embutidas, 2 mm de folga. Puxador concha no centro"],"gL":["Lateral da gaveta","36 × 11 × 1,5","4","Ripa de 1,5 de espessura. Cola + 2 cavilhas de 6 mm na frente"],"gT":["Traseira da gaveta","44,7 × 10 × 1,5","2","Entre as laterais, 1 cm mais baixa"],"gFu":["Fundo da gaveta","47,7 × 36 × 0,6","2","Pregado e colado por baixo"],"apPiso":["Apoio do piso","35 × 2 × 2","2","Colados e parafusados nas laterais"],"apPisoF":["Apoio do piso (frente)","102 × 2 × 2","1","Atrás do rodapé"],"apPr":["Apoio","35 × 2 × 2 ou 33 × 2 × 2","8","Nas laterais e nas divisórias, 2 parafusos 4 × 30 cada"],"bat":["Batente da porta","50 × 3 × 1","2","Colado atrás do montante, na borda livre de cada porta: ela fecha rente. O fecho magnético vai aqui"],"sfTopo":["Sarrafo do topo","102 × 3 × 3","2","Por dentro das travessas de cima. O topo é parafusado neles por baixo"],"mold":["Moldura","1 × 1","~3 m","Em volta dos vãos das portas, colada só no quadro"]},"zcut":45,"planLbl":"armários"}}};
+function run(PARTS,SCREWS,CFG){
+const {L,D,H,HINGES,DOORS,LATCHES,PULLS,DOOR_PULLS,ZD,ZC,DOOR_OPEN,GROUPS,PINFO,LT}=CFG;
+const NS='http://www.w3.org/2000/svg';
+let view='frente',hl=null,sel=null,xray=false;
+const c=Math.cos(Math.PI/6),s=.5;
+const pr=(x,y,z)=>[(x+y)*c,(x-y)*s-z];
+const OPEN=Math.PI*0.55;
+/* porta aberta: cada uma gira em volta das suas dobradiças; gavetas puxadas 22 cm */
+function moveP(p,[x,y,z]){if(view!=='aberta')return[x,y,z];
+  if(p.door){const d=DOORS[p.door-1],hx=d.hinge,hy=-0.45,a=d.side==='R'?OPEN:-OPEN,dx=x-hx,dy=y-hy;return[hx+dx*Math.cos(a)-dy*Math.sin(a),hy+dx*Math.sin(a)+dy*Math.cos(a),z]}
+  if(p.drawer)return[x,y-22,z];return[x,y,z]}
+function tp([x,y,z]){if(view==='tras')return[L-x,D-y,z];return[x,y,z]}
+function corners(p){const [x0,y0,z0,x1,y1,z1]=p.b;const out=[];for(const x of[x0,x1])for(const y of[y0,y1])for(const z of[z0,z1])out.push(tp(moveP(p,[x,y,z])));return out}
+function bbox(p){const cs=corners(p);const b=[1e9,1e9,1e9,-1e9,-1e9,-1e9];cs.forEach(v=>{for(let i=0;i<3;i++){b[i]=Math.min(b[i],v[i]);b[i+3]=Math.max(b[i+3],v[i])}});return b}
+const T=.3;
+function behind(A,B){ // A desenha antes de B (está mais longe: mais atrás, mais à esquerda ou mais embaixo)
+  if(A[3]<=B[0]+T)return true; if(B[3]<=A[0]+T)return false;
+  if(A[1]>=B[4]-T)return true; if(B[1]>=A[4]-T)return false;
+  if(A[5]<=B[2]+T)return true; if(B[5]<=A[2]+T)return false;
+  return null}
+function order(items){const n=items.length,adj=items.map(()=>[]),indeg=new Array(n).fill(0);
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const r=behind(items[i].t,items[j].t);if(r===true){adj[i].push(j);indeg[j]++}else if(r===false){adj[j].push(i);indeg[i]++}}
+  const key=t=>(t[1]+t[4])-(t[0]+t[3])-(t[2]+t[5]);
+  const done=new Array(n).fill(false),out=[];
+  while(out.length<n){let best=-1;
+    for(let i=0;i<n;i++)if(!done[i]&&indeg[i]===0&&(best<0||key(items[i].t)>key(items[best].t)))best=i;
+    if(best<0)for(let i=0;i<n;i++)if(!done[i]&&(best<0||indeg[i]<indeg[best]||(indeg[i]===indeg[best]&&key(items[i].t)>key(items[best].t))))best=i;
+    done[best]=true;out.push(items[best]);adj[best].forEach(j=>indeg[j]--)}
+  return out}
+const key=p=>p.u||p.id;
+const grp=p=>p.g==='baguetes'?'vidros':p.g;
+function active(p){return sel?key(p)===sel:(!hl||grp(p)===hl)}
+function pick(p){const k=key(p);sel=sel===k?null:k;hl=null;document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed','false'));showInfo();drawIso()}
+function showInfo(){const box=document.getElementById('pinfo');
+  if(!sel||!PINFO[sel]){box.hidden=true;box.innerHTML='';return}
+  const [n,d,q,o]=PINFO[sel];
+  box.innerHTML='<b class="pn"></b><span class="pd"></span><span class="pm q"></span><span class="pm o"></span><button type="button">Fechar</button>';
+  box.querySelector('.pn').textContent=n;box.querySelector('.pd').textContent=d+' cm';
+  box.querySelector('.q').textContent='Quantidade: '+q;box.querySelector('.o').textContent=o;
+  box.querySelector('button').onclick=()=>{sel=null;showInfo();drawIso()};box.hidden=false}
+function poly(g,pts,fill,stroke,w){const e=document.createElementNS(NS,'polygon');e.setAttribute('points',pts.map(v=>pr(...v).map(n=>n.toFixed(2)).join(',')).join(' '));e.style.fill=fill;e.style.stroke=stroke;e.setAttribute('stroke-width',w||'.25');e.setAttribute('stroke-linejoin','round');g.appendChild(e)}
+function drawBox(g,p){
+  const cs=corners(p);
+  const faces={top:[1,5,7,3],bot:[0,2,6,4],fr:[0,4,5,1],bk:[2,3,7,6],lf:[0,1,3,2],rt:[4,6,7,5]};
+  const col=p.m==='vidro'?null:p.m==='comp'?'comp':'w';
+  for(const [k,idx] of Object.entries(faces)){
+    const pts=idx.map(i=>cs[i]);
+    const P=pts.map(v=>pr(...v));let a=0;P.forEach((u,i)=>{const w=P[(i+1)%P.length];a+=u[0]*w[1]-w[0]*u[1]});
+    if(a<=0.001)continue;
+    if(!col){poly(g,pts,'var(--gl-fill)','var(--gl-stroke)','.15');continue}
+    const tone=(k==='top'||k==='bot')?'top':(k==='fr'||k==='bk')?'front':'side';
+    poly(g,pts,`var(--${col}-${tone})`,'var(--stroke)',p.thin?'.12':'.25');
+  }
+}
+function drawIron(svg){
+  const P=(x,y,z)=>pr(...tp([x,y,z]));
+  const pathOf=(arr)=>arr.map((v,i)=>(i?'L':'M')+P(...v).map(n=>n.toFixed(2)).join(' ')).join('')+'Z';
+  const add=d=>{const e=document.createElementNS(NS,'path');e.setAttribute('d',d);e.setAttribute('class','p-iron');svg.appendChild(e)};
+  if(view==='tras')return;
+  DOORS.forEach((d,k)=>{const o=d.side==='R'?1:-1,h=d.hinge,dp={door:k+1};
+    HINGES.forEach(z=>{
+      add(pathOf([[h,-0.3,z-1.6],[h+3.9*o,-0.3,z-3.7],[h+3.9*o,-0.3,z+3.7],[h,-0.3,z+1.6]]));
+      add(pathOf([[h,-0.3,z-1.6],[h-3.9*o,-0.3,z-3.7],[h-3.9*o,-0.3,z+3.7],[h,-0.3,z+1.6]].map(v=>moveP(dp,v))));
+    })});
+  LATCHES.forEach(l=>{const x=l.px-1.3;add(pathOf([[x,-0.3,l.z-1.7],[x+2.6,-0.3,l.z-1.7],[x+2.6,-0.3,l.z+1.7],[x,-0.3,l.z+1.7]]));const bx=l.px+(l.dir>0?0:-5);add(pathOf([[bx,-0.4,l.z-0.5],[bx+5,-0.4,l.z-0.5],[bx+5,-0.4,l.z+0.5],[bx,-0.4,l.z+0.5]]))});
+  (DOOR_PULLS||[]).forEach(pl=>{const g={door:pl.door};add(pathOf([[pl.x-1.5,-0.3,pl.z-1.5],[pl.x+1.5,-0.3,pl.z-1.5],[pl.x+1.5,-0.3,pl.z+1.5],[pl.x-1.5,-0.3,pl.z+1.5]].map(v=>moveP(g,v))))});
+  PULLS.forEach(pl=>{const g={drawer:pl.drawer};add(pathOf([[pl.x-4.8,-0.3,pl.z-1.7],[pl.x+4.8,-0.3,pl.z-1.7],[pl.x+4.8,-0.3,pl.z+1.7],[pl.x-4.8,-0.3,pl.z+1.7]].map(v=>moveP(g,v))))});
+}
+function drawScrews(svg){
+  SCREWS.forEach(sc=>{if(view==='aberta')return;const a=pr(...tp(sc.a)),b=pr(...tp(sc.b));const vis=sc.t.startsWith('vis');const col=vis?'var(--scr-vis)':'var(--scr)';
+    const ln=document.createElementNS(NS,'line');[['x1',a[0]],['y1',a[1]],['x2',b[0]],['y2',b[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));
+    ln.style.stroke=col;ln.setAttribute('stroke-width','.5');ln.setAttribute('stroke-linecap','round');svg.appendChild(ln);
+    const hd=document.createElementNS(NS,'circle');hd.setAttribute('cx',a[0].toFixed(2));hd.setAttribute('cy',a[1].toFixed(2));hd.setAttribute('r',vis?'.9':'.65');
+    hd.style.fill=col;hd.style.stroke='var(--paper)';hd.setAttribute('stroke-width','.15');svg.appendChild(hd)})}
+function drawDims(svg){
+  const ps=PARTS.filter(p=>key(p)===sel);if(!ps.length)return;
+  const p0=ps[0];let b=bbox(p0); // cota de uma peça só (a primeira do grupo)
+  const [x0,y0,z0,x1,y1,z1]=b,o=3,fmt=v=>String(Math.round(v*10)/10).replace('.',',');
+  const seg=(A3,C3,val,off)=>{const A=pr(...A3),C=pr(...C3);
+    const ln=document.createElementNS(NS,'line');[['x1',A[0]],['y1',A[1]],['x2',C[0]],['y2',C[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));ln.style.stroke='var(--amora)';ln.setAttribute('stroke-width','.45');svg.appendChild(ln);
+    const mx=(A[0]+C[0])/2+off[0],my=(A[1]+C[1])/2+off[1];
+    const tx=document.createElementNS(NS,'text');tx.setAttribute('x',mx.toFixed(2));tx.setAttribute('y',(my+1.5).toFixed(2));tx.setAttribute('text-anchor','middle');tx.style.fill='var(--paper)';tx.style.font='600 4.2px var(--f-mono)';tx.textContent=fmt(val);
+    svg.appendChild(tx);const bb=tx.getBBox();
+    const bg=document.createElementNS(NS,'rect');bg.setAttribute('x',(bb.x-1.2).toFixed(2));bg.setAttribute('y',(bb.y-.6).toFixed(2));bg.setAttribute('width',(bb.width+2.4).toFixed(2));bg.setAttribute('height',(bb.height+1.2).toFixed(2));bg.setAttribute('rx','1.2');bg.style.fill='var(--amora)';
+    svg.insertBefore(bg,tx)};
+  seg([x0,y0-o,z0],[x1,y0-o,z0],x1-x0,[-3,4.5]);
+  seg([x1+o,y0,z0],[x1+o,y1,z0],y1-y0,[3,4.5]);
+  seg([x1+o,y0-o,z0],[x1+o,y0-o,z1],z1-z0,[6,0]);
+}
+function drawIso(){
+  const svg=document.getElementById('iso');svg.innerHTML='';
+  const items=PARTS.map(p=>({p,t:bbox(p)}));
+  let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
+  items.forEach(({p})=>corners(p).forEach(v=>{const [a,b]=pr(...v);minx=Math.min(minx,a);maxx=Math.max(maxx,a);miny=Math.min(miny,b);maxy=Math.max(maxy,b)}));
+  const pad=10;svg.setAttribute('viewBox',`${minx-pad} ${miny-pad} ${maxx-minx+2*pad} ${maxy-miny+2*pad}`);
+  order(items).forEach(({p})=>{
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','piece');
+    g.style.opacity=xray?(p.m==='vidro'?.5:.16):(active(p)?1:.14);
+    drawBox(g,p);g.style.cursor='pointer';g.addEventListener('click',()=>pick(p));svg.appendChild(g)});
+  if(!xray)drawIron(svg);
+  if(xray)drawScrews(svg);
+  if(sel)drawDims(svg);
+}
+function setHl(h){hl=h;sel=null;showInfo();document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===hl?'true':'false'));drawIso()}
+const chips=document.getElementById('chips');
+GROUPS.forEach(([g,n])=>{const b=document.createElement('button');b.type='button';b.dataset.g=g;b.textContent=n;b.setAttribute('aria-pressed','false');b.onclick=()=>setHl(hl===g?null:g);chips.appendChild(b)});
+document.querySelectorAll('.views button[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.views button[data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));drawIso()});
+document.getElementById('xray').onclick=e=>{xray=!xray;e.currentTarget.setAttribute('aria-pressed',xray?'true':'false');document.getElementById('xleg').hidden=!xray;drawIso()};
+document.querySelectorAll('.fin button').forEach(b=>b.onclick=()=>{document.querySelector('.wrap').classList.toggle('jat',b.dataset.fin==='jat');document.querySelectorAll('.fin button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))});
+document.getElementById('copyBtn').onclick=e=>{const t=document.getElementById('copyTxt').textContent;
+  try{navigator.clipboard.writeText(t).then(()=>{e.target.textContent='Copiado!';setTimeout(()=>e.target.textContent='Copiar texto',1600)})}catch(_){}};
+drawIso();
+
+/* vistas ortográficas, desenhadas a partir das mesmas peças: unidades = cm */
+const el=(svg,tag,attrs,txt)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e};
+const R=(svg,x,y,w,h,cls)=>el(svg,'rect',{x,y,width:Math.max(w,.05),height:Math.max(h,.05),class:cls});
+const f1=v=>String(Math.round(v*10)/10).replace('.',',');
+function dimH(svg,x0,x1,y,t){el(svg,'line',{x1:x0,y1:y,x2:x1,y2:y,class:'d-line'});[x0,x1].forEach(x=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));el(svg,'text',{x:(x0+x1)/2,y:y-1.2,'text-anchor':'middle',class:'d-text'},t)}
+function dimV(svg,y0,y1,x,t){el(svg,'line',{x1:x,y1:y0,x2:x,y2:y1,class:'d-line'});[y0,y1].forEach(y=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));const ty=(y0+y1)/2;el(svg,'text',{x:x-1.5,y:ty,'text-anchor':'middle',class:'d-text',transform:`rotate(-90 ${x-1.5} ${ty})`},t)}
+const lbl=(svg,x,y,t,a='middle')=>el(svg,'text',{x,y,'text-anchor':a,class:'lbl'},t);
+const cls=(p,alt)=>p.m==='vidro'?'p-gl':alt?'p-w2':'p-w';
+const hinge=(v,X,Z,d,z)=>{const h=d.hinge;el(v,'path',{d:`M${X(h-3.9)} ${Z(z)-3.7} L${X(h)} ${Z(z)-1.6} L${X(h+3.9)} ${Z(z)-3.7} L${X(h+3.9)} ${Z(z)+3.7} L${X(h)} ${Z(z)+1.6} L${X(h-3.9)} ${Z(z)+3.7}Z`,class:'p-iron'})};
+const ringV=(v,X,Z,x,z)=>{el(v,'circle',{cx:X(x),cy:Z(z),r:1.5,class:'p-iron'});el(v,'circle',{cx:X(x),cy:Z(z)+2.2,r:1.9,style:'fill:none;stroke:#1D1B1C;stroke-width:.5'})};
+
+/* FRENTE */
+(function(){const v=document.getElementById('vFront');const ml=30,mr=20,oy=8,Z=z=>oy+H-z,X=x=>ml+x;
+  v.setAttribute('viewBox',`0 0 ${ml+L+mr} ${H+30}`);
+  const ps=PARTS.filter(p=>p.b[1]<4.5&&!p.thin&&p.g!=='prateleiras').sort((a,b)=>b.b[1]-a.b[1]);
+  ps.forEach(p=>{const [x0,y0,z0,x1,y1,z1]=p.b;R(v,X(x0),Z(z1),x1-x0,z1-z0,cls(p,p.g==='gaveta'||p.u==='alm'||p.g==='pisos'))});
+  DOORS.forEach(d=>HINGES.forEach(z=>hinge(v,X,Z,d,z)));
+  LATCHES.forEach(l=>{R(v,X(l.px-1.3),Z(l.z+1.7),2.6,3.4,'p-iron');R(v,X(l.px+(l.dir>0?0:-5)),Z(l.z+0.5),5,1,'p-iron')});
+  PULLS.forEach(pl=>R(v,X(pl.x-4.8),Z(pl.z+1.7),9.6,3.4,'p-iron'));
+  (DOOR_PULLS||[]).forEach(pl=>{el(v,'circle',{cx:X(pl.x),cy:Z(pl.z),r:1.6,class:'p-iron'});el(v,'circle',{cx:X(pl.x),cy:Z(pl.z-1.9),r:1.9,style:'fill:none;stroke:#1b1a1a;stroke-width:.5'})});
+  el(v,'line',{x1:X(-10),y1:Z(0),x2:X(L+10),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,X(0),X(L),Z(0)+6,f1(L));dimH(v,X(-3),X(L+3),Z(H)-4,f1(LT));
+  dimV(v,Z(H),Z(0),X(-3)-12,f1(H));dimV(v,Z(ZD[1]),Z(ZD[0]),X(-3)-5,f1(ZD[1]-ZD[0]));dimV(v,Z(10),Z(0),X(L)+6,'10 pés');
+  CFG.bays.forEach(b=>dimH(v,X(b.x0),X(b.x1),Z(0)+13,f1(b.w)));
+})();
+/* LATERAL */
+(function(){const v=document.getElementById('vSide');const ox=22,oy=8,Z=z=>oy+H-z,Y=y=>ox+y;
+  v.setAttribute('viewBox',`0 0 ${D+46} ${H+24}`);
+  const ps=PARTS.filter(p=>p.b[3]>L-4.5&&!p.door&&!p.drawer&&!p.thin&&p.g!=='prateleiras').sort((a,b)=>a.b[3]-b.b[3]);
+  ps.forEach(p=>{const [x0,y0,z0,x1,y1,z1]=p.b;R(v,Y(y0),Z(z1),y1-y0,z1-z0,cls(p,p.g==='fundo'))});
+  el(v,'line',{x1:Y(-8),y1:Z(0),x2:Y(D+8),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,Y(0),Y(D),Z(0)+6,f1(D));dimH(v,Y(-3),Y(D),Z(H)-4,f1(D+3));dimV(v,Z(H),Z(0),Y(D)+6,f1(H));
+  lbl(v,Y(1),Z(0)+11,'frente','start');lbl(v,Y(D-1),Z(0)+11,'fundo','end');
+})();
+/* PORTA */
+(function(){const v=document.getElementById('vDoor');const d=DOORS[0],w=d.x1-d.x0,hh=ZD[1]-ZD[0];const ox=22,oy=6,Z=z=>oy+ZD[1]-z,X=x=>ox+x-d.x0;
+  v.setAttribute('viewBox',`0 0 ${w+44} ${hh+14}`);
+  PARTS.filter(p=>p.door===1).sort((a,b)=>b.b[1]-a.b[1]).forEach(p=>{const [x0,y0,z0,x1,y1,z1]=p.b;R(v,X(x0),Z(z1),x1-x0,z1-z0,cls(p,p.u==='alm'))});
+  const [a,cc]=DOOR_OPEN[0],st=CFG.ST;
+  dimH(v,X(d.x0),X(d.x1),Z(ZD[0])+6,f1(w));dimH(v,X(d.x0+st),X(d.x1-st),Z(ZD[1])-3,f1(w-2*st)+' vão');
+  dimV(v,Z(ZD[1]),Z(ZD[0]),X(d.x0)-7,f1(hh));dimV(v,Z(cc),Z(a),X(d.x1)+6,f1(cc-a));
+  lbl(v,X((d.x0+d.x1)/2),Z((a+cc)/2),'almofada atrás');
+})();
+/* CORTE POR CIMA */
+(function(){const v=document.getElementById('vPlan');const ox=14,oy=8,X=x=>ox+x,Y=y=>oy+y,zc=CFG.zcut;
+  v.setAttribute('viewBox',`0 0 ${L+30} ${D+22}`);
+  const ps=PARTS.filter(p=>(p.b[2]<zc&&p.b[5]>zc&&!p.thin)||p.g==='prateleiras').sort((a,b)=>(a.g==='prateleiras'?-1:0)-(b.g==='prateleiras'?-1:0)||a.b[5]-b.b[5]);
+  ps.forEach(p=>{const [x0,y0,z0,x1,y1,z1]=p.b;R(v,X(x0),Y(y0),x1-x0,y1-y0,p.g==='colunas'||p.u==='alm'?'p-w2':'p-w')});
+  dimH(v,X(0),X(L),Y(D)+6,f1(L));dimV(v,Y(0),Y(D),X(L)+6,f1(D));
+  lbl(v,X(L/2),Y(-2),'FRENTE');lbl(v,X(L/2),Y(22),CFG.planLbl||'nicho');
+})();
+}
+function show(v){
+  const c=document.getElementById('content');c.innerHTML='';c.appendChild(document.getElementById('t'+v).content.cloneNode(true));
+  document.querySelector('.wrap').classList.remove('jat');
+  document.querySelectorAll('.model button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v==String(v)?'true':'false'));
+  run(DATA[v].PARTS,DATA[v].SCREWS,DATA[v].CFG);
+  try{history.replaceState(null,'','#'+v+'-cm')}catch(_){}
+}
+document.querySelectorAll('.model button').forEach(b=>b.onclick=()=>show(+b.dataset.v));
+show(location.hash.startsWith('#110')?110:150);
+</script>
+</html>

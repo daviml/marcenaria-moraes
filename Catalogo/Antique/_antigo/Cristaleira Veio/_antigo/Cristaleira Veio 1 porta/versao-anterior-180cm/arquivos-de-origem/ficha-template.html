@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cristaleira Veio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: folha de projeto de marcenaria — cabeçalho curto, vista 3D girável, vistas cotadas, lista de corte e montagem em sequência */
+:root{
+  --bg:#FAF7F3; --paper:#FFFFFF; --ink:#1C1519; --muted:#6B5E66; --line:#E4DAD8;
+  --amora:#4A1C3C; --cerne:#B0782C;
+  --mel-top:#E4B474; --mel-front:#CC9351; --mel-side:#A9733B;
+  --nog-top:#8D5D3D; --nog-front:#6F4529; --nog-side:#553420;
+  --gl-fill:rgba(190,222,230,.28); --gl-stroke:rgba(110,150,160,.75);
+  --comp-top:#E2C69C; --comp-front:#D2B282; --comp-side:#B89667;
+  --stage:#EEE8E3;
+  --stroke:#4A2E22; --dim:#4A1C3C; --hid:#8C7A84; --scr:#B0782C; --scr-vis:#C23B2E;
+  --f-display:"Bitter",Georgia,serif; --f-body:"Instrument Sans",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 56px}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+.wrap{--w-top:var(--mel-top);--w-front:var(--mel-front);--w-side:var(--mel-side)}
+.wrap.nog{--w-top:var(--nog-top);--w-front:var(--nog-front);--w-side:var(--nog-side)}
+h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;color:var(--ink)}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1}
+h2{font-size:22px;line-height:1.2}
+h3{font:600 17px/1.3 var(--f-display);margin:6px 0 0}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--cerne)}
+header{display:flex;flex-direction:column;gap:10px}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+.specs{display:flex;flex-wrap:wrap;gap:8px 20px;font:500 13px var(--f-mono);color:var(--ink);margin-top:6px}
+.specs span b{color:var(--cerne);font-weight:500}
+section{display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.views,.fin,.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fin{font-size:13px;color:var(--muted)}
+.views button,.chips button,.fin button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--amora);border-color:var(--amora);color:var(--paper)}
+.views button.xr[aria-pressed="true"],.fin button[aria-pressed="true"]{background:var(--cerne);border-color:var(--cerne);color:var(--paper)}
+.chips button[aria-pressed="true"]{border-color:var(--cerne);color:var(--cerne)}
+button:focus-visible{outline:2px solid var(--cerne);outline-offset:2px}
+.iso{display:flex;flex-direction:column;gap:12px}
+.iso svg{width:100%;height:auto;display:block;max-height:640px;background:var(--stage);border-radius:4px}
+[hidden]{display:none!important}
+.legend,.xlegend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.xlegend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:3px;margin-right:6px}
+.prod{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.prod{grid-template-columns:1fr 1fr}}
+.prod .sheet{display:flex;flex-direction:column;gap:8px}
+.prod h3{margin:0}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+dl.facts dt{font:500 12px/1.9 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+dl.facts dd{margin:0}
+.price{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline}
+.price b{font:700 26px/1 var(--f-display);color:var(--cerne)}
+.opts{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:620px){.opts{grid-template-columns:1fr 1fr}}
+.opt{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.opt .sw{display:flex;gap:4px}.opt .sw i{display:block;width:26px;height:14px;border-radius:2px;border:1px solid var(--stroke)}
+.copy{white-space:pre-wrap;font:14px/1.6 var(--f-body);background:var(--bg);border:1px dashed var(--line);border-radius:6px;padding:12px;margin:0}
+.cbtn{align-self:flex-start;font:500 13px var(--f-body);border:1px solid var(--cerne);background:transparent;color:var(--cerne);padding:6px 12px;border-radius:999px;cursor:pointer}
+.pinfo{border:1px solid var(--line);border-left:3px solid var(--cerne);border-radius:6px;padding:10px 14px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.pinfo b.pn{font:600 16px var(--f-display)}
+.pinfo .pd{font:500 18px var(--f-mono);color:var(--cerne)}
+.pinfo .pm{font-size:13px;color:var(--muted)}
+.pinfo button{align-self:flex-start;font:500 12px var(--f-body);border:1px solid var(--line);background:transparent;color:var(--muted);padding:4px 10px;border-radius:999px;cursor:pointer;margin-top:4px}
+.note{font-size:13px;color:var(--muted);margin:0}
+.scroll{overflow-x:auto}
+.ortho svg{display:block;width:100%;min-width:520px;height:auto}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.vt{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+svg text{font-family:var(--f-mono)}
+.d-line{stroke:var(--dim);stroke-width:.25}
+.d-text{fill:var(--dim);font-size:3.2px}
+.lbl{fill:var(--muted);font-size:3px}
+.p-w{fill:var(--w-front);stroke:var(--stroke);stroke-width:.25}
+.p-w2{fill:var(--w-side);stroke:var(--stroke);stroke-width:.25}
+.p-gl{fill:var(--gl-fill);stroke:var(--gl-stroke);stroke-width:.2}
+.p-hid{fill:none;stroke:var(--hid);stroke-width:.25;stroke-dasharray:1.2 .8}
+.p-iron{fill:#1D1B1C}
+ul.keep{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+ul.keep.tight{gap:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mat{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;border:1px solid var(--stroke)}
+.mat.w{background:var(--w-top)}.mat.gl{background:var(--gl-fill);border-color:var(--gl-stroke)}.mat.comp{background:var(--comp-top)}.mat.iron{background:#1D1B1C}
+.tag{font:500 11px var(--f-mono);padding:2px 7px;border-radius:999px;white-space:nowrap}
+.tag.sim{background:color-mix(in srgb,var(--cerne) 18%,transparent);color:var(--cerne)}
+.tag.nao{background:color-mix(in srgb,var(--amora) 14%,transparent);color:var(--amora)}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+ol.steps li::marker{font-family:var(--f-mono);color:var(--cerne)}
+.buy{display:flex;flex-wrap:wrap;gap:12px}
+.buy div{flex:1 1 200px;min-width:0;border-top:2px solid var(--cerne);padding-top:8px}
+.buy b{display:block;font:600 20px var(--f-display)}
+.buy span{color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:no-preference){.iso g.piece{transition:opacity .2s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Marcenaria Moraes · catálogo · ficha do produto</div>
+    <h1>Cristaleira Veio</h1>
+    <p class="lead">Cristaleira de madeira maciça com vidro nos três lados: porta de vidro na frente e janelas de vidro nas duas laterais. Quatro nichos com três prateleiras soltas, gaveta embaixo, chapéu com friso e ferragens de ferro preto (dobradiças borboleta, tramela e puxador concha). Inspirada na cristaleira rústica da foto de referência.</p>
+    <div class="specs"><span><b>C</b> 50 cm (56 no topo)</span><span><b>P</b> 40 cm (43 no topo)</span><span><b>A</b> 180 cm</span><span><b>Madeira</b> cambará maciço</span><span><b>Acabamento</b> mel ou nogueira</span><span><b>Post</b> sem preço · valor sob consulta</span></div>
+  </header>
+
+  <section id="produto">
+    <h2>O produto</h2>
+    <div class="prod">
+      <div class="sheet">
+        <h3>Ficha técnica</h3>
+        <dl class="facts">
+          <dt>Nome</dt><dd>Cristaleira Veio</dd>
+          <dt>Medidas</dt><dd>50 cm de largura × 40 cm de profundidade × 180 cm de altura. O topo tem beiral de 3 cm: 56 × 43 cm</dd>
+          <dt>Estrutura</dt><dd>4 colunas de 4 × 4 cm (duas ripas de cambará coladas), do chão ao topo, com pés de 4 cm</dd>
+          <dt>Vidros</dt><dd>12 vidros de 3 mm: 4 na porta e 4 em cada lateral, presos com baguete dos dois lados (troca fácil se quebrar)</dd>
+          <dt>Por dentro</dt><dd>Piso + 3 prateleiras soltas, alinhadas com as travessas da porta e das laterais: 4 nichos de ~31 cm de altura e 30 cm de fundo</dd>
+          <dt>Gaveta</dt><dd>42 × 30 cm por dentro, 13 cm de altura útil, corre sobre o piso de madeira com guias laterais</dd>
+          <dt>Ferragens</dt><dd>3 dobradiças borboleta de sobrepor, tramela e puxador concha, todas de ferro preto. Fecho magnético por dentro</dd>
+          <dt>Peso</dt><dd>~54 kg (46 de madeira e 8 de vidro)</dd>
+          <dt>Fabricação</dt><dd>Sob encomenda, peça a peça, em Uberlândia. Prazo sugerido: 4 a 5 semanas</dd>
+        </dl>
+      </div>
+      <div class="sheet">
+        <h3>Custo e preço (uso interno)</h3>
+        <div class="price"><span><b>~R$ 750</b><br><span class="note">material, versão mel</span></span><span><b>R$ 2.300 a 2.600</b><br><span class="note">preço sugerido</span></span></div>
+        <p class="note"><b>Não vai no post:</b> no Instagram a cristaleira aparece como "sob encomenda · valor sob consulta", e o valor é passado no direct ou no WhatsApp. Conta do planejamento: (R$ 750 de material + ~35 h × R$ 30) × 1,3 ≈ R$ 2.340. A versão nogueira gasta uns R$ 40 a mais de tingidor. Cristaleiras rústicas de 1 porta em madeira maciça costumam sair de R$ 1.800 a 3.500.</p>
+        <h3>Por que vale</h3>
+        <ul class="keep tight">
+          <li><b>Madeira maciça de verdade,</b> não MDF. Pode ser lixada e renovada daqui a 20 anos.</li>
+          <li><b>Vidro nos três lados:</b> o que está dentro aparece de qualquer ângulo da sala.</li>
+          <li><b>Nenhum parafuso aparente</b> na frente nem nas laterais. Só as ferragens de ferro, que são decoração.</li>
+          <li><b>Vidro trocável:</b> baguete com preguinho por dentro, sem massa nem silicone.</li>
+        </ul>
+      </div>
+    </div>
+    <h3>Acabamentos</h3>
+    <div class="opts">
+      <div class="opt"><div class="sw"><i style="background:var(--mel-top)"></i><i style="background:var(--mel-front)"></i></div><b>Mel · principal</b><span class="note">Cambará natural com óleo de linhaça e cera de abelha. Dourado, como a peça da foto, e escurece um pouco com o tempo.</span></div>
+      <div class="opt"><div class="sw"><i style="background:var(--nog-top)"></i><i style="background:var(--nog-front)"></i></div><b>Nogueira</b><span class="note">Tingidor nogueira à base d'água antes do óleo e da cera. Mais escura, combina com aparador e mesa rústica.</span></div>
+    </div>
+    <h3>Texto de venda</h3>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:10px">
+      <p class="copy" id="copyTxt">Cristaleira Veio 🌳
+
+Madeira maciça e vidro nos três lados, para mostrar louças, taças e lembranças de família.
+
+• 180 × 50 × 40 cm
+• Cambará maciço com óleo e cera: mel ou nogueira
+• 3 prateleiras, gaveta e ferragens de ferro preto
+• Feita sob encomenda em Uberlândia
+
+Valor sob consulta: chame no direct ou no WhatsApp 📲</p>
+      <button type="button" class="cbtn" id="copyBtn">Copiar texto</button>
+    </div>
+    <h3>Cuidados (para passar ao cliente)</h3>
+    <ul class="keep tight">
+      <li>Limpe a madeira com pano levemente úmido e seque em seguida. Nada de álcool, multiuso ou lustra-móveis com silicone.</li>
+      <li>Vidro: limpa-vidros borrifado no pano, nunca direto no vidro, para não escorrer na madeira.</li>
+      <li>Não passe de ~15 kg por prateleira. Peças pesadas vão na prateleira de baixo.</li>
+      <li>A cada 3 ou 4 meses, passe uma camada fina de cera de abelha na madeira e lustre com pano seco.</li>
+      <li>Evite sol direto o dia todo e parede úmida. Se o piso for irregular, calce os pés para a porta fechar certinho.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Vista 3D</h2>
+    <div class="sheet iso">
+      <div class="fin" role="group" aria-label="Acabamento"><span>Acabamento:</span>
+        <button type="button" data-fin="mel" aria-pressed="true">Mel</button>
+        <button type="button" data-fin="nog" aria-pressed="false">Nogueira</button>
+      </div>
+      <div class="views" role="group" aria-label="Ângulo da vista">
+        <button type="button" data-view="frente" aria-pressed="true">Frente</button>
+        <button type="button" data-view="tras" aria-pressed="false">Trás</button>
+        <button type="button" data-view="aberta" aria-pressed="false">Porta e gaveta abertas</button>
+        <button type="button" class="xr" id="xray" aria-pressed="false">Ver parafusos (raio-X)</button>
+      </div>
+      <svg id="iso" role="img" aria-label="Desenho 3D da cristaleira"></svg>
+      <div class="pinfo" id="pinfo" hidden aria-live="polite"></div>
+      <div class="chips" id="chips" role="group" aria-label="Destacar peça"></div>
+      <div class="legend"><span><span class="mat w"></span>Cambará (mel ou nogueira)</span><span><span class="mat gl"></span>Vidro 3 mm</span><span><span class="mat comp"></span>Compensado 6 mm (fundo da gaveta)</span><span><span class="mat iron"></span>Ferro preto</span></div>
+      <div class="xlegend" id="xleg" hidden><span><i style="background:var(--scr)"></i>Parafuso escondido (por dentro ou por baixo)</span><span><i style="background:var(--scr-vis)"></i>Aparece só no fundo, que fica contra a parede</span></div>
+      <p class="note">Toque numa peça para ver as medidas dela. No raio-X, a madeira fica transparente para mostrar os 109 parafusos; gire para "Trás" para ver os do fundo. As 64 cavilhas não aparecem no desenho.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Vistas cotadas</h2>
+    <p class="note">Medidas em centímetros.</p>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th>Conferência</th><th>Conta</th><th>Fecha com</th></tr></thead>
+        <tbody>
+          <tr><td>Largura (frente)</td><td class="num">4 coluna + 42 vão + 4 coluna</td><td class="num">50 ✓</td></tr>
+          <tr><td>Profundidade (lado)</td><td class="num">4 coluna + 30 vão + 4 coluna + 2 fundo</td><td class="num">40 ✓</td></tr>
+          <tr><td>Altura</td><td class="num">178 coluna + 2 topo</td><td class="num">180 ✓</td></tr>
+          <tr><td>Frente, de baixo para cima</td><td class="num">4 pé + 4 rodapé + 16 gaveta + 4 travessa + 140 porta + 10 travessa</td><td class="num">178 ✓</td></tr>
+          <tr><td>Porta (com 2 mm de folga em volta)</td><td class="num">42 − 0,4 = 41,6 · 140 − 0,4 = 139,6</td><td class="num">41,6 × 139,6 ✓</td></tr>
+          <tr><td>Largura dos vidros da porta</td><td class="num">41,6 − 6 − 6 montantes = 29,6 de vão</td><td class="num">vidro 29,4 ✓</td></tr>
+          <tr><td>Alturas da porta</td><td class="num">6 + 4 vãos de 28,9 + 3 × 4 + 5,8</td><td class="num">139,6 ✓</td></tr>
+          <tr><td>Lateral, de baixo para cima</td><td class="num">4 pé + 30 painel + 4 vãos de 29 + 3 × 4 travessas + 16 travessa</td><td class="num">178 ✓</td></tr>
+          <tr><td>Prateleiras × travessas</td><td>As travessas da lateral ficam a 63, 96 e 129 cm do chão e as da porta quase na mesma altura. A prateleira (2 cm) apoia no apoio de 2 cm colado atrás da travessa, então fica escondida atrás dela, de frente e de lado</td><td class="num">65 + 2 = 67 = topo da travessa ✓</td></tr>
+          <tr><td>Nichos</td><td class="num">28 → 65 · 67 → 98 · 100 → 131 · 133 → 168 (vão da porta)</td><td class="num">37 · 31 · 31 · 35 ✓</td></tr>
+          <tr><td>Chapéu</td><td class="num">friso 5 (de 173 a 178) + topo 2; beiral: friso sai 2 e o topo mais 1</td><td class="num">56 × 43 ✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid2">
+      <div class="sheet ortho"><p class="vt">Frente</p><div class="scroll"><svg id="vFront" role="img" aria-label="Vista de frente cotada"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Lateral (lado direito)</p><div class="scroll"><svg id="vSide" role="img" aria-label="Vista lateral cotada"></svg></div></div>
+    </div>
+    <div class="grid2">
+      <div class="sheet ortho"><p class="vt">Porta, vista de frente</p><div class="scroll"><svg id="vDoor" role="img" aria-label="Porta cotada"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Corte por cima, na altura de uma prateleira</p><div class="scroll"><svg id="vPlan" role="img" aria-label="Corte horizontal na altura da prateleira"></svg></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Lista de corte</h2>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th>Peça</th><th>Qtd</th><th>Medida final</th><th>Material</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Colunas</td><td class="num">4</td><td class="num">178 × 4 × 4</td><td><span class="mat w"></span>Cambará</td><td>Cada uma com 2 ripas de 178 × 4 × 2 coladas pela face. Corte com 182 e acerte depois. <b>Veio em pé</b></td></tr>
+          <tr><td>Travessas da frente</td><td class="num">3</td><td class="num">42 × 4 × 2 (2) · 42 × 10 × 2 (1)</td><td><span class="mat w"></span>Cambará</td><td>Rodapé, travessa sobre a gaveta e travessa de cima (a de 10). Rentes à face da frente das colunas</td></tr>
+          <tr><td>Travessas de trás</td><td class="num">2</td><td class="num">42 × 4 × 2 · 42 × 10 × 2</td><td><span class="mat w"></span>Cambará</td><td>Rentes à face de trás das colunas. Seguram o fundo</td></tr>
+          <tr><td>Painéis de baixo das laterais</td><td class="num">2</td><td class="num">30 × 30 × 2</td><td><span class="mat w"></span>Cambará</td><td>Veio deitado. Rentes à face de fora das colunas</td></tr>
+          <tr><td>Travessas das laterais</td><td class="num">6</td><td class="num">30 × 4 × 2</td><td><span class="mat w"></span>Cambará</td><td>3 por lado, com a base a 63, 96 e 129 cm do chão</td></tr>
+          <tr><td>Travessas de cima das laterais</td><td class="num">2</td><td class="num">30 × 16 × 2</td><td><span class="mat w"></span>Cambará</td><td>De 162 a 178 cm. O friso cobre os 5 cm de cima</td></tr>
+          <tr><td>Tábuas do fundo</td><td class="num">2</td><td class="num">174 × 24,9 × 2</td><td><span class="mat w"></span>Cambará</td><td>Refile 5 cm de cada tábua de 30. <b>Veio em pé</b>. Ficam atrás das colunas, de 4 a 178 cm, com fresta de 2 mm entre elas</td></tr>
+          <tr><td>Piso da gaveta</td><td class="num">1</td><td class="num">46 × 34 × 2</td><td><span class="mat w"></span>Cambará</td><td>Tábua de 30 + ripa de 4 colada. Recorte de 2 × 2 nos 4 cantos, em volta das colunas</td></tr>
+          <tr><td>Piso do armário</td><td class="num">1</td><td class="num">46 × 36 × 2</td><td><span class="mat w"></span>Cambará</td><td>Tábua de 30 + ripa de 6 colada. Recorte de 2 × 2 nos cantos da frente e de 2 × 4 nos de trás</td></tr>
+          <tr><td>Prateleiras</td><td class="num">3</td><td class="num">45 × 30 × 2</td><td><span class="mat w"></span>Cambará</td><td>Uma tábua de 30 inteira. Recorte de 1,5 × 4 nos dois cantos de trás. Soltas</td></tr>
+          <tr><td>Topo</td><td class="num">1</td><td class="num">56 × 43 × 2</td><td><span class="mat w"></span>Cambará</td><td>Tábua de 30 + tábua de 13 coladas (anéis alternados). Bordas da frente e dos lados arredondadas</td></tr>
+          <tr><td>Friso da frente</td><td class="num">1</td><td class="num">54 × 5 × 2</td><td><span class="mat w"></span>Cambará</td><td>As duas pontas a 45°</td></tr>
+          <tr><td>Frisos dos lados</td><td class="num">2</td><td class="num">42 × 5 × 2</td><td><span class="mat w"></span>Cambará</td><td>Ponta da frente a 45°, ponta de trás reta, rente ao fundo</td></tr>
+          <tr><td>Montantes da porta</td><td class="num">2</td><td class="num">139,6 × 6 × 2</td><td><span class="mat w"></span>Cambará</td><td>Veio em pé. Separe as ripas mais retas da tábua para eles</td></tr>
+          <tr><td>Travessas da porta</td><td class="num">5</td><td class="num">29,6 × 6 × 2 (2) · 29,6 × 4 × 2 (3)</td><td><span class="mat w"></span>Cambará</td><td>Duas de 6 (em cima e embaixo; a de cima fica com 5,8 depois de ajustada) e três de 4 no meio</td></tr>
+          <tr><td>Frente da gaveta</td><td class="num">1</td><td class="num">41,6 × 15,6 × 2</td><td><span class="mat w"></span>Cambará</td><td>Embutida, com 2 mm de folga em volta</td></tr>
+          <tr><td>Laterais da gaveta</td><td class="num">2</td><td class="num">30 × 13 × 2</td><td><span class="mat w"></span>Cambará</td><td></td></tr>
+          <tr><td>Traseira da gaveta</td><td class="num">1</td><td class="num">37,2 × 11 × 2</td><td><span class="mat w"></span>Cambará</td><td>Entre as laterais, 2 cm mais baixa para o ar sair quando fecha</td></tr>
+          <tr><td>Fundo da gaveta</td><td class="num">1</td><td class="num">41,2 × 30 × 0,6</td><td><span class="mat comp"></span>Compensado</td><td>Pregado e colado por baixo</td></tr>
+          <tr><td>Apoios dos pisos</td><td class="num">7</td><td class="num">30 × 2 × 2 (4) · 42 × 2 × 2 (3)</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Nas laterais (4), na frente (2) e atrás do piso da gaveta (1)</td></tr>
+          <tr><td>Guias da gaveta</td><td class="num">2</td><td class="num">30 × 4 × 2</td><td><span class="mat w"></span>Cambará</td><td>Uma de cada lado, logo acima do piso da gaveta. Enchem o degrau entre a lateral e a coluna</td></tr>
+          <tr><td>Apoios das prateleiras</td><td class="num">6</td><td class="num">30 × 2 × 2</td><td><span class="mat w"></span>Ripa 2 × 2</td><td>Colados atrás das travessas das laterais, rentes à base delas</td></tr>
+          <tr><td>Sarrafos do topo</td><td class="num">4</td><td class="num">42 × 3 × 3 (2) · 28 × 3 × 3 (2)</td><td><span class="mat w"></span>Sarrafo 3 × 3</td><td>Por dentro das travessas de cima, rentes ao topo delas</td></tr>
+          <tr><td>Batentes</td><td class="num">2</td><td class="num">136 × 1,5 × 1 · 10 × 2 × 2</td><td><span class="mat w"></span>Cambará</td><td>Da porta (na coluna da esquerda, por dentro) e da gaveta (no piso, atrás)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Ripas e sarrafos escondidos podem ser de pinus; na versão nogueira levam o mesmo tingidor. Para tirar ripas de 4, 5, 6 e 10 cm, peça para a madeireira desdobrar as tábuas de 30 (ou use a serra circular quando tiver).</p>
+  </section>
+
+  <section>
+    <h2>Vidros e baguetes</h2>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th>Peça</th><th>Qtd</th><th>Medida</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Vidros da porta</td><td class="num">4</td><td class="num">29,4 × 28,7 cm</td><td>Vidro incolor 3 mm com bordas lapidadas (sem fio)</td></tr>
+          <tr><td>Vidros das laterais</td><td class="num">8</td><td class="num">29,6 × 28,6 cm</td><td>4 de cada lado. Mesmo vidro</td></tr>
+          <tr><td>Baguete de madeira 1 × 1 cm</td><td class="num">~28 m</td><td class="num">compre 30 m</td><td>Dos dois lados de cada vidro: por fora colada no vão, por dentro com preguinho sem cabeça de 15 mm a cada 10 cm, sem cola. Assim o vidro troca por dentro</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><b>Meça os vãos depois da peça montada</b> e só então encomende os vidros: a vidraçaria corta 2 mm menor que o vão em cada sentido. Se um vão saiu diferente, o vidro dele também muda. Total: ~1,0 m² de vidro (~8 kg).</p>
+  </section>
+
+  <section>
+    <h2>Como cada peça se prende</h2>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th>Ligação</th><th>Cola</th><th>Como</th></tr></thead>
+        <tbody>
+          <tr><td>Ripas das colunas (face com face)</td><td><span class="tag sim">sim</span></td><td>Titebond III nas duas faces, alicates ou sargentos a cada 20 cm. Espere 24 h</td></tr>
+          <tr><td>Travessas da frente e de trás → colunas</td><td><span class="tag sim">sim</span></td><td>Cavilhas de <b>8 × 40 mm</b>: 1 por ponta nas de 4 cm e 2 nas de 10 cm. Entram 2 cm na coluna e 2 cm na travessa</td></tr>
+          <tr><td>Painel de baixo da lateral → colunas</td><td><span class="tag sim">só embaixo</span></td><td>3 cavilhas por lado. O painel tem veio deitado e cresce na altura: <b>cola só na cavilha de baixo</b>; as duas de cima entram secas, com o furo do painel alongado na vertical (8 × 12 mm)</td></tr>
+          <tr><td>Travessas das laterais → colunas</td><td><span class="tag sim">sim</span></td><td>1 cavilha + cola em cada ponta (2 nas travessas de cima, de 16 cm)</td></tr>
+          <tr><td>Apoios dos pisos → laterais e travessas</td><td><span class="tag sim">sim</span></td><td>Cola e 3 parafusos <b>4 × 30</b> de dentro para fora (atravessa 2 cm do apoio e entra 1 cm na peça de 2)</td></tr>
+          <tr><td>Pisos → apoios</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 30</b> de cima para baixo: na frente em furo redondo; nos lados e atrás em <b>furo oval</b> frente ↔ trás (o piso cresce e encolhe na profundidade)</td></tr>
+          <tr><td>Guias da gaveta → laterais</td><td><span class="tag sim">sim</span></td><td>Cola e 3 parafusos <b>4 × 30</b>. Passe vela na face de cima do piso e das guias para a gaveta correr leve</td></tr>
+          <tr><td>Apoios das prateleiras → travessas</td><td><span class="tag sim">sim</span></td><td>Cola e 2 parafusos <b>4 × 30</b>, rentes à base da travessa. As prateleiras só apoiam (tiram para limpar)</td></tr>
+          <tr><td>Frisos → travessas de cima</td><td><span class="tag sim">sim</span></td><td>Cola só na travessa (não na coluna, que tem veio cruzado) e 3 parafusos <b>4 × 30</b> de dentro para fora. Cantos da frente a 45°, colados entre si</td></tr>
+          <tr><td>Sarrafos do topo → travessas</td><td><span class="tag sim">sim</span></td><td>Cola e parafusos <b>4 × 40</b> (3 nos compridos, 2 nos curtos)</td></tr>
+          <tr><td>Topo → sarrafos</td><td><span class="tag nao">não</span></td><td>Parafusos <b>4 × 40</b> de baixo para cima (atravessa 3 cm de sarrafo e entra 1 cm no topo). Sarrafo da frente em furo redondo; os outros em <b>furo oval</b> frente ↔ trás, com arruela. O topo cresce para trás</td></tr>
+          <tr><td>Fundo → colunas e travessas de trás</td><td><span class="tag nao">não</span></td><td>6 parafusos <b>4 × 40</b> em cada coluna de trás (furo redondo) e 2 parafusos <b>4 × 30</b> em cada travessa, em furo oval no sentido da largura. Fresta de 2 mm entre as tábuas. São os únicos parafusos que aparecem, e ficam contra a parede</td></tr>
+          <tr><td>Quadro da porta</td><td><span class="tag sim">sim</span></td><td>Travessas → montantes com cola e cavilhas 8 × 40: 2 nas de 6 cm, 1 nas de 4 cm. Monte sobre uma superfície plana e confira as diagonais</td></tr>
+          <tr><td>Vidros</td><td><span class="tag nao">não</span></td><td>Baguete de fora colada no vão; vidro; baguete de dentro só com preguinho sem cabeça 15 mm. Cola nunca encosta no vidro</td></tr>
+          <tr><td>Porta → coluna da direita</td><td><span class="tag nao">não</span></td><td>3 dobradiças borboleta de sobrepor (a 42, 98 e 154 cm do chão), com os parafusos pretos que vêm com elas. Calce a porta com papelão de 2 mm em volta para marcar os furos</td></tr>
+          <tr><td>Tramela e fecho</td><td><span class="tag nao">não</span></td><td>Tramela na coluna da esquerda, a 98 cm, girando por cima do montante da porta. Fecho magnético por dentro, no alto, e batente de 1,5 × 1 colado na coluna da esquerda para a porta parar rente</td></tr>
+          <tr><td>Gaveta</td><td><span class="tag sim">sim</span></td><td>Laterais → frente com cola e 2 cavilhas cada; traseira → laterais com cola e 2 parafusos <b>4 × 40</b> pela lateral; fundo de compensado colado e pregado por baixo a cada 8 cm. Puxador concha com os parafusos dele, por dentro</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Furo oval: dois furos de 5 mm encostados, unidos com a broca inclinada, sempre no sentido em que a madeira se mexe (atravessado ao veio). Parafuso de madeira: furo-guia de 3 mm e furo de passagem de 5 mm na peça de cima. Cavilha: broca de 8 mm com fita marcando 21 mm de fundo; marque a outra peça com <b>marcador de cavilha</b> (pino de centrar) para os furos baterem.</p>
+  </section>
+
+  <section>
+    <h2>Como esconder os parafusos</h2>
+    <p class="note" style="font-size:14px;color:var(--ink)">São 109 parafusos de madeira e 64 cavilhas. Na frente e nas laterais <b>não aparece nenhum</b>: a estrutura é toda em cavilha, e os parafusos dos apoios, guias, frisos e topo entram por dentro ou por baixo. Use o botão <b>Ver parafusos (raio-X)</b> na vista 3D.</p>
+    <ul class="keep">
+      <li><b>O que aparece de propósito:</b> dobradiças, tramela e puxador de ferro preto, com parafusos pretos. São a "joia" da peça.</li>
+      <li><b>O fundo</b> leva 16 parafusos por fora, contra a parede. Se a cristaleira for ficar solta no meio da sala, troque-os por cavilha de 8 mm colada só na coluna, cortada rente e lixada.</li>
+      <li><b>Nunca tape os parafusos em furo oval</b> (pisos, topo e fundo): eles precisam deslizar quando a madeira se mexe.</li>
+      <li>Dentro dos nichos, os parafusos dos apoios das prateleiras ficam atrás da travessa e não aparecem pelo vidro.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Ordem de montagem</h2>
+    <ol class="steps">
+      <li><b>Deixe a madeira 1 a 2 semanas dentro de casa</b>, deitada com tacos entre as tábuas. Madeira úmida empena a porta e trinca o vidro depois.</li>
+      <li><b>Cole as peças largas e as colunas:</b> as 2 ripas de cada coluna, o topo (30 + 13, anéis alternados) e os dois pisos (30 + ripa). Espere 24 h.</li>
+      <li><b>Corte tudo na medida final</b> e no esquadro, seguindo a lista de corte. Separe as ripas mais retas para os montantes da porta.</li>
+      <li><b>Lixe todas as peças antes de montar</b> (80 → 120 → 180). Depois de montada, os cantos internos ficam difíceis.</li>
+      <li><b>Fure as cavilhas e monte tudo a seco</b> primeiro, sem cola, para conferir. Numere as ligações a lápis.</li>
+      <li><b>Monte as duas laterais</b> deitadas: 2 colunas + painel de baixo + 3 travessas + travessa de cima, com cola (no painel, só na cavilha de baixo). Confira as diagonais. Espere 24 h.</li>
+      <li><b>Nas laterais ainda soltas,</b> cole e parafuse os apoios dos pisos, as guias da gaveta e os apoios das prateleiras. Com a peça deitada é muito mais fácil.</li>
+      <li><b>Una as laterais</b> com as 5 travessas da frente e de trás (cola + cavilhas), com a cristaleira deitada de costas sobre um cobertor. Confira as diagonais da frente e de cima, aperte com cinta ou sargento e espere 24 h.</li>
+      <li><b>Pisos:</b> parafuse os apoios da frente e de trás, apoie os pisos e prenda com os 4 × 30 (furo oval nos lados e atrás).</li>
+      <li><b>Chapéu:</b> sarrafos do topo por dentro das travessas; frisos com cantos a 45°; por último o topo, com os furos ovais.</li>
+      <li><b>Fundo:</b> as 2 tábuas atrás das colunas, com 2 mm de fresta (use uma moeda de calço) e o batente da porta na coluna da esquerda.</li>
+      <li><b>Porta:</b> monte o quadro, espere a cola secar e prove no vão. Ajuste com plaina até ficar 2 mm de folga em volta. Faça o mesmo com a gaveta.</li>
+      <li><b>Acabamento antes dos vidros e das ferragens:</b> mel = 3 demãos finas de óleo de linhaça cozido (tira o excesso em 20 min, 24 h entre demãos) e cera de abelha depois de 1 semana. Nogueira = tingidor nogueira à base d'água antes, testado numa sobra. Mesmo número de demãos por dentro e por fora. <b>Pano com óleo de linhaça pode pegar fogo sozinho:</b> abra no chão para secar ou deixe de molho na água.</li>
+      <li><b>Vidros:</b> meça cada vão pronto, encomende com 2 mm a menos, cole as baguetes de fora, encaixe o vidro e prenda as de dentro com preguinho.</li>
+      <li><b>Ferragens:</b> dobradiças (porta calçada com 2 mm), tramela, fecho magnético, puxador e 4 sapatas de feltro nos pés.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>O que comprar</h2>
+    <p class="note">Para uma cristaleira, versão mel.</p>
+    <div class="buy">
+      <div><b>~15 m de cambará</b><span>tábua de 30 × 2 cm · ~R$ 265. Fundo 3,6 m + colunas e porta 3,6 m + topo, pisos, prateleiras, laterais, gaveta e ripas</span></div>
+      <div><b>Ripas e sarrafos</b><span>~6 m de ripa 2 × 2 e 1,5 m de sarrafo 3 × 3 (pinus serve) · ~R$ 30</span></div>
+      <div><b>12 vidros 3 mm</b><span>~1,0 m², incolor, bordas lapidadas, cortados na vidraçaria · ~R$ 140</span></div>
+      <div><b>30 m de baguete 1 × 1</b><span>de madeira, + preguinho sem cabeça 15 mm · ~R$ 45</span></div>
+      <div><b>Ferragens de ferro preto</b><span>3 dobradiças borboleta de sobrepor (~7,5 cm), tramela, puxador concha, fecho magnético e 4 sapatas de feltro · ~R$ 110</span></div>
+      <div><b>Fixação</b><span>100 cavilhas 8 × 40 + 75 parafusos 4 × 30 + 40 de 4 × 40 cabeça chata + 10 arruelas + marcador de cavilha 8 mm · ~R$ 45</span></div>
+      <div><b>Compensado 6 mm</b><span>retalho de 42 × 30 para o fundo da gaveta · ~R$ 15</span></div>
+      <div><b>Acabamento</b><span>óleo de linhaça cozido 500 ml (~R$ 30) · cera de abelha (~R$ 30). Nogueira: + tingidor nogueira à base d'água (~R$ 40)</span></div>
+      <div><b>Consumo</b><span>lixas 80, 120, 180 e 220 · ~R$ 35. Broca de 8 mm, se ainda não tiver</span></div>
+    </div>
+    <p class="note"><b>Custo total: ~R$ 750 (mel) a ~R$ 790 (nogueira).</b> Você já tem cola (Titebond III), alicates e tico-tico. A plaina manual da etapa 2 ajuda muito no ajuste da porta.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+const PARTS=__PARTS__;
+const SCREWS=__SCREWS__;
+const HINGES=[42,98,154];
+const L=50,D=40,H=180;
+const GROUPS=[['colunas','Colunas'],['travessas','Travessas'],['laterais','Laterais'],['fundo','Fundo'],['pisos','Pisos'],['prateleiras','Prateleiras'],['apoios','Apoios e sarrafos'],['chapeu','Chapéu (friso e topo)'],['porta','Porta'],['vidros','Vidros'],['gaveta','Gaveta']];
+const NS='http://www.w3.org/2000/svg';
+let view='frente',hl=null,sel=null,xray=false;
+const c=Math.cos(Math.PI/6),s=.5;
+const pr=(x,y,z)=>[(x+y)*c,(x-y)*s-z];
+const DOORX=45.9,DOORY=-0.45,OPEN=Math.PI*0.55;
+/* porta aberta: gira em volta das dobradiças; gaveta puxada 22 cm */
+function moveP(p,[x,y,z]){if(view!=='aberta')return[x,y,z];
+  if(p.door){const dx=x-DOORX,dy=y-DOORY,a=OPEN;return[DOORX+dx*Math.cos(a)-dy*Math.sin(a),DOORY+dx*Math.sin(a)+dy*Math.cos(a),z]}
+  if(p.drawer)return[x,y-22,z];return[x,y,z]}
+function tp([x,y,z]){if(view==='tras')return[L-x,D-y,z];return[x,y,z]}
+function corners(p){const [x0,y0,z0,x1,y1,z1]=p.b;const out=[];for(const x of[x0,x1])for(const y of[y0,y1])for(const z of[z0,z1])out.push(tp(moveP(p,[x,y,z])));return out}
+function bbox(p){const cs=corners(p);const b=[1e9,1e9,1e9,-1e9,-1e9,-1e9];cs.forEach(v=>{for(let i=0;i<3;i++){b[i]=Math.min(b[i],v[i]);b[i+3]=Math.max(b[i+3],v[i])}});return b}
+const T=.3;
+function behind(A,B){ // A desenha antes de B (está mais longe: mais atrás, mais à esquerda ou mais embaixo)
+  if(A[3]<=B[0]+T)return true; if(B[3]<=A[0]+T)return false;
+  if(A[1]>=B[4]-T)return true; if(B[1]>=A[4]-T)return false;
+  if(A[5]<=B[2]+T)return true; if(B[5]<=A[2]+T)return false;
+  return null}
+function order(items){const n=items.length,adj=items.map(()=>[]),indeg=new Array(n).fill(0);
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const r=behind(items[i].t,items[j].t);if(r===true){adj[i].push(j);indeg[j]++}else if(r===false){adj[j].push(i);indeg[i]++}}
+  const key=t=>(t[1]+t[4])-(t[0]+t[3])-(t[2]+t[5]);
+  const done=new Array(n).fill(false),out=[];
+  while(out.length<n){let best=-1;
+    for(let i=0;i<n;i++)if(!done[i]&&indeg[i]===0&&(best<0||key(items[i].t)>key(items[best].t)))best=i;
+    if(best<0)for(let i=0;i<n;i++)if(!done[i]&&(best<0||indeg[i]<indeg[best]||(indeg[i]===indeg[best]&&key(items[i].t)>key(items[best].t))))best=i;
+    done[best]=true;out.push(items[best]);adj[best].forEach(j=>indeg[j]--)}
+  return out}
+const key=p=>p.u||p.id;
+const grp=p=>p.g==='baguetes'?'vidros':p.g;
+function active(p){return sel?key(p)===sel:(!hl||grp(p)===hl)}
+const PINFO={
+ col:['Coluna','178 × 4 × 4','4 · 2 ripas de 178 × 4 × 2 coladas','Do chão ao topo, com pé de 4 cm. Recebe todas as travessas em cavilha 8 × 40'],
+ tfRod:['Rodapé da frente','42 × 4 × 2','1','De 4 a 8 cm do chão, rente à frente. 1 cavilha por ponta'],
+ tfGav:['Travessa sobre a gaveta','42 × 4 × 2','1','De 24 a 28 cm. Separa a gaveta da porta'],
+ tfSup:['Travessa de cima (frente)','42 × 10 × 2','1','De 168 a 178 cm. O friso cobre os 5 cm de cima. 2 cavilhas por ponta'],
+ ttInf:['Travessa de baixo (trás)','42 × 4 × 2','1','Rente à face de trás das colunas. Segura o fundo e o apoio do piso'],
+ ttSup:['Travessa de cima (trás)','42 × 10 × 2','1','Segura o fundo e o sarrafo do topo'],
+ lInf:['Painel de baixo da lateral','30 × 30 × 2','2','Veio deitado. 3 cavilhas por lado, cola só na de baixo'],
+ lTr:['Travessa da lateral','30 × 4 × 2','6 · 3 por lado','Base a 63, 96 e 129 cm. Por dentro recebe o apoio da prateleira'],
+ lSup:['Travessa de cima da lateral','30 × 16 × 2','2','De 162 a 178 cm. 2 cavilhas por ponta'],
+ fundo:['Tábua do fundo','174 × 24,9 × 2','2','Veio em pé, atrás das colunas. 4 × 40 nas colunas e 4 × 30 em furo oval nas travessas'],
+ pisoInf:['Piso da gaveta','46 × 34 × 2','1 · tábua de 30 + ripa de 4','Recorte 2 × 2 nos 4 cantos. A gaveta corre em cima dele'],
+ pisoSup:['Piso do armário','46 × 36 × 2','1 · tábua de 30 + ripa de 6','Recorte 2 × 2 na frente e 2 × 4 atrás. Chão do nicho de baixo'],
+ apPiso:['Apoio do piso','30 ou 42 × 2 × 2','7','Cola + 3 parafusos 4 × 30. Os pisos apoiam em cima'],
+ guia:['Guia da gaveta','30 × 4 × 2','2','Enche o degrau entre o painel da lateral e a coluna, para a gaveta correr reta'],
+ apPr:['Apoio da prateleira','30 × 2 × 2','6','Colado atrás da travessa da lateral, rente à base dela, com 2 parafusos 4 × 30'],
+ batGav:['Batente da gaveta','10 × 2 × 2','1','No piso, atrás. A gaveta para com a frente rente'],
+ batPorta:['Batente da porta','136 × 1,5 × 1','1','Colado na coluna da esquerda, por dentro. A porta para rente à frente'],
+ sfTopoFT:['Sarrafo do topo','42 × 3 × 3','2','Por dentro das travessas de cima (frente e trás). O da frente prende o topo em furo redondo'],
+ sfTopoL:['Sarrafo do topo (lado)','28 × 3 × 3','2','Por dentro das travessas de cima das laterais. Furo oval'],
+ prat:['Prateleira','45 × 30 × 2','3','Solta, apoiada nos apoios. Recorte 1,5 × 4 nos cantos de trás'],
+ frisoF:['Friso da frente','54 × 5 × 2','1','Pontas a 45°. Cola na travessa + 3 parafusos 4 × 30 de dentro'],
+ frisoL:['Friso do lado','42 × 5 × 2','2','Ponta da frente a 45°, a de trás reta'],
+ topo:['Topo','56 × 43 × 2','1 · tábuas de 30 + 13 coladas','Beiral de 3 cm na frente e nos lados. Bordas arredondadas. 4 × 40 de baixo'],
+ pMont:['Montante da porta','139,6 × 6 × 2','2','Veio em pé. As dobradiças vão no da direita'],
+ pTr:['Travessa da porta','29,6 × 6 × 2','2','Em cima e embaixo. 2 cavilhas por ponta'],
+ pMeio:['Travessa do meio da porta','29,6 × 4 × 2','3','Na altura das prateleiras. 1 cavilha por ponta'],
+ vP:['Vidro da porta','29,4 × 28,7 × 0,3','4','Vidro 3 mm lapidado, entre baguetes de 1 × 1'],
+ vL:['Vidro da lateral','29,6 × 28,6 × 0,3','8 · 4 por lado','Vidro 3 mm lapidado, entre baguetes de 1 × 1'],
+ bg:['Baguete','1 × 1','~28 m','Por fora colada; por dentro com preguinho sem cabeça 15 mm'],
+ gFrente:['Frente da gaveta','41,6 × 15,6 × 2','1','Embutida com 2 mm de folga. Puxador concha no centro'],
+ gLat:['Lateral da gaveta','30 × 13 × 2','2','Cola + 2 cavilhas na frente'],
+ gTras:['Traseira da gaveta','37,2 × 11 × 2','1','Entre as laterais, com 2 parafusos 4 × 40 de cada lado'],
+ gFundo:['Fundo da gaveta','41,2 × 30 × 0,6','1 · compensado','Colado e pregado por baixo'],
+};
+function pick(p){const k=key(p);sel=sel===k?null:k;hl=null;document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed','false'));showInfo();drawIso()}
+function showInfo(){const box=document.getElementById('pinfo');
+  if(!sel||!PINFO[sel]){box.hidden=true;box.innerHTML='';return}
+  const [n,d,q,o]=PINFO[sel];
+  box.innerHTML='<b class="pn"></b><span class="pd"></span><span class="pm q"></span><span class="pm o"></span><button type="button">Fechar</button>';
+  box.querySelector('.pn').textContent=n;box.querySelector('.pd').textContent=d+' cm';
+  box.querySelector('.q').textContent='Quantidade: '+q;box.querySelector('.o').textContent=o;
+  box.querySelector('button').onclick=()=>{sel=null;showInfo();drawIso()};box.hidden=false}
+function poly(g,pts,fill,stroke,w){const e=document.createElementNS(NS,'polygon');e.setAttribute('points',pts.map(v=>pr(...v).map(n=>n.toFixed(2)).join(',')).join(' '));e.style.fill=fill;e.style.stroke=stroke;e.setAttribute('stroke-width',w||'.25');e.setAttribute('stroke-linejoin','round');g.appendChild(e)}
+function drawBox(g,p){
+  const cs=corners(p); // ordem: x0y0z0,x0y0z1,x0y1z0,x0y1z1,x1y0z0,...
+  const F=(i)=>cs[i];
+  const faces={top:[1,5,7,3],bot:[0,2,6,4],fr:[0,4,5,1],bk:[2,3,7,6],lf:[0,1,3,2],rt:[4,6,7,5]};
+  const col=p.m==='vidro'?null:p.m==='comp'?'comp':'w';
+  for(const [k,idx] of Object.entries(faces)){
+    const pts=idx.map(F);
+    // face visível: normal aponta para o observador (−y, +x, +z) → área projetada com sinal
+    const P=pts.map(v=>pr(...v));let a=0;P.forEach((u,i)=>{const w=P[(i+1)%P.length];a+=u[0]*w[1]-w[0]*u[1]});
+    if(a<=0.001)continue;
+    if(!col){poly(g,pts,'var(--gl-fill)','var(--gl-stroke)','.15');continue}
+    const tone=(k==='top'||k==='bot')?'top':(k==='fr'||k==='bk')?'front':'side';
+    poly(g,pts,`var(--${col}-${tone})`,'var(--stroke)',p.thin?'.12':'.25');
+  }
+}
+function drawIron(svg){
+  const P=(x,y,z)=>pr(...tp([x,y,z]));
+  const pathOf=(arr)=>arr.map((v,i)=>(i?'L':'M')+P(...v).map(n=>n.toFixed(2)).join(' ')).join('')+'Z';
+  const add=d=>{const e=document.createElementNS(NS,'path');e.setAttribute('d',d);e.setAttribute('class','p-iron');svg.appendChild(e)};
+  if(view==='tras')return;
+  HINGES.forEach(z=>{
+    add(pathOf([[46,-0.3,z-1.6],[49.8,-0.3,z-3.7],[49.8,-0.3,z+3.7],[46,-0.3,z+1.6]]));
+    const door=[[45.8,-0.3,z-1.6],[42,-0.3,z-3.7],[42,-0.3,z+3.7],[45.8,-0.3,z+1.6]].map(v=>moveP({door:1},v));
+    add(pathOf(door));
+  });
+  add(pathOf([[0.8,-0.3,96.3],[3.4,-0.3,96.3],[3.4,-0.3,99.7],[0.8,-0.3,99.7]]));
+  const g={drawer:1};add(pathOf([[20.2,-0.3,14.3],[29.8,-0.3,14.3],[29.8,-0.3,17.7],[20.2,-0.3,17.7]].map(v=>moveP(g,v))));
+}
+function drawScrews(svg){
+  SCREWS.forEach(sc=>{if(view==='aberta')return;const a=pr(...tp(sc.a)),b=pr(...tp(sc.b));const vis=sc.t.startsWith('vis');const col=vis?'var(--scr-vis)':'var(--scr)';
+    const ln=document.createElementNS(NS,'line');[['x1',a[0]],['y1',a[1]],['x2',b[0]],['y2',b[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));
+    ln.style.stroke=col;ln.setAttribute('stroke-width','.5');ln.setAttribute('stroke-linecap','round');svg.appendChild(ln);
+    const hd=document.createElementNS(NS,'circle');hd.setAttribute('cx',a[0].toFixed(2));hd.setAttribute('cy',a[1].toFixed(2));hd.setAttribute('r',vis?'.9':'.65');
+    hd.style.fill=col;hd.style.stroke='var(--paper)';hd.setAttribute('stroke-width','.15');svg.appendChild(hd)})}
+function drawDims(svg){
+  const ps=PARTS.filter(p=>key(p)===sel);if(!ps.length)return;
+  let b=[1e9,1e9,1e9,-1e9,-1e9,-1e9];ps.forEach(p=>{const t=bbox(p);for(let i=0;i<3;i++){b[i]=Math.min(b[i],t[i]);b[i+3]=Math.max(b[i+3],t[i+3])}});
+  const [x0,y0,z0,x1,y1,z1]=b,o=3,fmt=v=>String(Math.round(v*10)/10).replace('.',',');
+  const seg=(A3,C3,val,off)=>{const A=pr(...A3),C=pr(...C3);
+    const ln=document.createElementNS(NS,'line');[['x1',A[0]],['y1',A[1]],['x2',C[0]],['y2',C[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));ln.style.stroke='var(--amora)';ln.setAttribute('stroke-width','.45');svg.appendChild(ln);
+    const mx=(A[0]+C[0])/2+off[0],my=(A[1]+C[1])/2+off[1];
+    const tx=document.createElementNS(NS,'text');tx.setAttribute('x',mx.toFixed(2));tx.setAttribute('y',(my+1.5).toFixed(2));tx.setAttribute('text-anchor','middle');tx.style.fill='var(--paper)';tx.style.font='600 4.2px var(--f-mono)';tx.textContent=fmt(val);
+    svg.appendChild(tx);const bb=tx.getBBox();
+    const bg=document.createElementNS(NS,'rect');bg.setAttribute('x',(bb.x-1.2).toFixed(2));bg.setAttribute('y',(bb.y-.6).toFixed(2));bg.setAttribute('width',(bb.width+2.4).toFixed(2));bg.setAttribute('height',(bb.height+1.2).toFixed(2));bg.setAttribute('rx','1.2');bg.style.fill='var(--amora)';
+    svg.insertBefore(bg,tx)};
+  seg([x0,y0-o,z0],[x1,y0-o,z0],x1-x0,[-3,4.5]);
+  seg([x1+o,y0,z0],[x1+o,y1,z0],y1-y0,[3,4.5]);
+  seg([x1+o,y0-o,z0],[x1+o,y0-o,z1],z1-z0,[6,0]);
+}
+function drawIso(){
+  const svg=document.getElementById('iso');svg.innerHTML='';
+  const items=PARTS.map(p=>({p,t:bbox(p)}));
+  let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
+  items.forEach(({p})=>corners(p).forEach(v=>{const [a,b]=pr(...v);minx=Math.min(minx,a);maxx=Math.max(maxx,a);miny=Math.min(miny,b);maxy=Math.max(maxy,b)}));
+  const pad=10;svg.setAttribute('viewBox',`${minx-pad} ${miny-pad} ${maxx-minx+2*pad} ${maxy-miny+2*pad}`);
+  order(items).forEach(({p})=>{
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','piece');
+    g.style.opacity=xray?(p.m==='vidro'?.5:.16):(active(p)?1:.14);
+    drawBox(g,p);g.style.cursor='pointer';g.addEventListener('click',()=>pick(p));svg.appendChild(g)});
+  if(!xray)drawIron(svg);
+  if(xray)drawScrews(svg);
+  if(sel)drawDims(svg);
+}
+function setHl(h){hl=h;sel=null;showInfo();document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===hl?'true':'false'));drawIso()}
+const chips=document.getElementById('chips');
+GROUPS.forEach(([g,n])=>{const b=document.createElement('button');b.type='button';b.dataset.g=g;b.textContent=n;b.setAttribute('aria-pressed','false');b.onclick=()=>setHl(hl===g?null:g);chips.appendChild(b)});
+document.querySelectorAll('.views button[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.views button[data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));drawIso()});
+document.getElementById('xray').onclick=e=>{xray=!xray;e.currentTarget.setAttribute('aria-pressed',xray?'true':'false');document.getElementById('xleg').hidden=!xray;drawIso()};
+document.querySelectorAll('.fin button').forEach(b=>b.onclick=()=>{document.querySelector('.wrap').classList.toggle('nog',b.dataset.fin==='nog');document.querySelectorAll('.fin button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))});
+document.getElementById('copyBtn').onclick=e=>{const t=document.getElementById('copyTxt').textContent;
+  try{navigator.clipboard.writeText(t).then(()=>{e.target.textContent='Copiado!';setTimeout(()=>e.target.textContent='Copiar texto',1600)})}catch(_){}};
+drawIso();
+
+/* vistas ortográficas: unidades = cm */
+const el=(svg,tag,attrs,txt)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e};
+const R=(svg,x,y,w,h,cls)=>el(svg,'rect',{x,y,width:w,height:h,class:cls});
+function dimH(svg,x0,x1,y,t){el(svg,'line',{x1:x0,y1:y,x2:x1,y2:y,class:'d-line'});[x0,x1].forEach(x=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));el(svg,'text',{x:(x0+x1)/2,y:y-1.2,'text-anchor':'middle',class:'d-text'},t)}
+function dimV(svg,y0,y1,x,t){el(svg,'line',{x1:x,y1:y0,x2:x,y2:y1,class:'d-line'});[y0,y1].forEach(y=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));const ty=(y0+y1)/2;el(svg,'text',{x:x-1.5,y:ty,'text-anchor':'middle',class:'d-text',transform:`rotate(-90 ${x-1.5} ${ty})`},t)}
+const lbl=(svg,x,y,t,a='middle')=>el(svg,'text',{x,y,'text-anchor':a,class:'lbl'},t);
+const DO=[[34.2,63.1],[67.1,96],[100,128.9],[132.9,161.8]], SO=[[34,63],[67,96],[100,129],[133,162]];
+
+/* FRENTE */
+(function(){const v=document.getElementById('vFront');const ox=34,oy=8,Z=z=>oy+180-z,X=x=>ox+x;
+  v.setAttribute('viewBox','0 0 124 204');
+  R(v,X(-3),Z(180),56,2,'p-w');R(v,X(-2),Z(178),54,5,'p-w2');
+  R(v,X(0),Z(178),4,178,'p-w');R(v,X(46),Z(178),4,178,'p-w');
+  R(v,X(4),Z(173),42,5,'p-w');R(v,X(4),Z(8),42,4,'p-w');R(v,X(4),Z(28),42,4,'p-w');
+  R(v,X(4.2),Z(23.8),41.6,15.6,'p-w2');R(v,X(20.2),Z(17.7),9.6,3.4,'p-iron');
+  R(v,X(4.2),Z(167.8),41.6,139.6,'p-w');
+  DO.forEach(([a,c])=>R(v,X(10.2),Z(c),29.6,c-a,'p-gl'));
+  [65,98,131].forEach(z=>el(v,'line',{x1:X(10.2),y1:Z(z+1),x2:X(39.8),y2:Z(z+1),class:'p-hid'}));
+  HINGES.forEach(z=>el(v,'path',{d:`M${X(42)} ${Z(z)-3.7} L${X(45.9)} ${Z(z)-1.6} L${X(49.8)} ${Z(z)-3.7} L${X(49.8)} ${Z(z)+3.7} L${X(45.9)} ${Z(z)+1.6} L${X(42)} ${Z(z)+3.7}Z`,class:'p-iron'}));
+  R(v,X(0.8),Z(99.7),2.6,3.4,'p-iron');
+  el(v,'line',{x1:X(-10),y1:Z(0),x2:X(60),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,X(0),X(50),Z(0)+6,'50');dimH(v,X(-3),X(53),Z(180)-4,'56');
+  dimV(v,Z(180),Z(0),X(-3)-14,'180');dimV(v,Z(168),Z(28),X(-3)-6,'140 porta');dimV(v,Z(24),Z(8),X(-3)-6,'16');
+  dimV(v,Z(28),Z(0),X(50)+6,'28');dimV(v,Z(178),Z(168),X(50)+6,'10');
+  lbl(v,X(25),Z(66)-1.5,'prateleira (tracejado)');lbl(v,X(25),Z(16)-3,'gaveta');
+})();
+/* LATERAL (direita: frente à esquerda) */
+(function(){const v=document.getElementById('vSide');const ox=26,oy=8,Z=z=>oy+180-z,Y=y=>ox+y;
+  v.setAttribute('viewBox','0 0 92 204');
+  R(v,Y(-3),Z(180),43,2,'p-w');R(v,Y(-2),Z(178),42,5,'p-w2');
+  R(v,Y(0),Z(178),4,178,'p-w');R(v,Y(34),Z(178),4,178,'p-w');R(v,Y(38),Z(178),2,174,'p-w2');
+  R(v,Y(4),Z(34),30,30,'p-w');R(v,Y(4),Z(173),30,11,'p-w');
+  [63,96,129].forEach(z=>R(v,Y(4),Z(z+4),30,4,'p-w'));
+  SO.forEach(([a,c])=>R(v,Y(4),Z(c),30,c-a,'p-gl'));
+  el(v,'line',{x1:Y(-8),y1:Z(0),x2:Y(48),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,Y(0),Y(40),Z(0)+6,'40');dimH(v,Y(-3),Y(40),Z(180)-4,'43');
+  dimV(v,Z(63),Z(34),Y(40)+6,'29');dimV(v,Z(34),Z(4),Y(40)+6,'30');dimV(v,Z(4),Z(0),Y(40)+12,'4');
+  dimV(v,Z(178),Z(162),Y(40)+6,'16');
+  lbl(v,Y(1),Z(0)+11,'frente','start');lbl(v,Y(39),Z(0)+11,'fundo','end');
+})();
+/* PORTA */
+(function(){const v=document.getElementById('vDoor');const ox=24,oy=6,Z=z=>oy+167.8-z,X=x=>ox+x-4.2;
+  v.setAttribute('viewBox','0 0 92 150');
+  R(v,X(4.2),Z(167.8),6,139.6,'p-w');R(v,X(39.8),Z(167.8),6,139.6,'p-w');
+  R(v,X(10.2),Z(34.2),29.6,6,'p-w');R(v,X(10.2),Z(167.8),29.6,5.8,'p-w');
+  [63.1,96,128.9].forEach(z=>R(v,X(10.2),Z(z+4),29.6,4,'p-w'));
+  DO.forEach(([a,c])=>R(v,X(10.2),Z(c),29.6,c-a,'p-gl'));
+  dimH(v,X(4.2),X(45.8),Z(28.2)+6,'41,6');dimH(v,X(10.2),X(39.8),Z(167.8)-3,'29,6 vão');
+  dimV(v,Z(167.8),Z(28.2),X(4.2)-8,'139,6');dimV(v,Z(63.1),Z(34.2),X(45.8)+6,'28,9');dimV(v,Z(34.2),Z(28.2),X(45.8)+6,'6');dimV(v,Z(67.1),Z(63.1),X(45.8)+12,'4');
+  lbl(v,X(25),Z(48),'vidro 29,4 × 28,7');
+})();
+/* CORTE POR CIMA */
+(function(){const v=document.getElementById('vPlan');const ox=16,oy=8,X=x=>ox+x,Y=y=>oy+y;
+  v.setAttribute('viewBox','0 0 84 62');
+  [[0,0],[46,0],[0,34],[46,34]].forEach(([x,y])=>R(v,X(x),Y(y),4,4,'p-w2'));
+  R(v,X(0),Y(38),50,2,'p-w');
+  R(v,X(2.5),Y(8),45,30,'p-w');lbl(v,X(25),Y(24),'prateleira 45 × 30');
+  [0,48].forEach(x=>{R(v,X(x+1),Y(4.2),.3,29.6,'p-gl');R(v,X(x),Y(4),1,30,'p-w2');R(v,X(x+1.3),Y(4),1,30,'p-w2')});
+  R(v,X(4.2),Y(0),41.6,2,'p-w');R(v,X(10.3),Y(1),29.4,.3,'p-gl');
+  dimH(v,X(0),X(50),Y(40)+6,'50');dimV(v,Y(0),Y(40),X(50)+6,'40');dimH(v,X(2.5),X(47.5),Y(8)-2,'45');
+  lbl(v,X(25),Y(-2),'FRENTE (porta)');lbl(v,X(-2),Y(20)+1,'vidro','end');
+})();
+})();
+</script>
+
+</html>

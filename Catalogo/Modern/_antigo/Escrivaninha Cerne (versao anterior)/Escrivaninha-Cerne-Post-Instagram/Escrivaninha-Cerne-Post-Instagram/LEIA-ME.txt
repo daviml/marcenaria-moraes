@@ -1,0 +1,21 @@
+ESCRIVANINHA CERNE · POST DE LANÇAMENTO NO INSTAGRAM
+Marcenaria Moraes · 09/10/2026
+
+previa-do-post.html
+  Abra com dois cliques para ver o post inteiro, com botões para copiar a legenda.
+
+LEGENDA-E-TEXTOS.txt
+  Legenda, hashtags, ordem do carrossel, textos alternativos, stories e status do WhatsApp.
+
+1-carrossel-para-postar/
+  Os 6 itens do post, na ordem, prontos para o Instagram (1080 × 1350, formato 4:5).
+  O vídeo 2-video.mp4 é a versão 4:5 feita para o carrossel.
+
+2-imagens-alta-resolucao/
+  As mesmas 5 imagens em 2160 × 2700 (o dobro), para impressão, site ou WhatsApp.
+
+3-outros-videos/
+  Reels vertical 9:16 (stories, Reels e status) e o comercial horizontal com base preta.
+
+4-ficha-do-produto/
+  Ficha completa da Escrivaninha Cerne: 3D com medidas, lista de corte, montagem e compras.

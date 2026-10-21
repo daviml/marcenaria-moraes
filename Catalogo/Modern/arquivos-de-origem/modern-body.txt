@@ -1,0 +1,133 @@
+#p5 .card img{object-fit:cover}
+</style></head><body>
+
+<!-- ===== POST ===== -->
+<section class="s prod" id="p1">
+  <img class="bg" src="renders/line-capa.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="txt" style="top:800px"><div class="eb">Nova linha</div><h2 style="font-size:150px;line-height:1">Modern</h2>
+    <div class="sub">Madeira maciça, linhas retas e nada à vista.<br>Escrivaninha, mesa de centro e aparador.</div></div>
+  <div class="pill" style="position:absolute;left:72px;top:1194px"><b>Sob encomenda</b><span>em Uberlândia</span></div>
+  <div style="position:absolute;right:76px;top:1213px;font:500 27px 'Instrument Sans';letter-spacing:.06em;color:#D9D0D5">arraste →</div>
+</section>
+
+<section class="s" id="p2">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">03</div>
+  <div class="eb">O que une a linha</div>
+  <h2>Nada à vista</h2>
+  <div class="d">Nenhum parafuso, cantoneira ou puxador de metal. Só madeira, e preto se quiser.</div>
+  <div class="grid">
+    <div class="c"><img src="renders/line-borda.png"><div><b>Borda de 4 cm</b><span>CANTOS ARREDONDADOS</span></div></div>
+    <div class="c"><img src="renders/line-perna.png"><div><b>Pernas de painel</b><span>TÁBUA INTEIRA EM PÉ</span></div></div>
+    <div class="c"><img src="renders/line-cava.png"><div><b>Gaveta com cava</b><span>SEM PUXADOR</span></div></div>
+    <div class="c"><img src="renders/line-preto.png"><div><b>Detalhes pretos</b><span>OPÇÃO, MESMO PREÇO</span></div></div>
+  </div>
+</section>
+
+<section class="s prod" id="p3">
+  <img class="bg" src="renders/line-es.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">04</div>
+  <div class="txt"><div class="eb">Linha Modern · escritório</div><h2>Escrivaninha Cerne</h2>
+    <div class="sub">Tampo de 1,50 m, saia que esconde os fios e desmonta em 4 partes.</div></div>
+  <div class="chips"><div><b>150</b> × 60 × 76 cm</div></div>
+</section>
+
+<section class="s prod" id="p4">
+  <img class="bg" src="renders/line-mc.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">05</div>
+  <div class="txt"><div class="eb">Linha Modern · sala</div><h2>Mesa de Centro Modern</h2>
+    <div class="sub">Prateleira embaixo e zero ferragem.</div></div>
+  <div class="chips"><div><b>100</b> × 60 × 40 cm</div></div>
+</section>
+
+<section class="s prod" id="p4b">
+  <img class="bg" src="renders/line-ap.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">06</div>
+  <div class="txt"><div class="eb">Linha Modern · hall</div><h2>Aparador Modern</h2>
+    <div class="sub">Duas gavetas com cava e prateleira baixa.</div></div>
+  <div class="chips"><div><b>120</b> × 35 × 80 cm</div></div>
+</section>
+
+<section class="s" id="p5">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">07</div>
+  <div class="eb">Escolha o visual</div>
+  <h2>Madeira ou preto</h2>
+  <div class="d">Nogueira ou jatobá, inteira ou com a base em preto fosco. Mesmo preço.</div>
+  <div class="card" style="left:48px"><img src="renders/line-capa.png"><div class="sh"></div><div class="tag">MADEIRA INTEIRA</div><b>Madeira</b><span>Nogueira (cambará tingido) ou jatobá, do tampo às pernas</span></div>
+  <div class="card" style="left:552px"><img src="renders/line-capaK.png"><div class="sh"></div><div class="tag">OPÇÃO</div><b>Detalhes pretos</b><span>Base em preto fosco, tampo em madeira</span></div>
+</section>
+
+<section class="s" id="p6">
+  <div class="hd"><img src="brand/moraes-selo-amora.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">08</div>
+  <div class="eb">Como encomendar</div>
+  <h2>Sob encomenda</h2>
+  <div class="side"><b>valor sob consulta</b><span>orçamento grátis</span></div>
+  <div class="steps">
+    <div class="stp"><i>1</i><div><b>Chame no direct ou no WhatsApp</b><span>Diga a peça, a madeira e se quer detalhes pretos</span></div></div>
+    <div class="stp"><i>2</i><div><b>Sinal de 50% para reservar</b><span>O restante na entrega</span></div></div>
+    <div class="stp"><i>3</i><div><b>Pronta em 2 a 4 semanas</b><span>Conforme a peça. Feita à mão, em Uberlândia</span></div></div>
+  </div>
+  <div class="strip"><img src="renders/line-borda.png"><img src="renders/line-perna.png"><img src="renders/line-cava.png"><img src="renders/line-preto.png"></div>
+  <div class="foot"><b>Linha Modern</b><span>· feita à mão em Uberlândia</span></div>
+</section>
+
+<!-- ===== STORIES ===== -->
+<section class="st" id="s1">
+  <img class="bg" src="renders/line-story.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Nova linha · Marcenaria Moraes</div><h2>Modern</h2><p>Escrivaninha, mesa de centro e aparador. Madeira maciça e nada à vista.</p></div>
+  <div class="low" style="text-align:center"><span class="ferro-tag">VEJA O POST NOVO ↓</span></div>
+</section>
+<section class="st" id="s2">
+  <img class="bg" src="renders/line-esS.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Linha Modern · escritório</div><h2 style="font-size:104px">Escrivaninha Cerne</h2><p>150 × 60 cm · desmonta em 4 partes</p></div>
+  <div class="low"><div class="pill"><b>Sob encomenda</b><span>valor sob consulta</span></div></div>
+</section>
+<section class="st" id="s3">
+  <img class="bg" src="renders/line-mcS.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Linha Modern · sala</div><h2 style="font-size:100px">Mesa de Centro Modern</h2><p>100 × 60 cm · prateleira embaixo</p></div>
+  <div class="low"><div class="pill"><b>Sob encomenda</b><span>valor sob consulta</span></div></div>
+</section>
+<section class="st" id="s3r">
+  <img class="bg" src="renders/line-apS.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Linha Modern · hall</div><h2 style="font-size:104px">Aparador Modern</h2><p>120 × 35 cm · gavetas com cava, sem puxador</p></div>
+  <div class="low"><div class="pill"><b>Sob encomenda</b><span>valor sob consulta</span></div></div>
+</section>
+<section class="st" id="s4">
+  <div class="top"><div class="eb">O que une a linha</div><h2 style="font-size:110px">Nada à vista</h2><p>Nenhum parafuso nem puxador. Só madeira, e preto se quiser.</p></div>
+  <div class="grid">
+    <div class="c"><img src="renders/line-borda.png"><span>Borda de 4 cm</span></div>
+    <div class="c"><img src="renders/line-perna.png"><span>Pernas de painel</span></div>
+    <div class="c"><img src="renders/line-cava.png"><span>Gaveta com cava</span></div>
+    <div class="c"><img src="renders/line-preto.png"><span>Detalhes pretos</span></div>
+  </div>
+</section>
+<section class="st" id="s5">
+  <img class="seal" src="brand/moraes-selo-cerne-claro.svg">
+  <div class="c"><div class="eb">Linha Modern</div><h2 style="margin-top:20px">Peça seu orçamento</h2><p>Valor sob consulta · orçamento grátis<br>Feita à mão em Uberlândia</p></div>
+  <div class="box">coloque aqui a figurinha "Link" para o WhatsApp</div>
+</section>
+
+<!-- ===== DESTAQUE: mesa de pernas de painel (quadro 100 × 100) ===== -->
+<section class="st dq" id="d1">
+  <svg viewBox="0 0 100 100" width="520" height="520" style="left:280px;top:700px">
+    <g fill="#DDAE62">
+      <rect x="4" y="22" width="92" height="9" rx="4.5"/>
+      <rect x="14" y="31" width="13" height="56" rx="2"/>
+      <rect x="73" y="31" width="13" height="56" rx="2"/>
+    </g>
+    <rect x="27" y="31" width="46" height="5" fill="#4A1C3C" opacity=".35"/>
+  </svg>
+</section>
+<section class="st dq" id="d2">
+  <svg viewBox="0 0 100 100" width="260" height="260" style="left:410px;top:640px"><g fill="#DDAE62"><rect x="4" y="22" width="92" height="9" rx="4.5"/><rect x="14" y="31" width="13" height="56" rx="2"/><rect x="73" y="31" width="13" height="56" rx="2"/></g></svg>
+  <div style="position:absolute;left:0;right:0;top:1130px;text-align:center;font:600 104px 'Instrument Sans';color:#F3ECEF">Modern</div>
+</section>
+
+<script>window.ready = true;</script>
+</body></html>

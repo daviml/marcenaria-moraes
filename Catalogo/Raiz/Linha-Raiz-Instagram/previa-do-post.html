@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Linha Raiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: mesa de aprovação do post — o carrossel em ordem de publicação, depois o texto pronto para copiar e os extras */
+:root{
+  --bg:#FAF7F3; --paper:#FFFFFF; --ink:#1C1519; --muted:#6B5E66; --line:#E6DCDD;
+  --amora:#4A1C3C; --cerne:#B0782C; --soft:#F3ECEF;
+  --f-display:"Young Serif",Georgia,serif; --f-body:"Instrument Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1C1519; --paper:#251C22; --ink:#F3ECEF; --muted:#B5A6AE; --line:#3B2E36;
+  --amora:#D7A3C6; --cerne:#DDAE62; --soft:#2E2229; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1C1519; --paper:#251C22; --ink:#F3ECEF; --muted:#B5A6AE; --line:#3B2E36;
+  --amora:#D7A3C6; --cerne:#DDAE62; --soft:#2E2229; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);padding-inline:16px;padding-block:32px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+h1,h2{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(32px,6vw,52px);line-height:1.05}
+h2{font-size:26px;line-height:1.2}
+.eyebrow{font:600 12px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--cerne)}
+header{display:flex;flex-direction:column;gap:12px}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+.note{font-size:14px;color:var(--muted);margin:0;max-width:70ch}
+.car{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.item{display:flex;flex-direction:column;gap:8px;min-width:0}
+.item img,.item video{width:100%;max-width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:block;background:#0F1013;border:1px solid var(--line)}
+.item .cap{display:flex;gap:8px;align-items:baseline;font-size:14px}
+.item .cap b{font:400 18px var(--f-display);color:var(--amora)}
+.item .cap span{color:var(--muted)}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+pre.copy{white-space:pre-wrap;font:15px/1.6 var(--f-body);margin:0;color:var(--ink);word-break:break-word}
+.btn{align-self:flex-start;font:600 14px var(--f-body);border:0;background:var(--amora);color:var(--bg);padding:9px 16px;border-radius:999px;cursor:pointer}
+.btn:focus-visible{outline:2px solid var(--cerne);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+ol.list,ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:70ch}
+ol.list li::marker{color:var(--cerne);font-weight:600}
+dl.alt{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin:0;font-size:15px}
+dl.alt dt{font:400 18px var(--f-display);color:var(--amora)}
+dl.alt dd{margin:0;color:var(--muted)}
+</style>
+<style>.st9 img{aspect-ratio:9/16!important}.dq img{aspect-ratio:9/16!important;border-radius:50%!important;object-fit:cover;max-width:180px}</style>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Marcenaria Moraes · Instagram</div>
+    <h1>Linha Raiz</h1>
+    <p class="lead">Post de apresentação da linha (com vídeo peça a peça), vídeo para o story, 6 stories e a capa do destaque. Cada peça tem também o próprio post na pasta do produto.</p>
+  </header>
+  <section>
+    <h2>O carrossel</h2>
+    <div class="car">
+      <div class="item"><img src="post/1-capa.png" alt="Capa · nova linha"><div class="cap"><b>1</b><span>Capa · nova linha</span></div></div>
+      <div class="item"><video src="video/video-linha-raiz-4x5.mp4" controls muted playsinline loop preload="metadata" poster="post/1-capa.png"></video><div class="cap"><b>2</b><span>Vídeo 4:5 · 38 s</span></div></div>
+      <div class="item"><img src="post/2-o-encaixe-a-mostra.png" alt="O encaixe à mostra"><div class="cap"><b>3</b><span>O encaixe à mostra</span></div></div>
+      <div class="item"><img src="post/3-mesa-de-jantar-raiz.png" alt="Mesa de Jantar Raiz"><div class="cap"><b>4</b><span>Mesa de Jantar Raiz</span></div></div>
+      <div class="item"><img src="post/4-banco-raiz.png" alt="Banco Raiz"><div class="cap"><b>5</b><span>Banco Raiz</span></div></div>
+      <div class="item"><img src="post/5-bancada-gourmet-raiz.png" alt="Bancada Gourmet Raiz"><div class="cap"><b>6</b><span>Bancada Gourmet Raiz</span></div></div>
+      <div class="item"><img src="post/6-nogueira-ou-jatoba.png" alt="Nogueira ou jatobá"><div class="cap"><b>7</b><span>Nogueira ou jatobá</span></div></div>
+      <div class="item"><img src="post/7-como-encomendar.png" alt="Como encomendar"><div class="cap"><b>8</b><span>Como encomendar</span></div></div>
+    </div>
+  </section>
+  <section>
+    <h2>Legenda</h2>
+    <div class="box"><pre class="copy" id="cap">Linha Raiz 🌳
+
+Nossa nova linha de móveis em madeira maciça grossa, com o encaixe à mostra: cavilhas, cunhas e gravatas-borboleta em cambará claro sobre a madeira escura. Para a sala de jantar e a área gourmet:
+
+🔹 Mesa de Jantar Raiz
+180 × 90 × 76 cm · 6 lugares, cavaletes com cunha passante, desmonta
+
+🔹 Banco Raiz
+160 × 35 × 45 cm · o par da mesa, 3 lugares
+
+🔹 Bancada Gourmet Raiz
+120 × 50 × 90 cm · gaveta, ganchos, toalheiro e prateleira de ripas
+
+✔️ Tampo de 5 cm: pranchas maciças coladas, que não empenam nem afundam
+✔️ Madeira maciça escura: cambará nogueira ou jatobá (madeira de lei)
+✔️ O encaixe é o enfeite: cavilhas, cunhas e gravatas em cambará claro
+✔️ Riscou? Lixa e passa óleo. Dura gerações
+
+📦 Sob encomenda, feita à mão em Uberlândia. Prazo de 2 a 5 semanas, conforme a peça.
+💬 Valor sob consulta: chame no direct ou no WhatsApp (link na bio).
+
+Arraste para ver peça a peça 👉
+
+Imagens do projeto em 3D. Cada peça sai com o veio único da sua madeira.
+
+#marcenariamoraes #linharaiz #mesadejantar #mesademadeira #bancodemadeira #areagourmet #espacogourmet #moveisrusticos #madeiramacica #jatoba #feitoamao #moveisdemadeira #marcenariaartesanal #uberlandia #udi #uberlandiamg #triangulomineiro</pre><button type="button" class="btn" data-copy="cap">Copiar legenda</button></div>
+  </section>
+  <section>
+    <h2>Stories</h2>
+    <div class="car st9">
+      <div class="item"><video src="video/story-linha-raiz-9x16.mp4" controls muted playsinline loop preload="metadata" style="aspect-ratio:9/16;width:100%;border-radius:10px;background:#0F1013"></video><div class="cap"><b>vídeo</b><span>Primeiro, com a figurinha Link</span></div></div>
+      <div class="item"><img src="stories/story-1-nova-linha.png" alt="Story 1"><div class="cap"><b>1</b><span>Nova linha no ar! 👀</span></div></div>
+      <div class="item"><img src="stories/story-2-mesa-de-jantar.png" alt="Story 2"><div class="cap"><b>2</b><span>Enquete: "Mesa para 6: nogueira ou jatobá?"</span></div></div>
+      <div class="item"><img src="stories/story-3-banco.png" alt="Story 3"><div class="cap"><b>3</b><span>Enquete: "Banco ou cadeira de um lado da mesa?"</span></div></div>
+      <div class="item"><img src="stories/story-4-bancada-gourmet.png" alt="Story 4"><div class="cap"><b>4</b><span>Enquete: "Sua área gourmet precisa de uma? Sim / Já tenho"</span></div></div>
+      <div class="item"><img src="stories/story-5-o-encaixe.png" alt="Story 5"><div class="cap"><b>5</b><span>Caixa de perguntas: "Ficou com dúvida sobre a linha Raiz?"</span></div></div>
+      <div class="item"><img src="stories/story-6-orcamento.png" alt="Story 6"><div class="cap"><b>6</b><span>Link: WhatsApp · texto "Peça seu orçamento"</span></div></div>
+    </div>
+  </section>
+  <div class="grid2">
+    <section>
+      <h2>Destaque "Raiz"</h2>
+      <div class="car dq"><div class="item"><img src="destaque/destaque-icone-raiz.png" alt="Ícone do destaque"><div class="cap"><b>capa</b><span>use esta</span></div></div><div class="item"><img src="destaque/destaque-raiz.png" alt="Capa com texto"><div class="cap"><b>reserva</b><span>com texto</span></div></div></div>
+      <ol class="list"><li>Publique o vídeo e os 6 stories.</li><li>No perfil: "+ Novo" nos destaques, escolha os stories, nome <b>Raiz</b>.</li><li>Editar capa → galeria → <b>destaque-icone-raiz.png</b>.</li></ol>
+    </section>
+    <section>
+      <h2>Texto alternativo</h2>
+      <dl class="alt"><dt>1</dt><dd>Uma bancada gourmet, uma mesa de jantar e um banco de madeira maciça escura, com cavilhas e gravatas-borboleta em madeira clara, título Raiz, nova linha da Marcenaria Moraes.</dd><dt>2</dt><dd>Vídeo da linha Raiz mostrando peça a peça: a gravata-borboleta de perto, a mesa de jantar, o banco, a bancada gourmet com a gaveta abrindo e as duas madeiras.</dd><dt>3</dt><dd>Quatro detalhes da linha: a gravata-borboleta no tampo, a cunha passante, as cavilhas claras e os ganchos de cavilha.</dd><dt>4</dt><dd>A Mesa de Jantar Raiz, com tampo de 5 cm e cavaletes ligados por uma longarina com cunha.</dd><dt>5</dt><dd>O Banco Raiz, com o mesmo cavalete da mesa.</dd><dt>6</dt><dd>A Bancada Gourmet Raiz, com gaveta, prateleira de ripas e toalheiro.</dd><dt>7</dt><dd>O conjunto em nogueira e em jatobá, lado a lado.</dd><dt>8</dt><dd>Como encomendar: chamar no direct ou WhatsApp, sinal de 50% e entrega em 2 a 5 semanas.</dd></dl>
+    </section>
+  </div>
+</div>
+<script>
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.dataset.copy),label=b.textContent;
+  const done=()=>{b.textContent='Copiado';setTimeout(()=>b.textContent=label,1600)};
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Texto selecionado, copie com Ctrl+C'};
+  try{navigator.clipboard.writeText(el.textContent).then(done,fallback)}catch(e){fallback()}
+}));
+</script>
+</html>

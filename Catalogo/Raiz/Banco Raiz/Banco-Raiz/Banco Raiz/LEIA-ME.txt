@@ -1,0 +1,16 @@
+BANCO RAIZ - Marcenaria Moraes · linha Raiz
+Atualizado em 10/10/2026
+
+160 × 35 × 45 cm · ~26 kg (nogueira) · 2 a 3 semanas
+Madeira: nogueira (principal) ou jatobá. Cavilhas, cunhas e gravatas em cambará claro (ou discretas), mesmo preço.
+Tampo de 5 cm e encaixes à mostra.
+
+Banco-Raiz.html
+  Ficha completa: ficha técnica, custo (~R$ 320) e preço sugerido (R$ 1.100 a 1.300;
+  jatobá R$ 1.400 a 1.600), só para USO INTERNO. Vista 3D com botões Nogueira / Jatobá / Detalhes claros
+  e raio-X dos parafusos, vistas cotadas, lista de corte, ligações, montagem e compras.
+
+Banco-Raiz-video-vertical-instagram.mp4 · Reels 9:16 (31 s), nogueira, com música
+Banco-Raiz-video-horizontal-jatoba.mp4  · comercial 16:9 (31 s), jatobá, com música
+
+A pasta "arquivos-de-origem" da linha Raiz tem o modelo 3D (models.mjs) e os scripts das três peças.

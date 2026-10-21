@@ -1,0 +1,9 @@
+MESA DE JANTAR RAIZ · POST NO INSTAGRAM
+Marcenaria Moraes · 10/10/2026
+
+previa-do-post.html       · o post inteiro, com botão para copiar a legenda
+LEGENDA-E-TEXTOS.txt      · legenda, textos alternativos, stories e status do WhatsApp
+1-carrossel-para-postar/  · os 6 itens do post na ordem (1080 × 1350); o vídeo já tem música
+2-imagens-alta-resolucao/ · as mesmas imagens em 2160 × 2700
+3-outros-videos/          · Reels vertical 9:16 (nogueira) e horizontal 16:9 (jatobá), com música
+4-ficha-do-produto/       · ficha completa

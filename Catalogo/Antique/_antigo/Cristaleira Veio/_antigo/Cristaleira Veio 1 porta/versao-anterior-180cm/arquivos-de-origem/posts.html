@@ -1,0 +1,176 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"Young Serif";src:url(/node_modules/@fontsource/young-serif/files/young-serif-latin-400-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:400;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:500;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-500-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:600;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-600-normal.woff2)}
+:root{--amora:#4A1C3C;--amora-d:#2E1028;--cerne:#B0782C;--cerne-c:#DDAE62;--papel:#FAF7F3;--carvao:#1C1519;--cinza:#6B5E66;--rosa:#D7A3C6;--creme:#F6F1EC}
+*{box-sizing:border-box;margin:0}
+body{background:#888;font-family:"Instrument Sans",sans-serif}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;margin-bottom:20px}
+.hd{position:absolute;left:72px;top:64px;display:flex;align-items:center;gap:26px}
+.hd img{width:100px;height:100px}
+.hd span{font:500 26px/1.22 "Instrument Sans";letter-spacing:.3em;color:var(--creme)}
+.num{position:absolute;right:76px;top:86px;font:500 26px "Instrument Sans";letter-spacing:.2em;color:#B9AEB4}
+.eb{font:600 28px "Instrument Sans";letter-spacing:.3em;text-transform:uppercase;color:var(--cerne-c)}
+.ys{font-family:"Young Serif";font-weight:400}
+/* 1 capa */
+#s1{background:#101114}
+#s1 .bg{position:absolute;inset:0;width:100%;height:100%}
+#s1 .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,0) 46%,rgba(46,16,40,.78) 70%,#2B0F25 88%)}
+#s1 .txt{position:absolute;left:72px;top:735px}
+#s1 h1{font:400 128px/1 "Young Serif";color:var(--creme);margin-top:22px;letter-spacing:-.01em}
+#s1 .sub{font:400 37px/1.38 "Instrument Sans";color:#EDE5EA;margin-top:30px}
+#s1 .pill{position:absolute;left:72px;top:1194px;height:70px;border-radius:35px;background:var(--cerne-c);display:flex;align-items:center;gap:14px;padding:0 32px;color:#1C1519}
+#s1 .pill b{font:600 32px "Instrument Sans"}#s1 .pill span{font:400 24px "Instrument Sans"}
+#s1 .arr{position:absolute;right:76px;top:1213px;font:500 27px "Instrument Sans";letter-spacing:.06em;color:#D9D0D5}
+/* 3 detalhes */
+#s3{background:var(--papel)}
+#s3 .img{position:absolute;left:0;top:0;width:1080px;height:700px}
+#s3 .fade{position:absolute;left:0;top:420px;width:1080px;height:290px;background:linear-gradient(180deg,rgba(250,247,243,0),var(--papel) 92%)}
+#s3 .eb{position:absolute;left:72px;top:600px;color:var(--cerne)}
+#s3 h2{position:absolute;left:72px;top:650px;font:400 74px/1.08 "Young Serif";color:var(--amora)}
+#s3 .grid{position:absolute;left:72px;top:850px;width:936px;display:grid;grid-template-columns:1fr 1fr;gap:34px 44px}
+#s3 .it{border-top:3px solid var(--cerne);padding-top:20px}
+#s3 .it b{display:block;font:600 33px "Instrument Sans";color:var(--carvao)}
+#s3 .it span{display:block;font:400 25px/1.38 "Instrument Sans";color:var(--cinza);margin-top:8px}
+#s3 .num{color:#E9E2DD}
+/* 4 medidas */
+#s4{background:var(--amora)}
+#s4 .eb{position:absolute;left:72px;top:200px}
+#s4 h2{position:absolute;left:72px;top:242px;font:400 104px/1 "Young Serif";color:var(--creme)}
+#s4 .d{position:absolute;left:72px;top:368px;width:930px;font:400 30px/1.4 "Instrument Sans";color:var(--rosa)}
+#s4 svg{position:absolute;left:0;top:470px}
+#s4 .stats{position:absolute;left:72px;top:1112px;width:936px;display:grid;grid-template-columns:repeat(4,1fr);gap:34px}
+#s4 .st{border-top:3px solid var(--cerne-c);padding-top:20px}
+#s4 .st b{display:block;font:400 56px/1 "Young Serif";color:var(--creme)}
+#s4 .st span{display:block;font:400 25px "Instrument Sans";color:var(--rosa);margin-top:12px}
+/* 5 acabamentos */
+#s5{background:#1C181B}
+#s5 .eb{position:absolute;left:72px;top:200px}
+#s5 h2{position:absolute;left:72px;top:242px;font:400 100px/1 "Young Serif";color:var(--creme)}
+#s5 .d{position:absolute;left:72px;top:368px;width:936px;font:400 30px/1.4 "Instrument Sans";color:#C9BFC5}
+#s5 .card{position:absolute;top:470px;width:480px;height:808px;border-radius:22px;overflow:hidden;background:#0f1013}
+#s5 .card img{position:absolute;inset:0;width:100%;height:100%}
+#s5 .card .sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,16,19,0) 62%,rgba(15,16,19,.92) 84%)}
+#s5 .tag{position:absolute;left:24px;top:24px;background:var(--cerne-c);color:#1C1519;font:600 22px "Instrument Sans";letter-spacing:.2em;padding:9px 16px;border-radius:24px}
+#s5 .card b{position:absolute;left:30px;bottom:96px;font:400 54px "Young Serif";color:var(--creme)}
+#s5 .card span{position:absolute;left:30px;right:24px;bottom:28px;font:400 23px/1.38 "Instrument Sans";color:#D9D0D5}
+/* 6 como encomendar */
+#s6{background:var(--papel)}
+#s6 .hd span{color:var(--amora)}#s6 .num{color:var(--cinza)}
+#s6 .eb{position:absolute;left:72px;top:206px;color:var(--cerne)}
+#s6 h2{position:absolute;left:72px;top:276px;font:400 86px/1 "Young Serif";color:var(--amora)}
+#s6 .side{position:absolute;left:760px;top:282px}
+#s6 .side b{display:block;font:600 30px "Instrument Sans";color:var(--cerne)}
+#s6 .side span{display:block;font:400 26px "Instrument Sans";color:var(--cinza);margin-top:8px}
+#s6 .steps{position:absolute;left:72px;top:428px;width:936px}
+#s6 .stp{display:grid;grid-template-columns:92px 1fr;border-top:2px solid #E6DCDB;padding:26px 0 24px}
+#s6 .stp:last-child{border-bottom:2px solid #E6DCDB}
+#s6 .stp i{font:400 46px/1 "Young Serif";color:var(--cerne);font-style:normal}
+#s6 .stp b{display:block;font:500 34px "Instrument Sans";color:var(--carvao)}
+#s6 .stp span{display:block;font:400 25px "Instrument Sans";color:var(--cinza);margin-top:6px}
+#s6 .strip{position:absolute;left:72px;top:832px;width:936px;height:250px;border-radius:20px;overflow:hidden}
+#s6 .strip img{width:100%;height:100%;display:block}
+#s6 .strip em{position:absolute;left:24px;bottom:22px;background:rgba(20,18,20,.86);color:var(--cerne-c);font:600 22px "Instrument Sans";letter-spacing:.2em;padding:10px 18px;border-radius:24px;font-style:normal}
+#s6 .foot{position:absolute;left:0;bottom:0;width:1080px;height:170px;background:var(--amora);display:flex;align-items:center;justify-content:center;gap:22px}
+#s6 .foot b{font:600 36px "Instrument Sans";color:var(--creme)}#s6 .foot span{font:400 27px "Instrument Sans";color:var(--rosa)}
+</style></head><body>
+
+<section class="s" id="s1">
+  <img class="bg" src="renders/capa.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="txt"><div class="eb">Lançamento</div><h1>Cristaleira<br>Veio</h1>
+    <div class="sub">Madeira maciça e vidro nos três lados.<br>Feita à mão, para mostrar o que importa.</div></div>
+  <div class="pill"><b>Sob encomenda</b><span>em Uberlândia</span></div>
+  <div class="arr">arraste →</div>
+</section>
+
+<section class="s" id="s3">
+  <img class="img" src="renders/detalhe.png"><div class="fade"></div>
+  <div class="num">03</div>
+  <div class="eb">Os detalhes</div>
+  <h2>Feita para mostrar<br>o que você guarda</h2>
+  <div class="grid">
+    <div class="it"><b>Madeira maciça</b><span>Cambará de verdade, nada de MDF. Pode ser lixada e renovada daqui a 20 anos</span></div>
+    <div class="it"><b>Vidro nos três lados</b><span>Frente e laterais em vidro de 3 mm, com 3 prateleiras por dentro</span></div>
+    <div class="it"><b>Ferragens de ferro</b><span>Dobradiças borboleta, tramela e puxador concha em ferro preto</span></div>
+    <div class="it"><b>Gaveta embaixo</b><span>42 cm de largura para talheres, toalhas e guardanapos</span></div>
+  </div>
+</section>
+
+<section class="s" id="s4">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">04</div>
+  <div class="eb">Medidas</div>
+  <h2>180 × 50 × 40 cm</h2>
+  <div class="d">Ocupa meio metro de parede e cabe num canto da sala, da copa ou do corredor.</div>
+  <svg width="1080" height="610" viewBox="0 0 1080 610" id="msvg"></svg>
+  <div class="stats">
+    <div class="st"><b>4</b><span>nichos com vidro</span></div>
+    <div class="st"><b>31 cm</b><span>entre prateleiras</span></div>
+    <div class="st"><b>42 cm</b><span>de gaveta</span></div>
+    <div class="st"><b>~50 kg</b><span>madeira maciça</span></div>
+  </div>
+</section>
+
+<section class="s" id="s5">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">05</div>
+  <div class="eb">Acabamentos</div>
+  <h2>Escolha o seu</h2>
+  <div class="d">A mesma madeira em dois tons, sempre com óleo de linhaça e cera de abelha por cima.</div>
+  <div class="card" style="left:48px"><img src="renders/mel.png"><div class="sh"></div><div class="tag">MEL</div><b>Mel</b><span>O dourado natural do cambará, que escurece e ganha brilho com o tempo</span></div>
+  <div class="card" style="left:552px"><img src="renders/nog.png"><div class="sh"></div><div class="tag">NOGUEIRA</div><b>Nogueira</b><span>Mais escura e sóbria, combina com aparador e mesa rústica</span></div>
+</section>
+
+<section class="s" id="s6">
+  <div class="hd"><img src="brand/moraes-selo-amora.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">06</div>
+  <div class="eb">Como encomendar</div>
+  <h2>Sob encomenda</h2>
+  <div class="side"><b>valor sob consulta</b><span>orçamento grátis</span></div>
+  <div class="steps">
+    <div class="stp"><i>1</i><div><b>Chame no direct ou no WhatsApp</b><span>Escolha o acabamento: mel ou nogueira</span></div></div>
+    <div class="stp"><i>2</i><div><b>Sinal de 50% para reservar</b><span>O restante na entrega</span></div></div>
+    <div class="stp"><i>3</i><div><b>Pronta em 4 a 5 semanas</b><span>Feita à mão, peça por peça. Entrega em Uberlândia</span></div></div>
+  </div>
+  <div class="strip"><img src="renders/faixa.png"><em>CRISTALEIRA VEIO · 180 × 50 × 40 CM</em></div>
+  <div class="foot"><b>Peça a sua</b><span>· feita à mão em Uberlândia</span></div>
+</section>
+
+<script>
+// Desenho das medidas: frente e lateral em escala (1 cm = 2,9 px)
+(function(){
+  const k=2.6, sv=document.getElementById('msvg'), NS='http://www.w3.org/2000/svg';
+  const E=(t,a,txt)=>{const e=document.createElementNS(NS,t);for(const n in a)e.setAttribute(n,a[n]);if(txt!=null)e.textContent=txt;sv.appendChild(e);return e};
+  const G='#DDAE62', W='#B0782C', D='#7A5232', L='rgba(246,241,236,.5)', base=500;
+  const R=(x,y,w,h,f,s)=>E('rect',{x,y,width:w,height:h,fill:f,stroke:s||'none','stroke-width':1.2});
+  const dimH=(x0,x1,y,t)=>{E('line',{x1:x0,y1:y,x2:x1,y2:y,stroke:G,'stroke-width':2.5});[x0,x1].forEach(x=>E('line',{x1:x,y1:y-12,x2:x,y2:y+12,stroke:G,'stroke-width':2.5}));E('text',{x:(x0+x1)/2,y:y-16,'text-anchor':'middle',fill:G,'font-family':'Instrument Sans','font-weight':600,'font-size':34},t)};
+  const dimV=(y0,y1,x,t)=>{E('line',{x1:x,y1:y0,x2:x,y2:y1,stroke:G,'stroke-width':2.5});[y0,y1].forEach(y=>E('line',{x1:x-12,y1:y,x2:x+12,y2:y,stroke:G,'stroke-width':2.5}));const ty=(y0+y1)/2;E('text',{x:x-16,y:ty,'text-anchor':'middle',fill:G,'font-family':'Instrument Sans','font-weight':600,'font-size':34,transform:`rotate(-90 ${x-16} ${ty})`},t)};
+  // FRENTE
+  const fx=260, Z=z=>base-z*k, X=x=>fx+x*k;
+  E('line',{x1:X(-20),y1:base,x2:X(70),y2:base,stroke:L,'stroke-width':2});
+  R(X(-3),Z(180),56*k,2*k,W); R(X(-2),Z(178),54*k,5*k,D);
+  R(X(0),Z(178),4*k,178*k,W); R(X(46),Z(178),4*k,178*k,W);
+  R(X(4),Z(173),42*k,5*k,W); R(X(4),Z(8),42*k,4*k,W); R(X(4),Z(28),42*k,4*k,W);
+  R(X(4.2),Z(23.8),41.6*k,15.6*k,'#A9713A'); R(X(22),Z(17.5),6*k,3*k,'#151314');
+  R(X(4.2),Z(167.8),41.6*k,139.6*k,W);
+  [[34.2,63.1],[67.1,96],[100,128.9],[132.9,161.8]].forEach(([a,c])=>R(X(10.2),Z(c),29.6*k,(c-a)*k,'rgba(214,226,228,.22)','rgba(246,241,236,.35)'));
+  [42,98,154].forEach(z=>E('path',{d:`M${X(42.2)} ${Z(z)-9} L${X(45.9)} ${Z(z)-5} L${X(49.6)} ${Z(z)-9} L${X(49.6)} ${Z(z)+9} L${X(45.9)} ${Z(z)+5} L${X(42.2)} ${Z(z)+9}Z`,fill:'#151314'}));
+  dimH(X(0),X(50),base+40,'50 cm'); dimV(Z(180),Z(0),X(0)-44,'180 cm');
+  E('text',{x:X(25),y:base+92,'text-anchor':'middle',fill:'#CDBFC7','font-family':'Instrument Sans','font-weight':500,'font-size':24,'letter-spacing':'.24em'},'FRENTE');
+  // LATERAL
+  const sx=690, Y=y=>sx+y*k;
+  E('line',{x1:Y(-10),y1:base,x2:Y(52),y2:base,stroke:L,'stroke-width':2});
+  R(Y(-3),Z(180),43*k,2*k,W); R(Y(-2),Z(178),42*k,5*k,D);
+  R(Y(0),Z(178),4*k,178*k,W); R(Y(34),Z(178),4*k,178*k,W); R(Y(38),Z(178),2*k,174*k,D);
+  R(Y(4),Z(34),30*k,30*k,W); R(Y(4),Z(173),30*k,11*k,W);
+  [63,96,129].forEach(z=>R(Y(4),Z(z+4),30*k,4*k,W));
+  [[34,63],[67,96],[100,129],[133,162]].forEach(([a,c])=>R(Y(4),Z(c),30*k,(c-a)*k,'rgba(214,226,228,.22)','rgba(246,241,236,.35)'));
+  dimH(Y(0),Y(40),base+40,'40 cm');
+  E('text',{x:Y(20),y:base+92,'text-anchor':'middle',fill:'#CDBFC7','font-family':'Instrument Sans','font-weight':500,'font-size':24,'letter-spacing':'.24em'},'LADO');
+})();
+window.ready=true;
+</script>
+</body></html>

@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Escrivaninha Cerne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: folha de projeto de marcenaria — cabeçalho curto, vista 3D girável, vistas cotadas, lista de corte e montagem em sequência */
+:root{
+  --bg:#FAF7F3; --paper:#FFFFFF; --ink:#1C1519; --muted:#6B5E66; --line:#E4DAD8;
+  --amora:#4A1C3C; --cerne:#B0782C;
+  --cam-top:#D9A27A; --cam-front:#BF835A; --cam-side:#9E6844;
+  --pin-top:#F1DFB4; --pin-front:#DEC58F; --pin-side:#C4A970;
+  --oil-top:#B7693F; --oil-front:#9C5432; --oil-side:#7F4227;
+  --blk-top:#4A4648; --blk-front:#2E2B2D; --blk-side:#1F1D1F;
+  --stage:#EEE8E3;
+  --stroke:#4A2E22; --dim:#4A1C3C; --hid:#8C7A84; --scr:#B0782C; --scr-vis:#C23B2E;
+  --f-display:"Bitter",Georgia,serif; --f-body:"Instrument Sans",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --cam-top:#D9A27A; --cam-front:#B67A52; --cam-side:#8F5C3B;
+  --pin-top:#E9D6A8; --pin-front:#D2B87F; --pin-side:#B39960;
+  --oil-top:#C2734A; --oil-front:#A55B37; --oil-side:#87472B;
+  --blk-top:#4A4648; --blk-front:#2E2B2D; --blk-side:#1F1D1F;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --cam-top:#D9A27A; --cam-front:#B67A52; --cam-side:#8F5C3B;
+  --pin-top:#E9D6A8; --pin-front:#D2B87F; --pin-side:#B39960;
+  --oil-top:#C2734A; --oil-front:#A55B37; --oil-side:#87472B;
+  --blk-top:#4A4648; --blk-front:#2E2B2D; --blk-side:#1F1D1F;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 56px}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;color:var(--ink)}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1}
+h2{font-size:22px;line-height:1.2}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--cerne)}
+header{display:flex;flex-direction:column;gap:10px}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+.specs{display:flex;flex-wrap:wrap;gap:8px 20px;font:500 13px var(--f-mono);color:var(--ink);margin-top:6px}
+.specs span b{color:var(--cerne);font-weight:500}
+section{display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.views{display:flex;flex-wrap:wrap;gap:6px}
+.views button,.chips button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--amora);border-color:var(--amora);color:var(--paper)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button[aria-pressed="true"]{border-color:var(--cerne);color:var(--cerne)}
+button:focus-visible{outline:2px solid var(--cerne);outline-offset:2px}
+.iso svg{width:100%;height:auto;display:block;max-height:460px;background:var(--stage);border-radius:4px}
+[hidden]{display:none!important}
+.xlegend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.xlegend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:3px;margin-right:6px}
+.views button.xr[aria-pressed="true"]{background:var(--cerne);border-color:var(--cerne);color:var(--paper)}
+.wrap.nat{--blk-top:var(--oil-top);--blk-front:var(--oil-front);--blk-side:var(--oil-side);--blk-stroke:var(--stroke)}
+.wrap{--blk-stroke:#6A6468}
+.fin{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.fin button[aria-pressed="true"]{background:var(--cerne);border-color:var(--cerne);color:var(--paper)}
+.fin button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.prod{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.prod{grid-template-columns:1fr 1fr}}
+.prod .sheet{display:flex;flex-direction:column;gap:8px}
+.prod h3{margin:0}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+dl.facts dt{font:500 12px/1.9 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+dl.facts dd{margin:0}
+.price{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline}
+.price b{font:700 30px/1 var(--f-display);color:var(--cerne)}
+.price s{color:var(--muted)}
+.opts{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:620px){.opts{grid-template-columns:1fr 1fr}}
+.opt{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.opt .sw{display:flex;gap:4px}.opt .sw i{display:block;width:26px;height:14px;border-radius:2px;border:1px solid var(--stroke)}
+.copy{white-space:pre-wrap;font:14px/1.6 var(--f-body);background:var(--bg);border:1px dashed var(--line);border-radius:6px;padding:12px;margin:0}
+.cbtn{align-self:flex-start;font:500 13px var(--f-body);border:1px solid var(--cerne);background:transparent;color:var(--cerne);padding:6px 12px;border-radius:999px;cursor:pointer}
+ul.keep.tight{gap:6px}
+.pinfo{border:1px solid var(--line);border-left:3px solid var(--cerne);border-radius:6px;padding:10px 14px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.pinfo b.pn{font:600 16px var(--f-display)}
+.pinfo .pd{font:500 18px var(--f-mono);color:var(--cerne)}
+.pinfo .pm{font-size:13px;color:var(--muted)}
+.pinfo button{align-self:flex-start;font:500 12px var(--f-body);border:1px solid var(--line);background:transparent;color:var(--muted);padding:4px 10px;border-radius:999px;cursor:pointer;margin-top:4px}
+.cota-l{stroke:var(--amora);stroke-width:.45;fill:none}
+.cota-bg{fill:var(--amora)}
+.cota-t{fill:var(--paper);font:600 4.2px var(--f-mono)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:0}
+.scroll{overflow-x:auto}
+.ortho svg{display:block;width:100%;min-width:560px;height:auto}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.vt{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+svg text{font-family:var(--f-mono)}
+.d-line{stroke:var(--dim);stroke-width:.25}
+.d-text{fill:var(--dim);font-size:3.2px}
+.lbl{fill:var(--muted);font-size:3px}
+.p-cam{fill:var(--cam-top);stroke:var(--stroke);stroke-width:.25}
+.p-cam2{fill:var(--cam-front);stroke:var(--stroke);stroke-width:.25}
+.p-pin{fill:var(--pin-front);stroke:var(--stroke);stroke-width:.25}
+.p-oil{fill:var(--oil-top);stroke:var(--stroke);stroke-width:.25}
+.p-oil2{fill:var(--oil-front);stroke:var(--stroke);stroke-width:.25}
+.p-blk{fill:var(--blk-front);stroke:var(--blk-side);stroke-width:.25}
+.p-ref{fill:var(--cerne);stroke:var(--stroke);stroke-width:.25}
+.p-ref2{fill:color-mix(in srgb,var(--cerne) 55%,var(--paper));stroke:var(--stroke);stroke-width:.25;stroke-dasharray:none}
+.p-gray{fill:color-mix(in srgb,var(--hid) 22%,var(--paper));stroke:var(--hid);stroke-width:.2}
+.ref-l{stroke:var(--ink);stroke-width:.2;fill:none}
+.ref-t{fill:var(--ink);font-size:2.6px}
+.ref-b{fill:var(--cerne);font-size:2.9px;font-weight:600}
+h3{font:600 17px/1.3 var(--f-display);margin:6px 0 0}
+ul.keep{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+.rings{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.rings svg{width:380px;max-width:100%;height:auto}
+.p-hid{fill:none;stroke:var(--hid);stroke-width:.25;stroke-dasharray:1.2 .8}
+.p-out{fill:none;stroke:var(--hid);stroke-width:.3;stroke-dasharray:2 1}
+.screw{fill:var(--paper);stroke:var(--ink);stroke-width:.3}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mat{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;border:1px solid var(--stroke)}
+.mat.cam{background:var(--cam-top)}.mat.pin{background:var(--pin-top)}.mat.oil{background:var(--oil-top)}.mat.blk{background:var(--blk-front)}
+.tag{font:500 11px var(--f-mono);padding:2px 7px;border-radius:999px;white-space:nowrap}
+.tag.sim{background:color-mix(in srgb,var(--cerne) 18%,transparent);color:var(--cerne)}
+.tag.nao{background:color-mix(in srgb,var(--amora) 14%,transparent);color:var(--amora)}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+ol.steps li::marker{font-family:var(--f-mono);color:var(--cerne)}
+.buy{display:flex;flex-wrap:wrap;gap:12px}
+.buy div{flex:1 1 200px;min-width:0;border-top:2px solid var(--cerne);padding-top:8px}
+.buy b{display:block;font:600 20px var(--f-display)}
+.buy span{color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:no-preference){.iso g.piece{transition:opacity .2s}}
+</style>
+
+<div class="wrap nat">
+  <header>
+    <div class="eyebrow">Marcenaria Moraes · catálogo · ficha do produto</div>
+    <h1>Escrivaninha Cerne</h1>
+    <p class="lead">Escrivaninha de madeira maciça, do tampo às pernas. Tampo largo de 150 × 60 cm com borda engrossada de 4 cm e cantos arredondados, pernas de painel recuadas e saia traseira que esconde os fios. Reforçada por baixo para ficar reta por muitos anos.</p>
+    <div class="specs"><span><b>C</b> 150 cm</span><span><b>P</b> 60 cm</span><span><b>A</b> 76 cm</span><span><b>Madeira</b> cambará maciço</span><span><b>Acabamento</b> natural ou base preta</span><span><b>Lançamento</b> R$ 1.500</span></div>
+  </header>
+
+  <section id="produto">
+    <h2>O produto</h2>
+    <div class="prod">
+      <div class="sheet">
+        <h3>Ficha técnica</h3>
+        <dl class="facts">
+          <dt>Nome</dt><dd>Escrivaninha Cerne</dd>
+          <dt>Medidas</dt><dd>150 cm de largura × 60 cm de profundidade × 76 cm de altura</dd>
+          <dt>Tampo</dt><dd>Cambará maciço de 2 cm, com borda engrossada para 4 cm na frente e nos lados. Cantos com raio de 6 cm</dd>
+          <dt>Espaço livre</dt><dd>138 cm entre as pernas e 72 cm do chão até a borda: cabe cadeira de escritório com braço</dd>
+          <dt>Base</dt><dd>Duas pernas de painel (56 × 74 cm) e saia traseira de 30 cm, recuadas para não bater o joelho</dd>
+          <dt>Peso</dt><dd>~35 kg</dd>
+          <dt>Fixação</dt><dd>Nenhum parafuso à vista. As ligações que desmontam usam parafuso allen em bucha metálica com rosca: desmonta em 4 partes (tampo, 2 pernas e saia) com uma chave allen, quantas vezes precisar, sem espanar</dd>
+          <dt>Fabricação</dt><dd>Sob encomenda, peça a peça, em Uberlândia</dd>
+        </dl>
+      </div>
+      <div class="sheet">
+        <h3>Preço</h3>
+        <div class="price"><span><b>R$ 1.500</b><br><span class="note">preço de lançamento</span></span><span><s>R$ 1.600 a R$ 1.900</s><br><span class="note">preço normal</span></span></div>
+        <p class="note">Os dois acabamentos têm o mesmo preço. Custo de material: ~R$ 330 a 390 (veja "O que comprar"). Prazo sugerido: 3 a 4 semanas da encomenda à entrega, contando a semana em que a madeira descansa antes de colar.</p>
+        <h3>Por que vale o preço</h3>
+        <ul class="keep tight">
+          <li><b>Madeira maciça de verdade,</b> não MDF nem compensado. Pode ser lixada e renovada daqui a 20 anos.</li>
+          <li><b>Não afunda no meio:</b> três vigas por baixo do tampo (engrosso, reforço e saia).</li>
+          <li><b>Sem parafuso aparente</b> e sem cantoneira de metal.</li>
+          <li><b>Feita para trabalhar:</b> 1,5 m de tampo cabe monitor, notebook e caderno lado a lado.</li>
+        </ul>
+      </div>
+    </div>
+    <h3>Acabamentos</h3>
+    <div class="opts">
+      <div class="opt"><div class="sw"><i style="background:var(--oil-top)"></i><i style="background:var(--oil-front)"></i></div><b>Natural · principal</b><span class="note">Cambará inteiro com óleo de linhaça e cera de abelha. Tom avermelhado que escurece e ganha brilho com o tempo.</span></div>
+      <div class="opt"><div class="sw"><i style="background:var(--oil-top)"></i><i style="background:#2E2B2D"></i></div><b>Base preta</b><span class="note">Tampo natural, pernas e saia em preto fosco. Fica mais moderna e combina com cadeira e luminária pretas.</span></div>
+    </div>
+    <h3>Texto de venda</h3>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:10px">
+      <p class="copy" id="copyTxt">Escrivaninha Cerne 🌳
+
+Madeira maciça de verdade, do tampo às pernas. Um tampo largo de 1,50 m para trabalhar e estudar com espaço, borda engrossada e cantos arredondados.
+
+• 150 × 60 × 76 cm
+• Cambará maciço com óleo e cera: natural ou com base preta
+• Reforçada por baixo para o tampo ficar reto por muitos anos
+• Sem parafusos aparentes, desmonta para mudança
+• Feita sob encomenda em Uberlândia
+
+Preço de lançamento: R$ 1.500
+Chame no direct ou no WhatsApp 📲</p>
+      <button type="button" class="cbtn" id="copyBtn">Copiar texto</button>
+    </div>
+    <h3>Cuidados (para passar ao cliente)</h3>
+    <ul class="keep tight">
+      <li>Limpe com pano levemente úmido e seque em seguida. Nada de álcool, multiuso ou lustra-móveis com silicone.</li>
+      <li>Use porta-copos: copo gelado ou molhado parado deixa marca branca.</li>
+      <li>A cada 2 ou 3 meses, passe uma camada fina de cera de abelha e lustre com pano seco.</li>
+      <li>Evite sol direto o dia todo e encostar em parede úmida: a madeira é viva e se mexe um pouco com o clima.</li>
+      <li>Riscos e manchas saem com lixa fina e uma nova demão de óleo. Essa é a vantagem da madeira maciça.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Vista 3D</h2>
+    <div class="sheet iso">
+      <div class="fin" role="group" aria-label="Acabamento"><span>Acabamento:</span>
+        <button type="button" data-fin="nat" aria-pressed="true">Natural</button>
+        <button type="button" data-fin="blk" aria-pressed="false">Base preta</button>
+      </div>
+      <div class="views" role="group" aria-label="Ângulo da vista">
+        <button type="button" data-view="frente" aria-pressed="true">Frente</button>
+        <button type="button" data-view="tras" aria-pressed="false">Trás</button>
+        <button type="button" data-view="virada" aria-pressed="false">De ponta-cabeça (como monta)</button>
+        <button type="button" class="xr" id="xray" aria-pressed="false">Ver parafusos (raio-X)</button>
+      </div>
+      <svg id="iso" role="img" aria-label="Desenho 3D da mesa"></svg>
+      <div class="pinfo" id="pinfo" hidden aria-live="polite"></div>
+      <div class="chips" id="chips" role="group" aria-label="Destacar peça"></div>
+      <div class="legend" id="legNat"><span><span class="mat oil"></span>Cambará com óleo e cera (a peça inteira)</span></div>
+      <div class="legend" id="legBlk" hidden><span><span class="mat oil"></span>Tampo e engrosso: cambará com óleo e cera</span><span><span class="mat blk"></span>Pernas, saia, sarrafos e reforços: preto fosco</span></div>
+      <div class="xlegend" id="xleg" hidden><span><i style="background:var(--scr)"></i>Parafuso escondido (embaixo do tampo ou por dentro)</span><span><i style="background:var(--scr-vis)"></i>Allen M6 em bucha com rosca: as ligações que desmontam</span></div>
+      <p class="note">Toque numa peça para ver as medidas dela. No raio-X, a madeira fica transparente para mostrar os parafusos; gire para "Trás" e "De ponta-cabeça" para ver de onde cada um entra.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Vistas cotadas</h2>
+    <p class="note">Medidas em centímetros. Tracejado = peça escondida atrás de outra.</p>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th>Conferência</th><th>Conta</th><th>Fecha com</th></tr></thead>
+        <tbody>
+          <tr><td>Profundidade (frente → fundo)</td><td class="num">2 recuo + 56 perna + 2 recuo</td><td class="num">60 do tampo ✓</td></tr>
+          <tr><td>Perna × engrosso da frente</td><td>O engrosso ocupa os 6 cm da frente, embaixo do tampo. A perna começa a 2 cm da borda, então os 4 primeiros cm dela ficam embaixo do engrosso: por isso o <b>recorte de 4 × 2</b> no canto de cima da frente. Nada passa para fora do tampo</td><td class="num">2 + 4 = 6 ✓</td></tr>
+          <tr><td>Largura (ponta → ponta)</td><td class="num">4 + 2 perna + 138 saia + 2 perna + 4</td><td class="num">150 ✓</td></tr>
+          <tr><td>Engrosso do lado</td><td class="num">começa onde o da frente acaba (6) e vai até 58</td><td class="num">52, alinhado com o fundo da perna ✓</td></tr>
+          <tr><td>Altura</td><td class="num">74 perna + 2 tampo</td><td class="num">76 ✓</td></tr>
+          <tr><td>Vão livre</td><td class="num">76 − 2 tampo − 2 engrosso</td><td class="num">72 ✓</td></tr>
+          <tr><td>Sarrafo do topo da perna</td><td class="num">do engrosso (6) até a saia (56)</td><td class="num">50 ✓</td></tr>
+          <tr><td>Reforço A e sarrafo da saia</td><td class="num">138 entre pernas − 3 − 3 dos sarrafos</td><td class="num">132 ✓</td></tr>
+          <tr><td>Travessa B (2 metades)</td><td class="num">6 → 25 e 35 → 53</td><td class="num">19 e 18 ✓</td></tr>
+          <tr><td>Sarrafo da saia</td><td class="num">saia 30 − sarrafo do topo 4</td><td class="num">26 ✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sheet ortho"><p class="vt">Frente</p><div class="scroll"><svg id="vFront" role="img" aria-label="Vista de frente cotada"></svg></div></div>
+    <div class="grid2">
+      <div class="sheet ortho"><p class="vt">Lateral (lado esquerdo)</p><div class="scroll"><svg id="vSide" role="img" aria-label="Vista lateral cotada"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Por baixo, sem o tampo · parafusos</p><div class="scroll"><svg id="vBottom" role="img" aria-label="Vista por baixo com parafusos"></svg></div></div>
+    </div>
+  </section>
+
+  <section id="reforco">
+    <h2>Reforço: reta por muitos anos</h2>
+    <p class="note" style="font-size:14px;color:var(--ink)">O tampo fica apoiado em <b>três vigas no comprimento</b>: o engrosso na frente, o <b>reforço A</b> no meio e a saia atrás. As pernas seguram as pontas. Assim o meio não afunda. A <b>travessa B</b>, atravessada no centro, mantém o tampo plano na largura, para ele não empenar como uma telha.</p>
+    <div class="sheet ortho"><p class="vt">Corte no meio da mesa, de frente para trás</p><div class="scroll"><svg id="vCut" role="img" aria-label="Corte mostrando as três vigas sob o tampo"></svg></div></div>
+    <div class="sheet ortho"><p class="vt">Por baixo do tampo: onde vai cada reforço</p><div class="scroll"><svg id="vRef" role="img" aria-label="Vista por baixo com os reforços A e B"></svg></div></div>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th></th><th>Peça</th><th>Medida</th><th>Cola</th><th>Para que serve</th></tr></thead>
+        <tbody>
+          <tr><td><b style="color:var(--cerne)">A</b></td><td>Reforço no comprimento</td><td class="num">132 × 10 × 2</td><td><span class="tag sim">sim</span></td><td>Deitado, bem em cima da emenda das duas tábuas. Cola em toda a peça (o veio corre no mesmo sentido) e 6 parafusos 4 × 30 de baixo. Impede o meio de afundar e reforça a emenda</td></tr>
+          <tr><td><b style="color:var(--cerne)">B</b></td><td>Travessa atravessada, em 2 metades</td><td class="num">19 e 18 × 4 × 3</td><td><span class="tag nao">não</span></td><td>Uma metade de cada lado do reforço A, no centro da mesa. Só parafusos 4 × 45 com rebaixo, em furo oval frente ↔ trás. Mantém o tampo plano na largura</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>O que mais mantém o tampo reto</h3>
+    <ul class="keep">
+      <li><b>Madeira seca e acostumada com a casa.</b> Deixe as tábuas 1 a 2 semanas dentro de casa antes de colar, deitadas e com tacos entre elas para o ar passar. Madeira que chega úmida da madeireira empena depois de pronta.</li>
+      <li><b>Anéis alternados na colagem.</b> Olhe a ponta de cada tábua: os anéis formam um arco. Cole uma com o arco para cima e a outra com o arco para baixo. Se uma quiser empenar, a outra puxa para o lado contrário.
+        <div class="rings"><svg id="vRings" viewBox="0 0 130 32" role="img" aria-label="Duas tábuas vistas pela ponta, com os anéis em sentidos opostos"></svg></div></li>
+      <li><b>Óleo nos dois lados do tampo,</b> com o mesmo número de demãos em cima e embaixo. Se só a face de cima recebe acabamento, as duas faces trocam umidade em ritmos diferentes e o tampo empena.</li>
+      <li><b>Toda peça atravessada vai só com parafuso em furo oval:</b> os sarrafos das pernas, o sarrafo da saia e a travessa B. Cola só nas peças que correm no mesmo sentido do tampo (engrosso da frente e reforço A).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Lista de corte</h2>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th>Peça</th><th>Qtd</th><th>Medida final</th><th>Madeira</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Tampo</td><td class="num">2</td><td class="num">150 × 30 × 2</td><td><span class="mat oil"></span>Cambará</td><td>Corte com 155 cm, cole as duas e acerte as pontas depois</td></tr>
+          <tr><td>Pernas</td><td class="num">4</td><td class="num">74 × 28 × 2</td><td><span class="mat oil"></span>Cambará</td><td>2 por perna, coladas pela borda: a perna fica com <b>56 cm</b>, 2 cm para dentro na frente e atrás. Refile 2 cm de cada tábua de 30 (de quebra, a borda sai reta para colar). <b>Veio na vertical</b>. Corte com 76 cm. <b>Recorte de 4 × 2 cm</b> no canto de cima da frente, onde passa o engrosso</td></tr>
+          <tr><td>Saia traseira</td><td class="num">1</td><td class="num">138 × 30 × 2</td><td><span class="mat oil"></span>Cambará</td><td>Uma tábua inteira de 30, alinhada com o fundo das pernas (2 cm para dentro do tampo). Meça entre as pernas antes de cortar</td></tr>
+          <tr><td>Engrosso da frente</td><td class="num">1</td><td class="num">150 × 6 × 2</td><td><span class="mat oil"></span>Cambará</td><td>Ripa desdobrada na madeireira. Vai de ponta a ponta e deixa a borda com cara de 4 cm</td></tr>
+          <tr><td>Engrosso dos lados</td><td class="num">2</td><td class="num">52 × 4 × 2</td><td><span class="mat oil"></span>Cambará</td><td>Da mesma tábua desdobrada. A ponta de trás arredondada com raio de 4 cm. Encosta na face de fora da perna</td></tr>
+          <tr><td>Sarrafos do topo das pernas</td><td class="num">2</td><td class="num">50 × 4 × 3</td><td><span class="mat oil"></span>Cambará</td><td>Seguram o tampo</td></tr>
+          <tr><td>Sarrafos da saia</td><td class="num">2</td><td class="num">26 × 3 × 3</td><td><span class="mat oil"></span>Cambará</td><td>Seguram a saia nas pernas</td></tr>
+          <tr><td>Reforço A (no comprimento)</td><td class="num">1</td><td class="num">132 × 10 × 2</td><td><span class="mat oil"></span>Cambará</td><td>Deitado no meio, sobre a emenda do tampo</td></tr>
+          <tr><td>Travessa B (2 metades)</td><td class="num">2</td><td class="num">19 e 18 × 4 × 3</td><td><span class="mat oil"></span>Cambará</td><td>Atravessada no centro, uma metade de cada lado do reforço A</td></tr>
+          <tr><td>Sarrafo do topo da saia</td><td class="num">1</td><td class="num">132 × 4 × 3</td><td><span class="mat oil"></span>Cambará</td><td>Substitui as cantoneiras: segura o tampo na saia</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Sarrafos e reforços (3 × 4 e 3 × 3 cm) ficam escondidos embaixo do tampo: podem ser de cambará ou de pinus, com o mesmo acabamento da base. Na versão <b>base preta</b>, pernas e saia também podem ser de pinus pintado, que é mais barato (foi assim na primeira peça, a mesa da Letícia).</p>
+  </section>
+
+  <section>
+    <h2>Como cada peça se prende</h2>
+    <div class="sheet scroll">
+      <table>
+        <thead><tr><th>Ligação</th><th>Cola</th><th>Como</th></tr></thead>
+        <tbody>
+          <tr><td>Tábuas do tampo e das pernas (borda com borda)</td><td><span class="tag sim">sim</span></td><td>Titebond III no gabarito de parafuso e porca, com sarrafos atravessados para não embarrigar</td></tr>
+          <tr><td>Engrosso → tampo</td><td><span class="tag sim">sim</span></td><td>Cola em toda a ripa (o veio corre no mesmo sentido) e 5 parafusos 4 × 30 de baixo</td></tr>
+          <tr><td>Engrosso dos lados → tampo</td><td><span class="tag sim">só na frente</span></td><td>Aqui o veio fica cruzado com o do tampo. Cole só os <b>10 cm da frente</b> (onde encontra o engrosso da frente). São 3 parafusos 4 × 30 de baixo: o da frente, na parte colada, em furo redondo; os outros 2 em <b>furo oval</b> frente ↔ trás. Assim o tampo cresce e encolhe para trás sem rachar</td></tr>
+          <tr><td>Sarrafo do topo → perna</td><td><span class="tag nao">não</span></td><td>O sarrafo fica deitado e a perna tem o veio em pé: <b>veio cruzado, sem cola</b>. 3 parafusos <b>4 × 35</b> de dentro para fora, com rebaixo de 1 cm: o do meio em furo redondo, os das pontas em <b>furo oval</b> no sentido do comprimento do sarrafo, para a perna crescer e encolher na largura sem rachar</td></tr>
+          <tr><td>Sarrafo da saia → perna</td><td><span class="tag sim">sim</span></td><td>Os dois com veio em pé: cola e 3 parafusos <b>4 × 35</b> de dentro para fora, com rebaixo de 1 cm (entra 1,5 cm na perna e para a 0,5 cm da face de fora)</td></tr>
+          <tr><td>Saia → sarrafos da saia</td><td><span class="tag nao">não</span></td><td>3 parafusos <b>allen M6 × 40</b> de cada lado, <b>de dentro para fora</b> (do sarrafo para a saia), em <b>bucha com rosca M6</b> cravada na face de dentro da saia. Nenhum aparece e desmonta quantas vezes quiser</td></tr>
+          <tr><td>Reforço A → tampo</td><td><span class="tag sim">sim</span></td><td>Cola em toda a peça e 6 parafusos 4 × 30 de baixo (veio no mesmo sentido do tampo)</td></tr>
+          <tr><td>Travessa B → tampo</td><td><span class="tag nao">não</span></td><td>2 parafusos 4 × 45 em cada metade, com rebaixo de 1 cm, em furo oval frente ↔ trás</td></tr>
+          <tr><td>Sarrafo do topo da saia → saia</td><td><span class="tag sim">sim</span></td><td>Cola e 5 parafusos 4 × 40 (o veio corre no mesmo sentido), rente ao topo da saia</td></tr>
+          <tr><td>Tampo → sarrafos das pernas</td><td><span class="tag nao">não</span></td><td>3 parafusos <b>allen M6 × 40</b> de baixo para cima, em <b>bucha com rosca M6</b> cravada no tampo, com rebaixo de 1 cm no sarrafo e arruela: o do meio em furo redondo de 7 mm, os das pontas em <b>furo oval</b> (para o tampo crescer e encolher). É o que solta a perna do tampo</td></tr>
+          <tr><td>Tampo → sarrafo da saia</td><td><span class="tag nao">não</span></td><td>4 parafusos <b>4 × 45</b> de baixo para cima, com rebaixo de 1 cm, todos em <b>furo oval</b> frente ↔ trás, a 30, 60, 90 e 120 cm da ponta</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Furo oval: faça dois furos de 5 mm encostados, no sentido da largura do tampo (frente para trás), e una com a broca inclinada. <b>Conta do parafuso no tampo:</b> sarrafo de 4 cm − rebaixo de 1 cm = 3 cm de sarrafo; um 4 × 45 entra 1,5 cm no tampo de 2 cm. Nunca use maior que 45 mm aí, ou ele fura o tampo. Ponha uma arruela embaixo da cabeça, para ela deslizar no furo oval.</p>
+    <p class="note"><b>Bucha com rosca M6</b> (a de 13 mm de comprimento, para madeira): fure com a broca indicada na embalagem (em geral 8 mm), com 13 mm de fundo e fita na broca marcando a profundidade. Crave com uma chave allen ou com um parafuso M6 com duas porcas travadas. <b>Conta:</b> sarrafo de 4 − rebaixo de 1 = 3 cm; o M6 × 40 entra 1 cm na bucha, que fica dentro dos 2 cm do tampo. Na saia, o sarrafo tem 3 cm e o M6 × 40 entra 1 cm. Para marcar onde cravar a bucha, fure o sarrafo primeiro, apoie no lugar e passe a broca de 3 mm pelo furo até marcar a outra peça. <i>Na mesa da Letícia, que não vai desmontar sempre, pode usar 4 × 45 (tampo) e 4 × 40 (saia) no lugar.</i></p>
+  </section>
+
+  <section>
+    <h2>Como esconder os parafusos</h2>
+    <p class="note" style="font-size:14px;color:var(--ink)">São 54 parafusos (42 de madeira e 12 allen em bucha), e <b>nenhum aparece</b>, nem atrás: quase todos entram por baixo, rumo ao tampo, e os da saia entram de dentro para fora. Use o botão <b>Ver parafusos (raio-X)</b> na vista 3D para ver cada um.</p>
+    <ul class="keep">
+      <li><b>A saia não leva parafuso por fora:</b> os 6 allen entram pelo sarrafo, do lado de dentro, e rosqueiam na bucha cravada na saia. A face de trás fica limpa, sem tampão nem massa.</li>
+      <li>Para alcançar esses 6 com a mesa montada, use chave allen em L (ou bit allen numa parafusadeira curta).</li>
+      <li><b>Nunca tape os parafusos em furo oval</b> embaixo do tampo: eles precisam deslizar quando a madeira se mexe. Ficam escondidos de qualquer jeito.</li>
+      <li>Parafuso de madeira: rebaixo de 1 cm com broca de 10 mm, furo-guia de 3 mm e furo de passagem de 5 mm. Allen M6: rebaixo de 1 cm com broca de 14 mm (cabe a arruela) e furo de passagem de 7 mm.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Ordem de montagem</h2>
+    <ol class="steps">
+      <li><b>Cole os painéis:</b> as 2 tábuas do tampo e as 2 de cada perna. Espere 24 h.</li>
+      <li><b>Acerte as medidas:</b> corte as pontas do tampo em 150 cm e as pernas em 74 cm, no esquadro.</li>
+      <li><b>Lixe tudo antes de montar</b> (80 → 120 → 180). Peça solta é muito mais fácil de lixar.</li>
+      <li><b>Cole o engrosso da frente</b> embaixo do tampo, rente à borda, de ponta a ponta.</li>
+      <li><b>Cole o reforço A</b> deitado no meio, bem em cima da emenda das duas tábuas, com cola e 6 parafusos 4 × 30.</li>
+      <li><b>Engrossos dos lados:</b> arredonde antes a ponta de trás (raio 4 cm). Encoste a ponta da frente no engrosso da frente, cole só os 10 cm da frente e parafuse o resto pelos furos ovais. Deixe uns 3 mm de folga na ponta de trás, por dentro da curva do tampo.</li>
+      <li><b>Arredonde:</b> os 4 cantos do tampo com <b>raio de 6 cm</b>, cortando os da frente junto com os engrossos (risque com um pires ou uma tampa de 12 cm de diâmetro e corte no tico-tico, por fora da linha; acerte com lixa 80); depois as quinas de cima do tampo, a de baixo do engrosso e as da frente das pernas, com raio de 3 a 5 mm (lixa 80 num taco, em ângulo, até ficar redondo ao toque). Não arredonde a emenda entre o tampo e o engrosso: ela fica reta e quase some.</li>
+      <li><b>Recorte as pernas</b> (4 × 2 cm no canto de cima da frente) e confira o encaixe no engrosso.</li>
+      <li><b>Acabamento da base antes de montar:</b> pernas, saia e sarrafos recebem o acabamento da versão escolhida (veja os dois últimos passos). Deixe sem acabamento só as faces onde vai cola.</li>
+      <li><b>Prenda os sarrafos:</b> nas pernas, os do topo rentes à borda de cima (<b>só parafuso, sem cola</b>, pontas em furo oval) e os da saia rentes à borda de trás (cola e parafuso); na saia, o sarrafo comprido rente ao topo, do lado de dentro (cola e parafuso). Nas pernas, use 4 × 35 com rebaixo de 1 cm.</li>
+      <li><b>Crave as buchas M6:</b> 3 em cada ponta da saia, na face de dentro, marcando pelos furos dos sarrafos da saia (veja a nota em "Como cada peça se prende").</li>
+      <li><b>Una as pernas com a saia</b> com os allen M6 × 40, de dentro para fora, com a mesa de ponta-cabeça no chão. Confira o esquadro medindo as duas diagonais: têm que dar iguais.</li>
+      <li><b>Encaixe o tampo</b> (de cabeça para baixo, sobre um cobertor), apoie a estrutura em cima com as pernas a <b>4 cm</b> de cada ponta e <b>2 cm</b> para dentro na frente e atrás e marque os 6 furos dos sarrafos das pernas no tampo. Tire a estrutura, crave as 6 buchas no tampo (13 mm de fundo, nunca mais), volte a estrutura e aperte os allen com arruela. Depois prenda o sarrafo da saia com 4 × 45. Por último, prenda as duas metades da <b>travessa B</b> no centro, só com parafuso em furo oval.</li>
+      <li><b>Acabamento natural</b> (tampo sempre, e a base inteira na versão natural): <b>óleo de linhaça cozido</b> (ou óleo de tung), não o mineral das tábuas de corte: ele endurece na madeira, e o mineral fica oleoso e mancha papel. Passe 3 demãos finas, tirando o excesso após 20 min e esperando 24 h entre elas; depois de 1 semana, cera de abelha lustrada com pano. Repita a cera a cada 2 ou 3 meses. <b>Cuidado:</b> pano com óleo de linhaça pode pegar fogo sozinho; abra no chão para secar ou deixe de molho na água antes de jogar fora.</li>
+      <li><b>Base preta:</b> uma demão de <b>fundo preparador</b> (seladora), lixa 220 e 2 demãos de <b>esmalte preto fosco</b> à base d'água. No pinus, o fundo também impede os nós de mancharem. Se preferir ver os veios, use stain preto no lugar.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>O que comprar</h2>
+    <p class="note">Para uma escrivaninha, versão inteira em cambará.</p>
+    <div class="buy">
+      <div><b>~9,5 m de cambará</b><span>tábua de 30 × 2 cm · ~R$ 165. Tampo 3,10 m + pernas 3,05 m + saia 1,40 m + 1,60 m desdobrada em ripas (engrossos e reforço A)</span></div>
+      <div><b>~3,5 m de sarrafo</b><span>3 × 4 cm, para os sarrafos e a travessa B · ~R$ 25</span></div>
+      <div><b>Acabamento</b><span>óleo de linhaça cozido (~R$ 25) · cera de abelha (~R$ 30). Base preta: + fundo preparador e esmalte preto fosco à base d'água (~R$ 60)</span></div>
+      <div><b>42 parafusos de madeira</b><span>cabeça chata: 17 de 4 × 30, 12 de 4 × 35, 5 de 4 × 40, 8 de 4 × 45 mm, + 16 arruelas · ~R$ 20</span></div>
+      <div><b>12 buchas + 12 allen</b><span>bucha metálica com rosca M6 para madeira (13 mm) + parafuso allen cabeça cilíndrica M6 × 40 + 12 arruelas M6 · ~R$ 30. Broca de 8 mm (confira na embalagem) e 14 mm</span></div>
+      <div><b>Consumo</b><span>lixas 60, 80, 120, 180, 220 e 320 · ~R$ 30. Brocas de 3, 5 e 10 mm e máscara PFF2, se ainda não tiver</span></div>
+    </div>
+    <p class="note"><b>Custo total: ~R$ 330 (natural) a ~R$ 390 (base preta).</b> Com a base preta em pinus, sai uns R$ 70 mais barato. Você já tem cola (Titebond III) e sargentos.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+const L=150,D=60,H=76,RC=6;
+/* retângulo de cantos arredondados no plano x,y: raios [frente-esq, frente-dir, fundo-dir, fundo-esq] */
+function rr(x0,y0,x1,y1,r){const pts=[],N=10;
+  const arc=(cx,cy,rad,a0)=>{if(!rad){pts.push([cx,cy]);return}for(let i=0;i<=N;i++){const a=a0+i*Math.PI/2/N;pts.push([cx+rad*Math.cos(a),cy+rad*Math.sin(a)])}};
+  arc(x0+r[0],y0+r[0],r[0],Math.PI);arc(x1-r[1],y0+r[1],r[1],1.5*Math.PI);arc(x1-r[2],y1-r[2],r[2],0);arc(x0+r[3],y1-r[3],r[3],.5*Math.PI);
+  return pts}
+const PARTS=[
+ {id:'tampo',n:'Tampo',b:[0,0,74,150,60,76],m:'oil',shape:rr(0,0,150,60,[RC,RC,RC,RC])},
+ {id:'pe',n:'Perna esquerda',b:[4,2,0,6,58,72],m:'blk',g:'pernas'},
+ {id:'pe2',n:'Perna esquerda',b:[4,6,72,6,58,74],m:'blk',g:'pernas',u:'pe'},
+ {id:'pd',n:'Perna direita',b:[144,2,0,146,58,72],m:'blk',g:'pernas'},
+ {id:'pd2',n:'Perna direita',b:[144,6,72,146,58,74],m:'blk',g:'pernas',u:'pd'},
+ {id:'eng',n:'Engrosso da frente',b:[0,0,72,150,6,74],m:'oil',shape:rr(0,0,150,6,[RC,RC,0,0])},
+ {id:'engE',n:'Engrosso',b:[0,6,72,4,58,74],m:'oil',g:'eng',shape:rr(0,6,4,58,[0,0,0,4])},
+ {id:'engD',n:'Engrosso',b:[146,6,72,150,58,74],m:'oil',g:'eng',shape:rr(146,6,150,58,[0,0,4,0])},
+ {id:'saia',n:'Saia traseira',b:[6,56,44,144,58,74],m:'blk'},
+ {id:'s5',n:'Sarrafos',b:[9,53,70,141,56,74],m:'blk',g:'sarrafos'},
+ {id:'s1',n:'Sarrafos',b:[6,6,70,9,56,74],m:'blk',g:'sarrafos'},
+ {id:'s2',n:'Sarrafos',b:[141,6,70,144,56,74],m:'blk',g:'sarrafos'},
+ {id:'s3',n:'Sarrafos',b:[6,53,44,9,56,70],m:'blk',g:'sarrafos'},
+ {id:'s4',n:'Sarrafos',b:[141,53,44,144,56,70],m:'blk',g:'sarrafos'},
+];
+PARTS.push(
+ {id:'r1',n:'Reforço A',b:[9,25,72,141,35,74],m:'blk',g:'reforco'},
+ {id:'r2',n:'Travessa B',b:[72,6,70,75,25,74],m:'blk',g:'reforco'},
+ {id:'r3',n:'Travessa B',b:[72,35,70,75,53,74],m:'blk',g:'reforco'});
+const GROUPS=[['reforco','Reforços A e B'],['tampo','Tampo'],['pernas','Pernas'],['eng','Engrosso (frente e lados)'],['saia','Saia'],['sarrafos','Sarrafos']];
+const grp=p=>p.g||p.id;
+const NS='http://www.w3.org/2000/svg';
+let view='frente',hl=null;
+function tf(b){let [x0,y0,z0,x1,y1,z1]=b;
+  if(view==='tras'){[x0,x1]=[L-x1,L-x0];[y0,y1]=[D-y1,D-y0]}
+  if(view==='virada'){[y0,y1]=[D-y1,D-y0];[z0,z1]=[H-z1,H-z0]}
+  return [x0,y0,z0,x1,y1,z1]}
+const c=Math.cos(Math.PI/6),s=.5;
+const pr=(x,y,z)=>[(x+y)*c,(x-y)*s-z];
+function behind(A,B){ // true if A drawn before B
+  if(A[3]<=B[0])return true; if(B[3]<=A[0])return false;
+  if(A[1]>=B[4])return true; if(B[1]>=A[4])return false;
+  if(A[5]<=B[2])return true; if(B[5]<=A[2])return false;
+  return false}
+function order(items){const n=items.length,adj=items.map(()=>[]),indeg=new Array(n).fill(0);
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(i!==j&&behind(items[i].t,items[j].t)){adj[i].push(j);indeg[j]++}
+  const q=[],out=[];indeg.forEach((d,i)=>{if(!d)q.push(i)});
+  while(q.length){const i=q.shift();out.push(items[i]);adj[i].forEach(j=>{if(--indeg[j]===0)q.push(j)})}
+  return out.length===n?out:items}
+
+/* parafusos: cabeça -> ponta, em cm do projeto; vis = aparece por fora */
+const SCREWS=[];
+const S=(a,b,vis)=>SCREWS.push({a,b,vis:!!vis});
+[7.5,142.5].forEach(x=>[12,31,50].forEach(y=>S([x,y,71],[x,y,75],1)));               /* tampo nos sarrafos das pernas: allen M6 x 40 em bucha */
+[30,60,90,120].forEach(x=>S([x,54.5,71],[x,54.5,75.5]));                               /* tampo no sarrafo da saia */
+[12,20,40,48].forEach(y=>S([73.5,y,71],[73.5,y,75.5]));                                /* tampo na travessa B */
+[20,42,64,86,108,130].forEach(x=>S([x,30,72],[x,30,75]));                              /* reforço A (4x30) */
+[15,45,75,105,135].forEach(x=>S([x,3,72],[x,3,75]));                                   /* engrosso da frente */
+[2,148].forEach(x=>[10,30,50].forEach(y=>S([x,y,72],[x,y,75])));                       /* engrossos dos lados */
+[15,31,47].forEach(y=>{S([8,y,72],[4.5,y,72]);S([142,y,72],[145.5,y,72])});          /* sarrafos do topo nas pernas: 4x35, rebaixo 1 cm, sem cola */
+[50,57,64].forEach(z=>{S([8,54.5,z],[4.5,54.5,z]);S([142,54.5,z],[145.5,54.5,z])});  /* sarrafos da saia nas pernas: 4x35, rebaixo 1 cm */
+[50,57,64].forEach(z=>{S([7.5,53,z],[7.5,57,z],1);S([142.5,53,z],[142.5,57,z],1)});  /* saia: allen M6 x 40 de dentro para fora, em bucha na saia */
+[25,50,75,100,125].forEach(x=>S([x,53,72],[x,57,72]));                                 /* sarrafo da saia na saia */
+let xray=false;
+function tp([x,y,z]){if(view==='tras')return[L-x,D-y,z];if(view==='virada')return[x,D-y,H-z];return[x,y,z]}
+function drawScrews(svg){
+  SCREWS.forEach(s=>{const a=pr(...tp(s.a)),b=pr(...tp(s.b));const col=s.vis?'var(--scr-vis)':'var(--scr)';
+    const ln=document.createElementNS(NS,'line');[['x1',a[0]],['y1',a[1]],['x2',b[0]],['y2',b[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));
+    ln.style.stroke=col;ln.setAttribute('stroke-width','.55');ln.setAttribute('stroke-linecap','round');svg.appendChild(ln);
+    const hd=document.createElementNS(NS,'circle');hd.setAttribute('cx',a[0].toFixed(2));hd.setAttribute('cy',a[1].toFixed(2));hd.setAttribute('r',s.vis?'1.1':'.8');
+    hd.style.fill=col;hd.style.stroke='var(--paper)';hd.setAttribute('stroke-width','.2');svg.appendChild(hd)})}
+document.getElementById('xray').onclick=e=>{xray=!xray;e.currentTarget.setAttribute('aria-pressed',xray?'true':'false');document.getElementById('xleg').hidden=!xray;drawIso()};
+
+/* ficha de cada peça: medida final (comprimento × largura × espessura), quantidade e observação */
+const PINFO={
+ tampo:['Tampo','150 × 60 × 2','1 · 2 tábuas de cambará de 150 × 30 × 2 coladas pela borda (corte com 155 e acerte depois)','Cantos com raio de 6 cm. Óleo nas duas faces, com o mesmo número de demãos'],
+ pe:['Perna','74 × 56 × 2','2 · cada uma com 2 tábuas de 74 × 28 × 2 coladas, veio em pé','Recorte de 4 × 2 no canto de cima da frente, onde passa o engrosso. Fica a 4 cm da ponta e 2 cm para dentro na frente e atrás'],
+ eng:['Engrosso da frente','150 × 6 × 2','1 · ripa desdobrada','Cola em toda a ripa + 5 parafusos 4 × 30. Deixa a borda da frente com cara de 4 cm. Cantos com raio de 6 junto com o tampo'],
+ engE:['Engrosso do lado','52 × 4 × 2','2 · ripa desdobrada','Ponta de trás arredondada com raio de 4. Cola só nos 10 cm da frente; o resto em 2 parafusos 4 × 30 em furo oval (veio cruzado)'],
+ saia:['Saia traseira','138 × 30 × 2','1 · uma tábua de 30','Alinhada com o fundo das pernas. Presa por 6 allen M6 × 40 em bucha, de dentro para fora'],
+ s1:['Sarrafo do topo da perna','50 × 4 × 3','2','Rente ao topo da perna, do lado de dentro. Sem cola (veio cruzado): 3 parafusos 4 × 35 com rebaixo, pontas em furo oval. Segura o tampo com 3 allen M6'],
+ s3:['Sarrafo da saia','26 × 3 × 3','2','Rente ao fundo da perna. Cola + 3 parafusos 4 × 35 com rebaixo. Recebe os allen da saia'],
+ s5:['Sarrafo do topo da saia','132 × 4 × 3','1','Rente ao topo da saia, do lado de dentro. Cola + 5 parafusos 4 × 40. Segura o tampo com 4 parafusos 4 × 45 em furo oval'],
+ r1:['Reforço A','132 × 10 × 2','1','Deitado sobre a emenda do tampo. Cola em toda a peça + 6 parafusos 4 × 30. Impede o meio de afundar'],
+ r2:['Travessa B (metade da frente)','19 × 4 × 3','1','Atravessada, sem cola: 2 parafusos 4 × 45 com rebaixo em furo oval. Mantém o tampo plano na largura'],
+ r3:['Travessa B (metade de trás)','18 × 4 × 3','1','Atravessada, sem cola: 2 parafusos 4 × 45 com rebaixo em furo oval'],
+};
+PINFO.pd=PINFO.pe;PINFO.engD=PINFO.engE;PINFO.s2=PINFO.s1;PINFO.s4=PINFO.s3;
+let sel=null;
+const key=p=>p.u||p.id;
+function active(p){return sel?key(p)===sel:(!hl||grp(p)===hl)}
+function pick(p){const k=key(p);sel=sel===k?null:k;hl=null;
+  document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed','false'));showInfo();drawIso()}
+function showInfo(){const box=document.getElementById('pinfo');
+  if(!sel){box.hidden=true;box.innerHTML='';return}
+  const [n,d,q,o]=PINFO[sel];
+  box.innerHTML='<b class="pn"></b><span class="pd"></span><span class="pm q"></span><span class="pm o"></span><button type="button">Fechar</button>';
+  box.querySelector('.pn').textContent=n;box.querySelector('.pd').textContent=d+' cm';
+  box.querySelector('.q').textContent='Quantidade: '+q;box.querySelector('.o').textContent=o;
+  box.querySelector('button').onclick=()=>{sel=null;showInfo();drawIso()};box.hidden=false}
+/* cotas da peça escolhida, desenhadas nas 3 arestas visíveis */
+function drawDims(svg){
+  const ps=PARTS.filter(p=>key(p)===sel);if(!ps.length)return;
+  let b=[1e9,1e9,1e9,-1e9,-1e9,-1e9];
+  ps.forEach(p=>{const t=tf(p.b);for(let i=0;i<3;i++){b[i]=Math.min(b[i],t[i]);b[i+3]=Math.max(b[i+3],t[i+3])}});
+  const [x0,y0,z0,x1,y1,z1]=b,o=3.5,fmt=v=>String(Math.round(v*10)/10).replace('.',',');
+  const seg=(a,c,val,off)=>{const A=pr(...a),C=pr(...c);
+    const ln=document.createElementNS(NS,'line');[['x1',A[0]],['y1',A[1]],['x2',C[0]],['y2',C[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));ln.setAttribute('class','cota-l');svg.appendChild(ln);
+    [A,C].forEach(P=>{const e=document.createElementNS(NS,'circle');e.setAttribute('cx',P[0].toFixed(2));e.setAttribute('cy',P[1].toFixed(2));e.setAttribute('r','.7');e.setAttribute('class','cota-bg');svg.appendChild(e)});
+    const mx=(A[0]+C[0])/2+off[0],my=(A[1]+C[1])/2+off[1];
+    const tx=document.createElementNS(NS,'text');tx.setAttribute('x',mx.toFixed(2));tx.setAttribute('y',(my+1.5).toFixed(2));tx.setAttribute('text-anchor','middle');tx.setAttribute('class','cota-t');tx.textContent=fmt(val);
+    svg.appendChild(tx);const bb=tx.getBBox();
+    const bg=document.createElementNS(NS,'rect');bg.setAttribute('x',(bb.x-1.2).toFixed(2));bg.setAttribute('y',(bb.y-.6).toFixed(2));bg.setAttribute('width',(bb.width+2.4).toFixed(2));bg.setAttribute('height',(bb.height+1.2).toFixed(2));bg.setAttribute('rx','1.2');bg.setAttribute('class','cota-bg');
+    svg.insertBefore(bg,tx)};
+  seg([x0,y0-o,z0],[x1,y0-o,z0],x1-x0,[-3,4.5]);
+  seg([x1+o,y0,z0],[x1+o,y1,z0],y1-y0,[3,4.5]);
+  seg([x1+o,y0-o,z0],[x1+o,y0-o,z1],z1-z0,[6,0]);
+}
+function drawIso(){
+  const svg=document.getElementById('iso');svg.innerHTML='';
+  const items=PARTS.map(p=>({p,t:tf(p.b)}));
+  let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
+  items.forEach(({t})=>{for(const x of [t[0],t[3]])for(const y of [t[1],t[4]])for(const z of [t[2],t[5]]){const [a,b]=pr(x,y,z);minx=Math.min(minx,a);maxx=Math.max(maxx,a);miny=Math.min(miny,b);maxy=Math.max(maxy,b)}});
+  const pad=9;svg.setAttribute('viewBox',`${minx-pad} ${miny-pad} ${maxx-minx+2*pad} ${maxy-miny+2*pad}`);
+  order(items).forEach(({p,t})=>{const [x0,y0,z0,x1,y1,z1]=t;
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','piece');
+    g.style.opacity=xray?.2:(active(p)?1:.18);
+    if(p.shape){drawPrism(g,p,t);g.style.cursor='pointer';g.addEventListener('click',()=>pick(p));svg.appendChild(g);return}
+    const faces=[
+      [[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],'top'],
+      [[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1],'front'],
+      [[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1],'side']];
+    faces.forEach(f=>{const k=f.pop();const pts=f.map(v=>pr(...v).map(n=>n.toFixed(2)).join(',')).join(' ');
+      const e=document.createElementNS(NS,'polygon');e.setAttribute('points',pts);
+      e.style.fill=`var(--${p.m}-${k})`;e.style.stroke=p.m==='blk'?'var(--blk-stroke)':'var(--stroke)';e.setAttribute('stroke-width','.3');e.setAttribute('stroke-linejoin','round');g.appendChild(e)});
+    g.style.cursor='pointer';g.addEventListener('click',()=>pick(p));
+    svg.appendChild(g)});
+  if(xray)drawScrews(svg);
+  if(sel)drawDims(svg);
+}
+function drawPrism(g,p,t){const z0=t[2],z1=t[5];
+  let pts=p.shape.map(([x,y])=>view==='tras'?[L-x,D-y]:view==='virada'?[x,D-y]:[x,y]);
+  let area=0;pts.forEach((a,i)=>{const b=pts[(i+1)%pts.length];area+=a[0]*b[1]-b[0]*a[1]});
+  if(area<0)pts=pts.slice().reverse(); // anti-horário
+  const poly=(arr,fill,stroke)=>{const e=document.createElementNS(NS,'polygon');e.setAttribute('points',arr.map(v=>pr(...v).map(n=>n.toFixed(2)).join(',')).join(' '));e.style.fill=fill;e.style.stroke=stroke;e.setAttribute('stroke-width','.3');e.setAttribute('stroke-linejoin','round');g.appendChild(e)};
+  const n=pts.length,vis=[];
+  for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n];const nx=b[1]-a[1],ny=-(b[0]-a[0]);const len=Math.hypot(nx,ny)||1;
+    const v=(nx-ny)/len>1e-6;vis.push(v);
+    if(v){const k=Math.abs(ny)>=Math.abs(nx)?'front':'side';const col='var(--'+p.m+'-'+k+')';poly([[a[0],a[1],z0],[b[0],b[1],z0],[b[0],b[1],z1],[a[0],a[1],z1]],col,col)}}
+  const line=(a,b)=>{const e=document.createElementNS(NS,'line');const [x1,y1]=pr(...a),[x2,y2]=pr(...b);Object.entries({x1,y1,x2,y2}).forEach(([k,v])=>e.setAttribute(k,v.toFixed(2)));e.style.stroke='var(--stroke)';e.setAttribute('stroke-width','.3');g.appendChild(e)};
+  for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n];
+    if(vis[i])line([a[0],a[1],z0],[b[0],b[1],z0]);
+    if(vis[i]!==vis[(i-1+n)%n])line([a[0],a[1],z0],[a[0],a[1],z1]);}
+  poly(pts.map(([x,y])=>[x,y,z1]),'var(--'+p.m+'-top)','var(--stroke)');
+}
+function setHl(h){hl=h;sel=null;showInfo();document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===hl?'true':'false'));drawIso()}
+const chips=document.getElementById('chips');
+GROUPS.forEach(([g,n])=>{const b=document.createElement('button');b.type='button';b.dataset.g=g;b.textContent=n;b.setAttribute('aria-pressed','false');b.onclick=()=>setHl(hl===g?null:g);chips.appendChild(b)});
+document.querySelectorAll('.views button[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.views button[data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));drawIso()});
+drawIso();
+document.querySelectorAll('.fin button').forEach(b=>b.onclick=()=>{const nat=b.dataset.fin==='nat';
+  document.querySelector('.wrap').classList.toggle('nat',nat);
+  document.querySelectorAll('.fin button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+  document.getElementById('legNat').hidden=!nat;document.getElementById('legBlk').hidden=nat});
+document.getElementById('copyBtn').onclick=e=>{const t=document.getElementById('copyTxt').textContent;
+  try{navigator.clipboard.writeText(t).then(()=>{e.target.textContent='Copiado!';setTimeout(()=>e.target.textContent='Copiar texto',1600)})}catch(_){}};
+
+/* vistas ortográficas: unidades = cm */
+const el=(svg,tag,attrs,txt)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e};
+const R=(svg,x,y,w,h,cls)=>el(svg,'rect',{x,y,width:w,height:h,class:cls});
+function dimH(svg,x0,x1,y,t,ext0,ext1){
+  if(ext0!=null)el(svg,'line',{x1:x0,y1:ext0,x2:x0,y2:y+1,class:'d-line','stroke-dasharray':'.6 .6'});
+  if(ext1!=null)el(svg,'line',{x1:x1,y1:ext1,x2:x1,y2:y+1,class:'d-line','stroke-dasharray':'.6 .6'});
+  el(svg,'line',{x1:x0,y1:y,x2:x1,y2:y,class:'d-line'});
+  [x0,x1].forEach(x=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));
+  el(svg,'text',{x:(x0+x1)/2,y:y-1.2,'text-anchor':'middle',class:'d-text'},t)}
+function dimV(svg,y0,y1,x,t,ext0,ext1){
+  if(ext0!=null)el(svg,'line',{x1:ext0,y1:y0,x2:x-1,y2:y0,class:'d-line','stroke-dasharray':'.6 .6'});
+  if(ext1!=null)el(svg,'line',{x1:ext1,y1:y1,x2:x-1,y2:y1,class:'d-line','stroke-dasharray':'.6 .6'});
+  el(svg,'line',{x1:x,y1:y0,x2:x,y2:y1,class:'d-line'});
+  [y0,y1].forEach(y=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));
+  const ty=(y0+y1)/2;el(svg,'text',{x:x-1.5,y:ty,'text-anchor':'middle',class:'d-text',transform:`rotate(-90 ${x-1.5} ${ty})`},t)}
+const lbl=(svg,x,y,t,a='middle')=>el(svg,'text',{x,y,'text-anchor':a,class:'lbl'},t);
+
+/* FRENTE: x → direita, z ↑ (y_svg = 76 - z) */
+(function(){const v=document.getElementById('vFront');const ox=22,oy=10,Z=z=>oy+76-z,X=x=>ox+x;
+  v.setAttribute('viewBox','0 0 200 104');
+  R(v,X(6),Z(74),138,30,'p-blk');el(v,'text',{x:X(75),y:Z(58),'text-anchor':'middle',class:'lbl',style:'fill:#CFC8CC'},'saia traseira (ao fundo)');
+  R(v,X(4),Z(72),2,72,'p-blk');R(v,X(144),Z(72),2,72,'p-blk');
+  R(v,X(0),Z(74),150,2,'p-oil2');R(v,X(0),Z(76),150,2,'p-oil');
+  R(v,X(6),Z(74),3,4,'p-hid');R(v,X(141),Z(74),3,4,'p-hid');
+  dimH(v,X(0),X(4),Z(0)+5,'4',null,null);dimH(v,X(146),X(150),Z(0)+5,'4',null,null);
+  el(v,'line',{x1:X(-4),y1:Z(0),x2:X(154),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,X(0),X(150),Z(76)-5,'150',Z(76),Z(76));
+  dimV(v,Z(76),Z(0),X(0)-12,'76',X(0),X(0));
+  dimV(v,Z(74),Z(0),X(0)-5,'74',X(4),null);
+  dimV(v,Z(76),Z(72),X(150)+6,'4',X(150),X(148));
+  dimV(v,Z(74),Z(44),X(150)+14,'30',X(144),X(144));
+  dimV(v,Z(44),Z(0),X(150)+14,'44',null,X(144));
+  dimV(v,Z(72),Z(0),X(40),'72 livre p/ as pernas',null,null);
+  lbl(v,X(92),Z(72)+4,'engrosso 150 × 6 × 2 (borda fica com 4 cm)');
+})();
+
+/* LATERAL: y → direita (frente à esquerda), z ↑ */
+(function(){const v=document.getElementById('vSide');const ox=22,oy=10,Z=z=>oy+76-z,Y=y=>ox+y;
+  v.setAttribute('viewBox','0 0 110 104');
+  R(v,Y(2),Z(72),56,72,'p-blk');R(v,Y(0),Z(76),60,2,'p-oil');
+  R(v,Y(0),Z(74),58,2,'p-oil2');lbl(v,Y(32),Z(74)-3.5,'engrosso do lado 52 × 4 × 2');R(v,Y(56),Z(74),2,30,'p-hid');R(v,Y(6),Z(74),50,4,'p-hid');R(v,Y(53),Z(70),3,26,'p-hid');
+  dimH(v,Y(0),Y(2),Z(0)+5,'2',null,null);dimH(v,Y(58),Y(60),Z(0)+5,'2',null,null);
+  el(v,'line',{x1:Y(-4),y1:Z(0),x2:Y(64),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,Y(0),Y(60),Z(76)-5,'60',Z(76),Z(76));
+  dimH(v,Y(6),Y(56),Z(70)+6,'sarrafo 50',null,null);dimH(v,Y(2),Y(58),Z(44)+30,'perna 56',null,null);dimV(v,Z(76),Z(72),Y(60)+12,'4',Y(60),Y(60));
+  dimV(v,Z(76),Z(0),Y(0)-6,'76',Y(0),Y(0));
+  dimV(v,Z(74),Z(44),Y(60)+6,'saia 30',Y(60),Y(60));
+  lbl(v,Y(1),Z(0)+10,'frente','start');lbl(v,Y(59),Z(0)+10,'fundo','end');
+  el(v,'text',{x:Y(30),y:Z(30),'text-anchor':'middle',class:'lbl',style:'fill:#CFC8CC'},'perna 56 × 74');el(v,'text',{x:Y(30),y:Z(30)+4,'text-anchor':'middle',class:'lbl',style:'fill:#CFC8CC'},'(2 tábuas de 28, veio ↕)');
+})();
+
+/* POR BAIXO: x → direita, y ↓ (frente embaixo) */
+(function(){const v=document.getElementById('vBottom');const ox=12,oy=12,X=x=>ox+x,Y=y=>oy+60-y;
+  v.setAttribute('viewBox','0 0 176 92');
+  const P2=(arr,cls)=>el(v,'polygon',{points:arr.map(([x,y])=>X(x).toFixed(2)+','+Y(y).toFixed(2)).join(' '),class:cls});
+  P2(rr(0,0,150,60,[RC,RC,RC,RC]),'p-out');
+  P2(rr(0,0,150,6,[RC,RC,0,0]),'p-oil');
+  P2(rr(0,6,4,58,[0,0,0,4]),'p-oil');P2(rr(146,6,150,58,[0,0,4,0]),'p-oil');
+  R(v,X(4),Y(58),2,56,'p-blk');R(v,X(144),Y(58),2,56,'p-blk');
+  [[2,10,0],[2,30,1],[2,50,1],[148,10,0],[148,30,1],[148,50,1]].forEach(([x,y,o])=>{
+    if(o)el(v,'rect',{x:X(x)-.6,y:Y(y)-1.5,width:1.2,height:3,rx:.6,class:'screw'});else el(v,'circle',{cx:X(x),cy:Y(y),r:.6,class:'screw'})});
+  R(v,X(6),Y(58),138,2,'p-blk');
+  R(v,X(9),Y(56),132,3,'p-blk');
+  R(v,X(9),Y(35),132,10,'p-blk');R(v,X(72),Y(25),3,19,'p-blk');R(v,X(72),Y(53),3,18,'p-blk');
+  R(v,X(6),Y(56),3,50,'p-blk');R(v,X(141),Y(56),3,50,'p-blk');
+  R(v,X(6),Y(56),3,3,'p-blk');R(v,X(141),Y(56),3,3,'p-blk');
+  dimH(v,X(0),X(4),Y(0)+5,'4',null,null);
+  // parafusos do tampo nos sarrafos: oval nas pontas, redondo no meio
+  [[7.5,12,1],[7.5,31,0],[7.5,50,1],[142.5,12,1],[142.5,31,0],[142.5,50,1]].forEach(([x,y,o])=>{
+    if(o)el(v,'rect',{x:X(x)-.7,y:Y(y)-1.6,width:1.4,height:3.2,rx:.7,class:'screw'});
+    else el(v,'circle',{cx:X(x),cy:Y(y),r:.75,class:'screw'})});
+  // cantoneiras Z na saia
+  [30,60,90,120].forEach(x=>el(v,'rect',{x:X(x)-.7,y:Y(54.5)-1.6,width:1.4,height:3.2,rx:.7,class:'screw'}));
+  // parafusos do engrosso
+  [15,45,75,105,135].forEach(x=>el(v,'circle',{cx:X(x),cy:Y(3),r:.6,class:'screw'}));
+  dimH(v,X(0),X(150),Y(60)-5,'150',Y(60),Y(60));
+  dimV(v,Y(60),Y(0),X(150)+7,'60',X(150),X(150));
+  lbl(v,X(75),Y(3)+1,'engrosso (cola + parafusos)');
+  lbl(v,X(75),Y(53)+4,'sarrafo da saia: 4 parafusos em furo oval');
+  lbl(v,X(11),Y(32),'furo oval ↕',"start");lbl(v,X(1),Y(60)+4.5,'canto raio 6','start');
+  lbl(v,X(75),Y(32),'tampo (tracejado)');
+  lbl(v,X(75),Y(0)+10,'FRENTE');
+})();
+
+/* CORTE: y → direita (frente à esquerda), z ↑ */
+(function(){const v=document.getElementById('vCut');const ox=34,oy=12,Y=y=>ox+y,Z=z=>oy+(78-z);
+  v.setAttribute('viewBox','0 0 136 52');
+  const L=(x1,y1,x2,y2)=>el(v,'line',{x1,y1,x2,y2,class:'ref-l'});
+  const T=(x,y,t,a='start',c='ref-t')=>el(v,'text',{x,y,'text-anchor':a,class:c},t);
+  R(v,Y(0),Z(76),60,2,'p-oil');R(v,Y(0),Z(74),6,2,'p-oil2');
+  R(v,Y(56),Z(74),2,30,'p-blk');R(v,Y(53),Z(74),3,4,'p-blk');
+  R(v,Y(6),Z(74),19,4,'p-ref2');R(v,Y(35),Z(74),18,4,'p-ref2');
+  R(v,Y(25),Z(74),10,2,'p-ref');
+  /* peso */
+  L(Y(30),Z(76)-8,Y(30),Z(76)-1);el(v,'path',{d:`M${Y(30)-1} ${Z(76)-2.2} L${Y(30)} ${Z(76)-.6} L${Y(30)+1} ${Z(76)-2.2}`,class:'ref-l'});T(Y(30),Z(76)-9,'peso','middle');
+  /* rótulos */
+  L(Y(3),Z(72),Y(3),Z(60));T(Y(3)-1,Z(60)+3.4,'viga da frente','end','ref-b');T(Y(3)-1,Z(60)+6.6,'engrosso (cola)','end');
+  L(Y(30),Z(72),Y(30),Z(60));T(Y(30),Z(60)+3.4,'A · viga do meio','middle','ref-b');T(Y(30),Z(60)+6.6,'reforço 10 × 2 (cola)','middle');
+  L(Y(15),Z(70),Y(15),Z(66));T(Y(15),Z(66)+3,'B · travessa','middle');
+  L(Y(57),Z(56),Y(64),Z(56));T(Y(65),Z(56)+1,'viga de trás','start','ref-b');T(Y(65),Z(56)+4.2,'saia de 30 cm','start');
+  T(Y(0),Z(76)-3,'frente','start');T(Y(60),Z(76)-3,'fundo','end');
+})();
+
+/* POR BAIXO, com os reforços em destaque: x → direita, frente embaixo */
+(function(){const v=document.getElementById('vRef');const ox=12,oy=10,X=x=>ox+x,Y=y=>oy+60-y;
+  v.setAttribute('viewBox','0 0 176 92');
+  const P2=(arr,cls)=>el(v,'polygon',{points:arr.map(([x,y])=>X(x).toFixed(2)+','+Y(y).toFixed(2)).join(' '),class:cls});
+  const T=(x,y,t,a='start',c='ref-t')=>el(v,'text',{x,y,'text-anchor':a,class:c},t);
+  P2(rr(0,0,150,60,[RC,RC,RC,RC]),'p-out');
+  P2(rr(0,0,150,6,[RC,RC,0,0]),'p-gray');P2(rr(0,6,4,58,[0,0,0,4]),'p-gray');P2(rr(146,6,150,58,[0,0,4,0]),'p-gray');
+  R(v,X(4),Y(58),2,56,'p-gray');R(v,X(144),Y(58),2,56,'p-gray');R(v,X(6),Y(58),138,2,'p-gray');
+  R(v,X(6),Y(56),3,50,'p-gray');R(v,X(141),Y(56),3,50,'p-gray');R(v,X(9),Y(56),132,3,'p-gray');
+  R(v,X(9),Y(35),132,10,'p-ref');
+  R(v,X(72),Y(25),3,19,'p-ref2');R(v,X(72),Y(53),3,18,'p-ref2');
+  [20,42,64,86,108,130].forEach(x=>el(v,'circle',{cx:X(x),cy:Y(30),r:.7,class:'screw'}));
+  [[73.5,12],[73.5,20],[73.5,40],[73.5,48]].forEach(([x,y])=>el(v,'rect',{x:X(x)-.6,y:Y(y)-1.5,width:1.2,height:3,rx:.6,class:'screw'}));
+  T(X(30),Y(30)+1,'A · reforço 132 × 10','middle','ref-b');
+  T(X(77),Y(16),'B · travessa','start','ref-b');T(X(77),Y(16)+3.2,'(furo oval ↕, sem cola)','start');
+  T(X(77),Y(48),'B','start','ref-b');
+  T(X(75),Y(0)+8,'FRENTE','middle');
+  T(X(75),Y(60)-3,'saia','middle');
+})();
+
+/* ANÉIS ALTERNADOS */
+(function(){const v=document.getElementById('vRings');
+  const clip=el(v,'clipPath',{id:'rgClip'});el(clip,'rect',{x:4,y:8,width:56,height:10});el(clip,'rect',{x:70,y:8,width:56,height:10});
+  R(v,4,8,56,10,'p-oil');R(v,70,8,56,10,'p-oil');
+  const g=el(v,'g',{'clip-path':'url(#rgClip)'});
+  for(const [x,up] of [[4,true],[70,false]])for(let i=0;i<5;i++){const r=14+i*7,cy=up?8+10+r-5:8-r+5;el(g,'circle',{cx:x+28,cy,r,class:'ref-l'}).style.strokeWidth='.5'}
+  el(v,'text',{x:32,y:24.5,'text-anchor':'middle',class:'ref-t'},'tábua 1: arco para cima').style.fontSize='4px';
+  el(v,'text',{x:98,y:24.5,'text-anchor':'middle',class:'ref-t'},'tábua 2: arco para baixo').style.fontSize='4px';
+  el(v,'text',{x:65,y:4.5,'text-anchor':'middle',class:'ref-t'},'vistas pela ponta').style.fontSize='4px';
+})();
+
+})();
+</script>
+
+</html>

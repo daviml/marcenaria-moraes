@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bancada Gourmet Raiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: folha de projeto de marcenaria — cabeçalho curto, vista 3D girável, vistas cotadas, lista de corte e montagem em sequência */
+:root{
+  --bg:#FAF7F3; --paper:#FFFFFF; --ink:#1C1519; --muted:#6B5E66; --line:#E4DAD8;
+  --amora:#4A1C3C; --cerne:#B0782C;
+  --mel-top:#E4B474; --mel-front:#CC9351; --mel-side:#A9733B;
+  --nog-top:#7E5234; --nog-front:#5E3A22; --nog-side:#472A17;
+  --jat-top:#7E3A22; --jat-front:#5C2716; --jat-side:#431B0D;
+  --gl-fill:rgba(190,222,230,.28); --gl-stroke:rgba(110,150,160,.75);
+  --comp-top:#E2C69C; --comp-front:#D2B282; --comp-side:#B89667;
+  --stage:#EEE8E3;
+  --stroke:#4A2E22; --dim:#4A1C3C; --hid:#8C7A84; --scr:#B0782C; --scr-vis:#C23B2E;
+  --f-display:"Bitter",Georgia,serif; --f-body:"Instrument Sans",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17121A; --paper:#211A24; --ink:#F1E9EE; --muted:#B3A4AE; --line:#3A2F3C;
+  --amora:#D9A3C8; --cerne:#DDAE62;
+  --stage:#DCD3CD;
+  --stroke:#2A1A12; --dim:#E3B6D4; --hid:#9C8C96; --scr:#E8B866; --scr-vis:#FF6B5B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 56px}
+.wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+.wrap{--w-top:var(--nog-top);--w-front:var(--nog-front);--w-side:var(--nog-side)}
+.wrap.jat{--w-top:var(--jat-top);--w-front:var(--jat-front);--w-side:var(--jat-side)}
+h1,h2{font-family:var(--f-display);text-wrap:balance;margin:0;color:var(--ink)}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1}
+h2{font-size:22px;line-height:1.2}
+h3{font:600 17px/1.3 var(--f-display);margin:6px 0 0}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--cerne)}
+header{display:flex;flex-direction:column;gap:10px}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+.specs{display:flex;flex-wrap:wrap;gap:8px 20px;font:500 13px var(--f-mono);color:var(--ink);margin-top:6px}
+.specs span b{color:var(--cerne);font-weight:500}
+section{display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.views,.fin,.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fin{font-size:13px;color:var(--muted)}
+.views button,.chips button,.fin button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--amora);border-color:var(--amora);color:var(--paper)}
+.views button.xr[aria-pressed="true"],.fin button[aria-pressed="true"]{background:var(--cerne);border-color:var(--cerne);color:var(--paper)}
+.chips button[aria-pressed="true"]{border-color:var(--cerne);color:var(--cerne)}
+button:focus-visible{outline:2px solid var(--cerne);outline-offset:2px}
+.iso{display:flex;flex-direction:column;gap:12px}
+.iso svg{width:100%;height:auto;display:block;max-height:640px;background:var(--stage);border-radius:4px}
+[hidden]{display:none!important}
+.legend,.xlegend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.xlegend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:3px;margin-right:6px}
+.prod{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.prod{grid-template-columns:1fr 1fr}}
+.prod .sheet{display:flex;flex-direction:column;gap:8px}
+.prod h3{margin:0}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+dl.facts dt{font:500 12px/1.9 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+dl.facts dd{margin:0}
+.price{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline}
+.price b{font:700 26px/1 var(--f-display);color:var(--cerne)}
+.opts{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:620px){.opts{grid-template-columns:1fr 1fr}}
+.opt{border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--paper);display:flex;flex-direction:column;gap:6px}
+.opt .sw{display:flex;gap:4px}.opt .sw i{display:block;width:26px;height:14px;border-radius:2px;border:1px solid var(--stroke)}
+.copy{white-space:pre-wrap;font:14px/1.6 var(--f-body);background:var(--bg);border:1px dashed var(--line);border-radius:6px;padding:12px;margin:0}
+.cbtn{align-self:flex-start;font:500 13px var(--f-body);border:1px solid var(--cerne);background:transparent;color:var(--cerne);padding:6px 12px;border-radius:999px;cursor:pointer}
+.pinfo{border:1px solid var(--line);border-left:3px solid var(--cerne);border-radius:6px;padding:10px 14px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.pinfo b.pn{font:600 16px var(--f-display)}
+.pinfo .pd{font:500 18px var(--f-mono);color:var(--cerne)}
+.pinfo .pm{font-size:13px;color:var(--muted)}
+.pinfo button{align-self:flex-start;font:500 12px var(--f-body);border:1px solid var(--line);background:transparent;color:var(--muted);padding:4px 10px;border-radius:999px;cursor:pointer;margin-top:4px}
+.note{font-size:13px;color:var(--muted);margin:0}
+.scroll{overflow-x:auto}
+.ortho svg{display:block;width:100%;min-width:520px;height:auto}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.vt{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+svg text{font-family:var(--f-mono)}
+.d-line{stroke:var(--dim);stroke-width:.25}
+.d-text{fill:var(--dim);font-size:3.2px}
+.lbl{fill:var(--muted);font-size:3px}
+.p-w{fill:var(--w-front);stroke:var(--stroke);stroke-width:.25}
+.p-w2{fill:var(--w-side);stroke:var(--stroke);stroke-width:.25}
+.p-gl{fill:var(--gl-fill);stroke:var(--gl-stroke);stroke-width:.2}
+.p-hid{fill:none;stroke:var(--hid);stroke-width:.25;stroke-dasharray:1.2 .8}
+.p-iron{fill:#1D1B1C}
+ul.keep{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+ul.keep.tight{gap:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mat{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;border:1px solid var(--stroke)}
+.mat.w{background:var(--w-top)}.mat.gl{background:var(--gl-fill);border-color:var(--gl-stroke)}.mat.comp{background:var(--comp-top)}.mat.iron{background:#1D1B1C}
+.tag{font:500 11px var(--f-mono);padding:2px 7px;border-radius:999px;white-space:nowrap}
+.tag.sim{background:color-mix(in srgb,var(--cerne) 18%,transparent);color:var(--cerne)}
+.tag.nao{background:color-mix(in srgb,var(--amora) 14%,transparent);color:var(--amora)}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;max-width:70ch}
+ol.steps li::marker{font-family:var(--f-mono);color:var(--cerne)}
+.buy{display:flex;flex-wrap:wrap;gap:12px}
+.buy div{flex:1 1 200px;min-width:0;border-top:2px solid var(--cerne);padding-top:8px}
+.buy b{display:block;font:600 20px var(--f-display)}
+.buy span{color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:no-preference){.iso g.piece{transition:opacity .2s}}
+
+.ortho svg{max-height:560px}
+.grid2 .wide{grid-column:1/-1}
+:root{--k-top:#E2C29A;--k-front:#CFA878;--k-side:#B98F60}
+.wrap.preto .bk{fill:var(--k-front)!important}
+.fin button.pr[aria-pressed="true"]{background:#CFA878;border-color:#B98F60;color:#2a1a0f}
+</style>
+<div class="wrap preto">
+  <header>
+    <div class="eyebrow">Marcenaria Moraes · linha Raiz · ficha do produto</div>
+    <h1>Bancada Gourmet Raiz</h1>
+    <p class="lead">Bancada de madeira maciça para área gourmet, varanda ou cozinha: tampo de 5 cm para apoiar a tábua e a travessa, gaveta de talheres com puxador torneado, prateleira de ripas embaixo, três ganchos para pano e avental de um lado e toalheiro do outro. Pernas de 7 × 7 encaixadas nas saias com cavilhas aparentes.</p>
+    <div class="specs"><span><b>C</b> 120 cm</span><span><b>P</b> 50 cm</span><span><b>A</b> 90 cm</span><span><b>Madeira</b> nogueira ou jatobá</span><span><b>Detalhes</b> cavilhas claras ou discretas</span><span><b>Post</b> sem preço · valor sob consulta</span></div>
+  </header>
+  <section id="produto">
+    <h2>O produto</h2>
+    <div class="prod">
+      <div class="sheet"><h3>Ficha técnica</h3><dl class="facts"><dt>Nome</dt><dd>Bancada Gourmet Raiz</dd><dt>Linha</dt><dd>Raiz: tampo grosso de 5 cm e encaixes à mostra, com cavilhas, cunhas e gravatas em cambará claro</dd><dt>Madeira</dt><dd><b>Nogueira (principal):</b> cambará maciço com tingidor nogueira. <b>Jatobá:</b> madeira de lei, escura por natureza, sem tingidor</dd><dt>Detalhes claros</dt><dd>Cavilhas, ganchos, puxador e gravatas em cambará natural, sem tingidor. Opção "discreta": tudo na mesma madeira do móvel. Mesmo preço</dd><dt>Medidas</dt><dd>120 cm de comprimento × 50 de profundidade × 90 de altura</dd><dt>Gaveta</dt><dd>43 cm de largura útil, 9 de altura e 35 de fundo: talheres, pegadores e facas</dd><dt>Prateleira</dt><dd>Ripas a 21 cm do chão, 50 cm livres até a saia: panelas, carvão, cestos</dd><dt>Ganchos e toalheiro</dt><dd>3 ganchos de cavilha no lado esquerdo e toalheiro de 30 cm no direito</dd><dt>Opção</dt><dd>Rodízios com trava nas 4 pernas (+ R$ 120): a bancada vira carrinho</dd><dt>Peso</dt><dd>~43 kg na nogueira · ~65 kg no jatobá</dd><dt>Fabricação</dt><dd>Sob encomenda, em Uberlândia. Prazo sugerido: 3 a 4 semanas</dd></dl></div>
+      <div class="sheet">
+        <h3>Custo e preço (uso interno)</h3>
+        <div class="price"><span><b>~R$ 480</b><br><span class="note">material, versão nogueira</span></span><span><b>R$ 1.900 a 2.200</b><br><span class="note">preço sugerido · jatobá: R$ 2.400 a 2.700</span></span></div>
+        <p class="note"><b>Não vai no post:</b> no Instagram aparece como "sob encomenda · valor sob consulta". Conta: (R$ 480 de material + ~34 h × R$ 30) × 1,3 ≈ R$ 1.950. <b>Jatobá:</b> ~R$ 750 de material e ~39 h → <b>R$ 2.400 a 2.700</b>. Detalhes claros ou discretos: mesmo preço.</p>
+        <h3>Por que vale</h3><ul class="keep tight"><li><b>Madeira maciça de verdade,</b> e grossa: tampo de 5 cm, que não empena nem afunda.</li><li><b>O encaixe é o enfeite:</b> cavilhas, cunhas e gravatas em cambará claro mostram como a peça foi feita.</li><li><b>Pensada para o churrasco:</b> tampo grosso, gaveta, ganchos, toalheiro e prateleira de ripas, que deixa o ar passar.</li><li><b>Dura gerações:</b> riscou, lixa e passa óleo. Fica mais bonita com o uso.</li><li><b>Linha Raiz:</b> mesa de jantar, banco e bancada gourmet com o mesmo desenho.</li></ul>
+      </div>
+    </div>
+    <h3>Madeiras e detalhes claros</h3>
+    <div class="opts">
+      <div class="opt"><div class="sw"><i style="background:var(--nog-top)"></i><i style="background:var(--nog-front)"></i></div><b>Nogueira · principal</b><span class="note">Cambará maciço com tingidor nogueira, óleo de linhaça e cera de abelha. Tom de chocolate.</span></div>
+      <div class="opt"><div class="sw"><i style="background:var(--jat-top)"></i><i style="background:var(--jat-front)"></i></div><b>Jatobá · madeira de lei</b><span class="note">Escuro por natureza: só óleo e cera. Mais duro, mais pesado e mais caro.</span></div>
+      <div class="opt"><div class="sw"><i style="background:var(--nog-front)"></i><i style="background:#CFA878"></i></div><b>Detalhes claros · padrão</b><span class="note">Cavilhas, cunhas e gravatas em cambará natural, sem tingidor: o encaixe vira enfeite. Opção "discreta": tudo da mesma madeira. Mesmo preço.</span></div>
+    </div>
+    <h3>Texto de venda</h3>
+    <div class="sheet" style="display:flex;flex-direction:column;gap:10px"><p class="copy" id="copyTxt">Bancada Gourmet Raiz 🌳
+
+Tampo de 5 cm, gaveta, ganchos, toalheiro e prateleira de ripas.
+
+• 120 × 50 × 90 cm
+• Madeira maciça escura: cambará nogueira ou jatobá
+• Cavilhas e gravatas em cambará claro (ou discretas)
+• Encaixes à mostra, feitos à mão
+• Feita sob encomenda em Uberlândia
+
+Valor sob consulta: chame no direct ou no WhatsApp 📲</p><button type="button" class="cbtn" id="copyBtn">Copiar texto</button></div>
+    <h3>Cuidados (para passar ao cliente)</h3>
+    <ul class="keep tight"><li>Limpe com pano levemente úmido e seque em seguida. Nada de álcool, multiuso ou lustra-móveis com silicone.</li><li>Use tábua para cortar e descanso para panela quente: o tampo aguenta, mas marca.</li><li>A cada 2 ou 3 meses, uma camada fina de cera de abelha, lustrada com pano seco. Na área externa, 1 demão de óleo por ano.</li><li>Não deixe na chuva nem no sol direto o dia todo: varanda coberta é o lugar dela.</li><li>Riscos saem com lixa fina e uma nova demão de óleo: é a vantagem da madeira maciça.</li></ul>
+  </section>
+  <section>
+    <h2>Vista 3D</h2>
+    <div class="sheet iso">
+      <div class="fin" role="group" aria-label="Madeira"><span>Madeira:</span><button type="button" data-fin="nog" aria-pressed="true">Nogueira</button><button type="button" data-fin="jat" aria-pressed="false">Jatobá</button><button type="button" class="pr" id="pretoBtn" aria-pressed="true">Detalhes claros</button></div>
+      <div class="views" role="group" aria-label="Ângulo da vista">
+        <button type="button" data-view="frente" aria-pressed="true">Frente</button><button type="button" data-view="tras" aria-pressed="false">Trás</button>
+        <button type="button" data-view="aberta" aria-pressed="false">Gaveta aberta</button><button type="button" class="xr" id="xray" aria-pressed="false">Ver parafusos (raio-X)</button>
+      </div>
+      <svg id="iso" role="img" aria-label="Desenho 3D"></svg>
+      <div class="pinfo" id="pinfo" hidden aria-live="polite"></div>
+      <div class="chips" id="chips" role="group" aria-label="Destacar peça"></div>
+      <div class="xlegend" id="xleg" hidden><span><i style="background:var(--scr)"></i>Parafuso de madeira, escondido embaixo ou por dentro</span><span><i style="background:var(--scr-vis)"></i>Allen M6 em bucha com rosca: o tampo que desmonta</span></div>
+      <p class="note">Toque numa peça para ver as medidas dela. No raio-X, a madeira fica transparente e aparecem as fixações escondidas (36): à vista, só os encaixes de madeira.</p>
+    </div>
+  </section>
+  <section>
+    <h2>Vistas cotadas</h2>
+    <div class="sheet scroll"><table><thead><tr><th>Conferência</th><th>Conta</th><th>Fecha com</th></tr></thead><tbody>
+      <tr><td>Comprimento</td><td class="num">3 + 7 perna + 100 + 7 perna + 3</td><td class="num">120 ✓</td></tr><tr><td>Profundidade</td><td class="num">3 + 7 perna + 30 + 7 perna + 3</td><td class="num">50 ✓</td></tr><tr><td>Altura</td><td class="num">85 perna + 5 tampo</td><td class="num">90 ✓</td></tr><tr><td>Gaveta</td><td class="num">abertura de 50 × 12,5; frente de 49,4 × 11,8</td><td class="num">3 mm de folga ✓</td></tr><tr><td>Prateleira</td><td class="num">ripas a 21 cm; 50 cm livres até a saia</td><td class="num">✓</td></tr>
+    </tbody></table></div>
+    <div class="grid2">
+      <div class="sheet ortho wide"><p class="vt">Frente</p><div class="scroll"><svg id="vFront" role="img" aria-label="Vista de frente"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Lateral</p><div class="scroll"><svg id="vSide" role="img" aria-label="Vista lateral"></svg></div></div>
+      <div class="sheet ortho"><p class="vt">Lado esquerdo: pernas, saia, ganchos e cavilhas</p><div class="scroll"><svg id="vDet" role="img" aria-label="Detalhe"></svg></div></div>
+      <div class="sheet ortho wide"><p class="vt">Por baixo do tampo</p><div class="scroll"><svg id="vPlan" role="img" aria-label="Vista por baixo"></svg></div></div>
+    </div>
+  </section>
+  <section>
+    <h2>Lista de corte</h2>
+    <div class="sheet scroll"><table><thead><tr><th>Peça</th><th>Qtd</th><th>Medida final</th><th>Material</th><th>Observação</th></tr></thead><tbody>
+<tr><td>Tábuas do tampo</td><td class="num">2</td><td class="num">120 × 25 × 5</td><td><span class="mat w"></span>Prancha de 5</td><td>Prancha de 30 × 5 (ou duas de 2,5 coladas). Corte com 5 cm a mais e acerte depois de colado. Cantos de fora com raio de 1,5 cm e quinas quebradas com lixa</td></tr>
+<tr><td>Gravatas-borboleta</td><td class="num">2</td><td class="num">10 × 5 × 0,6</td><td><span class="mat w"></span>Cambará claro <span class="tag sim">clara</span></td><td>Em cambará sem tingidor. Risque em volta da gravata, rebaixe 6 mm com tupia ou formão e cole por cima da emenda. Lixe rente depois de seca</td></tr>
+<tr><td>Pernas</td><td class="num">4</td><td class="num">85 × 7 × 7</td><td><span class="mat w"></span>Prancha de 5</td><td>Duas pranchas de 5 × 7 coladas e aplainadas para 7 × 7 (ou caibro de cambará). Furos (mortises) para as saias e as travessas de baixo</td></tr>
+<tr><td>Saias da frente</td><td class="num">2</td><td class="num">25 × 14 × 2,5</td><td><span class="mat w"></span>Madeira</td><td>Das pernas até a abertura da gaveta. Espigão de 3 cm na ponta da perna</td></tr>
+<tr><td>Régua embaixo da gaveta</td><td class="num">1</td><td class="num">50 × 2,5 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Fecha a abertura por baixo. Colada nas duas saias da frente</td></tr>
+<tr><td>Saias dos lados</td><td class="num">2</td><td class="num">37 × 14 × 2,5</td><td><span class="mat w"></span>Madeira</td><td>Com espigão de 3,5 cm em cada ponta. A da esquerda leva os 3 ganchos</td></tr>
+<tr><td>Saia do fundo</td><td class="num">1</td><td class="num">107 × 14 × 2,5</td><td><span class="mat w"></span>Madeira</td><td>Com espigão de 3,5 cm em cada ponta</td></tr>
+<tr><td>Guias da gaveta</td><td class="num">2</td><td class="num">37 × 3,5 × 2</td><td><span class="mat w"></span>Sarrafo 3,5 × 2</td><td>Da saia da frente à do fundo, dos dois lados da gaveta. Vela em cima</td></tr>
+<tr><td>Travessas da prateleira</td><td class="num">2</td><td class="num">107 × 5 × 4</td><td><span class="mat w"></span>Madeira</td><td>Frente e fundo, a 14 cm do chão, com espigão nas pernas. As ripas apoiam em cima</td></tr>
+<tr><td>Cavilhas aparentes</td><td class="num">24</td><td class="num">Ø 1,6 × 7</td><td><span class="mat w"></span>Cambará claro <span class="tag sim">clara</span></td><td>Vareta de cambará claro (ou cabo de vassoura torneado). Atravessam o encaixe e travam o espigão. Cola, martelo e corte rente deixando 2 mm</td></tr>
+<tr><td>Travessas dos lados</td><td class="num">2</td><td class="num">37 × 5 × 4</td><td><span class="mat w"></span>Madeira</td><td>Com espigão nas pernas</td></tr>
+<tr><td>Ripas da prateleira</td><td class="num">10</td><td class="num">41 × 7 × 2</td><td><span class="mat w"></span>Madeira</td><td>Ripas de 7 com 2,7 cm de vão, aparafusadas por cima nas travessas (parafuso escondido com tampa de madeira)</td></tr>
+<tr><td>Toalheiro</td><td class="num">1</td><td class="num">Ø 2,5 × 37</td><td><span class="mat w"></span>Cabo de madeira Ø 2,5</td><td>Entra 3,5 cm em cada perna do lado direito, com cola</td></tr>
+<tr><td>Ganchos</td><td class="num">3</td><td class="num">Ø 1,8 × 9</td><td><span class="mat w"></span>Cambará claro <span class="tag sim">clara</span></td><td>Cavilha grossa entrando 2 cm na saia do lado esquerdo, inclinada 10° para cima. Para pano, avental e pegador</td></tr>
+<tr><td>Frente da gaveta</td><td class="num">1</td><td class="num">49,4 × 11,8 × 2,5</td><td><span class="mat w"></span>Madeira</td><td>Folga de 3 mm em volta. Furo de 8 mm no meio para o puxador</td></tr>
+<tr><td>Puxador torneado</td><td class="num">1</td><td class="num">Ø 3 × 2,8</td><td><span class="mat w"></span>Cambará claro <span class="tag sim">clara</span></td><td>Em cambará claro, com espiga de 8 mm colada na frente</td></tr>
+<tr><td>Laterais da gaveta</td><td class="num">2</td><td class="num">35,5 × 9 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Ripa de 1,5. Cola + 2 cavilhas de 6 mm na frente</td></tr>
+<tr><td>Traseira da gaveta</td><td class="num">1</td><td class="num">42,6 × 8,5 × 1,5</td><td><span class="mat w"></span>Madeira</td><td>Entre as laterais, 0,5 cm mais baixa</td></tr>
+<tr><td>Fundo da gaveta</td><td class="num">1</td><td class="num">45,6 × 35,5 × 0,5</td><td><span class="mat comp"></span>Compensado 6 mm</td><td>Compensado 6 mm, pregado e colado por baixo</td></tr>
+    </tbody></table></div>
+    <p class="note">As peças marcadas como <b>clara</b> são de cambará natural, sem tingidor (na opção discreta, da mesma madeira do móvel). Medidas finais: compre com 5 cm a mais no comprimento e 1 cm na largura.</p>
+  </section>
+  <section>
+    <h2>Como cada peça se prende</h2>
+    <div class="sheet scroll"><table><thead><tr><th>Ligação</th><th>Cola</th><th>Como</th></tr></thead><tbody>
+      <tr><td>Pranchas do tampo (borda com borda)</td><td><span class="tag sim">sim</span></td><td>Titebond III, cavilhas de 10 mm escondidas a cada 30 cm para alinhar, alicates a cada 25 cm. Anéis alternados</td></tr><tr><td>Gravatas-borboleta</td><td><span class="tag sim">sim</span></td><td>Coladas no rebaixo de 6 mm, atravessando a emenda. Decoram e seguram a emenda</td></tr><tr><td>Saias e travessas → pernas</td><td><span class="tag sim">sim</span></td><td>Espigão de 3 a 3,5 cm no furo da perna, cola e cavilhas claras atravessadas (2 nas saias, 1 nas travessas de baixo)</td></tr><tr><td>Tampo → saias</td><td><span class="tag nao">não</span></td><td>Parafusos 4,5 × 50 inclinados por dentro das saias, em furo oval (8 no comprido, 4 nos lados)</td></tr><tr><td>Guias → saias</td><td><span class="tag nao">não</span></td><td>Parafusos 4 × 40</td></tr><tr><td>Ripas → travessas</td><td><span class="tag nao">não</span></td><td>Parafuso 4 × 30 por cima, escareado e tapado com tampa de madeira</td></tr><tr><td>Gaveta</td><td><span class="tag sim">sim</span></td><td>Laterais na frente com cola e cavilha de 6 mm, traseira com parafuso 4 × 30, fundo pregado</td></tr>
+    </tbody></table></div>
+    <p class="note">Espigão e furo (mortise and tenon): o espigão tem 1/3 da grossura da peça; faça o furo primeiro e ajuste o espigão a ele, justo a ponto de entrar com batidas leves. Cavilha atravessada: fure com o espigão montado, desmonte, desloque o furo do espigão 1 mm para o lado do ombro e cole: a cavilha puxa a junta. Furo oval: dois furos encostados, unidos com a broca inclinada, no sentido em que a madeira se mexe.</p>
+  </section>
+  <section>
+    <h2>Ordem de montagem</h2>
+    <ol class="steps"><li><b>Pranchas de 5 dentro da oficina</b> por 2 semanas, deitadas com tabiques.</li><li><b>Cole o tampo</b> (2 pranchas de 25 × 5) e as pernas (duas de 5 × 7 cada). 24 h, aplaine e lixe.</li><li><b>Furos nas pernas e espigões</b> nas saias e travessas. Monte a seco.</li><li><b>Cole as laterais</b> (2 pernas + saia + travessa de cada lado) e trave com as cavilhas claras. Depois ligue as laterais com as saias da frente, do fundo e as travessas.</li><li><b>Guias, régua e ripas.</b> Faça os furos dos ganchos (inclinados 10°) e do toalheiro antes de colar o lado.</li><li><b>Gaveta:</b> monte a caixa, ajuste até correr leve com 2 mm de folga e cole o puxador.</li><li><b>Gravatas</b> no tampo e <b>acabamento</b>: nogueira = tingidor + 3 demãos de óleo + cera, sem tingidor nas peças claras. Para área externa coberta, 1 demão a mais de óleo.</li><li><b>Prenda o tampo</b> com os parafusos inclinados em furo oval.</li></ol>
+  </section>
+  <section>
+    <h2>O que comprar</h2>
+    <div class="buy"><div><b>~0,1 m³ de cambará</b><span>em pranchas de 30 × 5 (ou tábuas de 2,5 para colar em dobro) · ~R$ 270 (versão nogueira)</span></div><div><b>ou ~0,1 m³ de jatobá</b><span>para a versão jatobá · ~R$ 580 no lugar do cambará</span></div><div><b>Cambará claro (contraste)</b><span>24 cavilhas, 3 ganchos, puxador, 2 gravatas: sobra de tábua sem tingidor + 1 m de vareta Ø 16 mm · ~R$ 15</span></div><div><b>Fixação</b><span>36 parafusos de madeira + cavilhas de 10 mm para o tampo · ~R$ 30</span></div><div><b>Compensado 6 mm</b><span>fundo da gaveta · ~R$ 15</span></div><div><b>Cabo de madeira Ø 2,5</b><span>toalheiro (cabo de vassoura de madeira serve)</span></div><div><b>Acabamento</b><span>óleo de linhaça e cera (~R$ 70); nogueira: + tingidor (~R$ 40)</span></div><div><b>Consumo</b><span>lixas 60, 80, 120 e 180 · fita crepe para proteger as peças claras · ~R$ 40. 4 feltros grossos</span></div></div>
+    <p class="note"><b>Custo total: ~R$ 480 (nogueira) ou ~R$ 750 (jatobá).</b> Ferramentas que ajudam muito nesta linha: formão de 12 e 25 mm, furadeira de bancada e plaina elétrica.</p>
+  </section>
+</div>
+<script>
+function run(PARTS,SCREWS,CFG){
+const {L,D,H,GROUPS,PINFO}=CFG,DOORS=[];
+const NS='http://www.w3.org/2000/svg';
+let view='frente',hl=null,sel=null,xray=false;
+const c=Math.cos(Math.PI/6),s=.5;
+const pr=(x,y,z)=>[(x+y)*c,(x-y)*s-z];
+const OPEN=Math.PI*0.55;
+/* porta aberta: cada uma gira em volta das suas dobradiças; gavetas puxadas 22 cm */
+function moveP(p,[x,y,z]){if(view!=='aberta')return[x,y,z];
+  if(p.door){const d=DOORS[p.door-1],hx=d.hinge,hy=-0.45,a=d.side==='R'?OPEN:-OPEN,dx=x-hx,dy=y-hy;return[hx+dx*Math.cos(a)-dy*Math.sin(a),hy+dx*Math.sin(a)+dy*Math.cos(a),z]}
+  if(p.drawer)return[x,y-20,z];return[x,y,z]}
+function tp([x,y,z]){if(view==='tras')return[L-x,D-y,z];return[x,y,z]}
+function corners(p){const [x0,y0,z0,x1,y1,z1]=p.b;const out=[];for(const x of[x0,x1])for(const y of[y0,y1])for(const z of[z0,z1])out.push(tp(moveP(p,[x,y,z])));return out}
+function bbox(p){const cs=corners(p);const b=[1e9,1e9,1e9,-1e9,-1e9,-1e9];cs.forEach(v=>{for(let i=0;i<3;i++){b[i]=Math.min(b[i],v[i]);b[i+3]=Math.max(b[i+3],v[i])}});return b}
+const T=.3;
+function behind(A,B){ // A desenha antes de B (está mais longe: mais atrás, mais à esquerda ou mais embaixo)
+  if(A[3]<=B[0]+T)return true; if(B[3]<=A[0]+T)return false;
+  if(A[1]>=B[4]-T)return true; if(B[1]>=A[4]-T)return false;
+  if(A[5]<=B[2]+T)return true; if(B[5]<=A[2]+T)return false;
+  return null}
+function order(items){const n=items.length,adj=items.map(()=>[]),indeg=new Array(n).fill(0);
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const r=behind(items[i].t,items[j].t);if(r===true){adj[i].push(j);indeg[j]++}else if(r===false){adj[j].push(i);indeg[i]++}}
+  const key=t=>(t[1]+t[4])-(t[0]+t[3])-(t[2]+t[5]);
+  const done=new Array(n).fill(false),out=[];
+  while(out.length<n){let best=-1;
+    for(let i=0;i<n;i++)if(!done[i]&&indeg[i]===0&&(best<0||key(items[i].t)>key(items[best].t)))best=i;
+    if(best<0)for(let i=0;i<n;i++)if(!done[i]&&(best<0||indeg[i]<indeg[best]||(indeg[i]===indeg[best]&&key(items[i].t)>key(items[best].t))))best=i;
+    done[best]=true;out.push(items[best]);adj[best].forEach(j=>indeg[j]--)}
+  return out}
+const key=p=>p.u||p.id;
+const grp=p=>p.g==='baguetes'?'vidros':p.g;
+function active(p){return sel?key(p)===sel:(!hl||grp(p)===hl)}
+function pick(p){const k=key(p);sel=sel===k?null:k;hl=null;document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed','false'));showInfo();drawIso()}
+function showInfo(){const box=document.getElementById('pinfo');
+  if(!sel||!PINFO[sel]){box.hidden=true;box.innerHTML='';return}
+  const [n,d,q,o]=PINFO[sel];
+  box.innerHTML='<b class="pn"></b><span class="pd"></span><span class="pm q"></span><span class="pm o"></span><button type="button">Fechar</button>';
+  box.querySelector('.pn').textContent=n;box.querySelector('.pd').textContent=d+' cm';
+  box.querySelector('.q').textContent='Quantidade: '+q;box.querySelector('.o').textContent=o;
+  box.querySelector('button').onclick=()=>{sel=null;showInfo();drawIso()};box.hidden=false}
+function poly(g,pts,fill,stroke,w){const e=document.createElementNS(NS,'polygon');e.setAttribute('points',pts.map(v=>pr(...v).map(n=>n.toFixed(2)).join(',')).join(' '));e.style.fill=fill;e.style.stroke=stroke;e.setAttribute('stroke-width',w||'.25');e.setAttribute('stroke-linejoin','round');g.appendChild(e)}
+function drawBox(g,p){
+  const cs=corners(p);
+  const faces={top:[1,5,7,3],bot:[0,2,6,4],fr:[0,4,5,1],bk:[2,3,7,6],lf:[0,1,3,2],rt:[4,6,7,5]};
+  const col=p.m==='vidro'?null:p.m==='comp'?'comp':(p.peg&&preto())?'k':'w';
+  if(p.bow&&col){const [x0,y0,,x1,y1,z1]=p.b,cx=(x0+x1)/2,w=(x1-x0)/2,cw=w*.42,ym=(y0+y1)/2;poly(g,[[x0,y0,z1],[x1,y0,z1],[cx+cw,ym,z1],[x1,y1,z1],[x0,y1,z1],[cx-cw,ym,z1]].map(v=>tp(v)),`var(--${col}-top)`,'var(--stroke)','.12');return}
+  for(const [k,idx] of Object.entries(faces)){
+    const pts=idx.map(i=>cs[i]);
+    const P=pts.map(v=>pr(...v));let a=0;P.forEach((u,i)=>{const w=P[(i+1)%P.length];a+=u[0]*w[1]-w[0]*u[1]});
+    if(a<=0.001)continue;
+    if(!col){poly(g,pts,'var(--gl-fill)','var(--gl-stroke)','.15');continue}
+    const tone=(k==='top'||k==='bot')?'top':(k==='fr'||k==='bk')?'front':'side';
+    poly(g,pts,`var(--${col}-${tone})`,'var(--stroke)',p.thin?'.12':'.25');
+  }
+}
+function drawIron(svg){}
+const preto=()=>document.querySelector('.wrap').classList.contains('preto');
+function drawScrews(svg){
+  SCREWS.forEach(sc=>{if(view==='aberta')return;const a=pr(...tp(sc.a)),b=pr(...tp(sc.b));const vis=sc.t==='allen';const col=vis?'var(--scr-vis)':'var(--scr)';
+    const ln=document.createElementNS(NS,'line');[['x1',a[0]],['y1',a[1]],['x2',b[0]],['y2',b[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));
+    ln.style.stroke=col;ln.setAttribute('stroke-width','.5');ln.setAttribute('stroke-linecap','round');svg.appendChild(ln);
+    const hd=document.createElementNS(NS,'circle');hd.setAttribute('cx',a[0].toFixed(2));hd.setAttribute('cy',a[1].toFixed(2));hd.setAttribute('r',vis?'.9':'.65');
+    hd.style.fill=col;hd.style.stroke='var(--paper)';hd.setAttribute('stroke-width','.15');svg.appendChild(hd)})}
+function drawDims(svg){
+  const ps=PARTS.filter(p=>key(p)===sel);if(!ps.length)return;
+  const p0=ps[0];let b=bbox(p0); // cota de uma peça só (a primeira do grupo)
+  const [x0,y0,z0,x1,y1,z1]=b,o=3,fmt=v=>String(Math.round(v*10)/10).replace('.',',');
+  const seg=(A3,C3,val,off)=>{const A=pr(...A3),C=pr(...C3);
+    const ln=document.createElementNS(NS,'line');[['x1',A[0]],['y1',A[1]],['x2',C[0]],['y2',C[1]]].forEach(([k,v])=>ln.setAttribute(k,v.toFixed(2)));ln.style.stroke='var(--amora)';ln.setAttribute('stroke-width','.45');svg.appendChild(ln);
+    const mx=(A[0]+C[0])/2+off[0],my=(A[1]+C[1])/2+off[1];
+    const tx=document.createElementNS(NS,'text');tx.setAttribute('x',mx.toFixed(2));tx.setAttribute('y',(my+1.5).toFixed(2));tx.setAttribute('text-anchor','middle');tx.style.fill='var(--paper)';tx.style.font='600 4.2px var(--f-mono)';tx.textContent=fmt(val);
+    svg.appendChild(tx);const bb=tx.getBBox();
+    const bg=document.createElementNS(NS,'rect');bg.setAttribute('x',(bb.x-1.2).toFixed(2));bg.setAttribute('y',(bb.y-.6).toFixed(2));bg.setAttribute('width',(bb.width+2.4).toFixed(2));bg.setAttribute('height',(bb.height+1.2).toFixed(2));bg.setAttribute('rx','1.2');bg.style.fill='var(--amora)';
+    svg.insertBefore(bg,tx)};
+  seg([x0,y0-o,z0],[x1,y0-o,z0],x1-x0,[-3,4.5]);
+  seg([x1+o,y0,z0],[x1+o,y1,z0],y1-y0,[3,4.5]);
+  seg([x1+o,y0-o,z0],[x1+o,y0-o,z1],z1-z0,[6,0]);
+}
+function drawIso(){
+  const svg=document.getElementById('iso');svg.innerHTML='';
+  const items=PARTS.map(p=>({p,t:bbox(p)}));
+  let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
+  items.forEach(({p})=>corners(p).forEach(v=>{const [a,b]=pr(...v);minx=Math.min(minx,a);maxx=Math.max(maxx,a);miny=Math.min(miny,b);maxy=Math.max(maxy,b)}));
+  const pad=10;svg.setAttribute('viewBox',`${minx-pad} ${miny-pad} ${maxx-minx+2*pad} ${maxy-miny+2*pad}`);
+  order(items).forEach(({p})=>{
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','piece');
+    g.style.opacity=xray?(p.m==='vidro'?.5:.16):(active(p)?1:.14);
+    drawBox(g,p);g.style.cursor='pointer';g.addEventListener('click',()=>pick(p));svg.appendChild(g)});
+  if(!xray)drawIron(svg);
+  if(xray)drawScrews(svg);
+  if(sel)drawDims(svg);
+}
+function setHl(h){hl=h;sel=null;showInfo();document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===hl?'true':'false'));drawIso()}
+const chips=document.getElementById('chips');
+GROUPS.forEach(([g,n])=>{const b=document.createElement('button');b.type='button';b.dataset.g=g;b.textContent=n;b.setAttribute('aria-pressed','false');b.onclick=()=>setHl(hl===g?null:g);chips.appendChild(b)});
+document.querySelectorAll('.views button[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('.views button[data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));drawIso()});
+document.getElementById('xray').onclick=e=>{xray=!xray;e.currentTarget.setAttribute('aria-pressed',xray?'true':'false');document.getElementById('xleg').hidden=!xray;drawIso()};
+document.querySelectorAll('.fin button').forEach(b=>b.onclick=()=>{document.querySelector('.wrap').classList.toggle('jat',b.dataset.fin==='jat');document.querySelectorAll('.fin button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))});
+document.getElementById('copyBtn').onclick=e=>{const t=document.getElementById('copyTxt').textContent;
+  try{navigator.clipboard.writeText(t).then(()=>{e.target.textContent='Copiado!';setTimeout(()=>e.target.textContent='Copiar texto',1600)})}catch(_){}};
+drawIso();
+
+
+document.getElementById('pretoBtn').onclick=e=>{const on=!preto();document.querySelector('.wrap').classList.toggle('preto',on);e.currentTarget.setAttribute('aria-pressed',on?'true':'false');drawIso()};
+/* vistas ortográficas, desenhadas a partir das mesmas peças: unidades = cm */
+const el=(svg,tag,attrs,txt)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e};
+const f1=v=>String(Math.round(v*10)/10).replace('.',',');
+const R=(svg,x,y,w,h,p,alt)=>el(svg,'rect',{x,y,width:Math.max(w,.05),height:Math.max(h,.05),class:(p.m==='comp'?'p-w2':alt?'p-w2':'p-w')+(p.peg&&preto()?' bk':'')});
+function dimH(svg,x0,x1,y,t){el(svg,'line',{x1:x0,y1:y,x2:x1,y2:y,class:'d-line'});[x0,x1].forEach(x=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));el(svg,'text',{x:(x0+x1)/2,y:y-1.2,'text-anchor':'middle',class:'d-text'},t)}
+function dimV(svg,y0,y1,x,t){el(svg,'line',{x1:x,y1:y0,x2:x,y2:y1,class:'d-line'});[y0,y1].forEach(y=>el(svg,'line',{x1:x-1,y1:y+1,x2:x+1,y2:y-1,class:'d-line'}));const ty=(y0+y1)/2;el(svg,'text',{x:x-1.5,y:ty,'text-anchor':'middle',class:'d-text',transform:`rotate(-90 ${x-1.5} ${ty})`},t)}
+const lbl=(svg,x,y,t,a='middle')=>el(svg,'text',{x,y,'text-anchor':a,class:'lbl'},t);
+const solid=PARTS.filter(p=>!p.thin);
+/* FRENTE: todas as peças, de trás para a frente */
+(function(){const v=document.getElementById('vFront');const ml=26,mr=18,oy=8,Z=z=>oy+H-z,X=x=>ml+x;
+  v.setAttribute('viewBox',`0 0 ${ml+L+mr} ${H+24}`);
+  [...solid].sort((a,b)=>b.b[1]-a.b[1]).forEach(p=>{const [x0,y0,z0,x1,y1,z1]=p.b;R(v,X(x0),Z(z1),x1-x0,z1-z0,p,p.g==='gaveta'||p.g==='tampo')});
+  el(v,'line',{x1:X(-8),y1:Z(0),x2:X(L+8),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,X(0),X(L),Z(0)+6,f1(L));dimV(v,Z(H),Z(0),X(0)-10,f1(H));
+  (CFG.fdims||[]).forEach(([a,b,t])=>dimV(v,Z(b),Z(a),X(L)+6,t));
+})();
+/* LATERAL: todas as peças, da esquerda para a direita */
+(function(){const v=document.getElementById('vSide');const ox=20,oy=8,Z=z=>oy+H-z,Y=y=>ox+y;
+  v.setAttribute('viewBox',`0 0 ${D+40} ${H+24}`);
+  [...solid].sort((a,b)=>a.b[3]-b.b[3]).forEach(p=>{const [x0,y0,z0,x1,y1,z1]=p.b;R(v,Y(y0),Z(z1),y1-y0,z1-z0,p,p.g==='tampo')});
+  el(v,'line',{x1:Y(-8),y1:Z(0),x2:Y(D+8),y2:Z(0),style:'stroke:var(--hid);stroke-width:.4'});
+  dimH(v,Y(0),Y(D),Z(0)+6,f1(D));dimV(v,Z(H),Z(0),Y(D)+6,f1(H));
+  lbl(v,Y(1),Z(0)+11,'frente','start');lbl(v,Y(D-1),Z(0)+11,'fundo','end');
+})();
+/* POR BAIXO: o que fica embaixo do tampo (vigas, sarrafos, pernas) */
+(function(){const v=document.getElementById('vPlan');const ox=12,oy=10,X=x=>ox+x,Y=y=>oy+y;
+  v.setAttribute('viewBox',`0 0 ${L+26} ${D+22}`);
+  [...solid].filter(p=>!p.drawer&&p.g!=='prateleira').sort((a,b)=>b.b[5]-a.b[5]||b.b[2]-a.b[2]).forEach(p=>{const [x0,y0,z0,x1,y1,z1]=p.b;R(v,X(x0),Y(y0),x1-x0,y1-y0,p,p.g==='pernas'||p.g==='sarrafos')});
+  dimH(v,X(0),X(L),Y(D)+6,f1(L));dimV(v,Y(0),Y(D),X(L)+6,f1(D));lbl(v,X(L/2),Y(-3),'FRENTE');
+})();
+/* DETALHE: o lado esquerdo da peça (cavalete ou lateral), olhando de fora; cavilhas no eixo x viram círculos */
+function drawDet(){const v=document.getElementById('vDet');v.innerHTML='';
+  const ps=PARTS.filter(p=>CFG.det.gs.includes(p.g)&&p.b[3]<=L/2+0.01&&!p.drawer);
+  const y0=Math.min(...ps.map(p=>p.b[1])),y1=Math.max(...ps.map(p=>p.b[4])),zt=Math.max(...ps.map(p=>p.b[5]));
+  const ox=16,oy=8,Y=y=>ox+y-y0,Z=z=>oy+zt-z;v.setAttribute('viewBox',`0 0 ${y1-y0+40} ${zt+22}`);
+  [...ps].sort((a,b)=>b.b[0]-a.b[0]).forEach(p=>{const [,a,c0,,b,d]=p.b;
+    if(p.cyl==='x'){el(v,'circle',{cx:Y((a+b)/2),cy:Z((c0+d)/2),r:(b-a)/2,class:'p-w'+(p.peg&&preto()?' bk':'')});return}
+    R(v,Y(a),Z(d),b-a,d-c0,p)});
+  dimH(v,Y(y0),Y(y1),Z(0)+7,f1(y1-y0));dimV(v,Z(zt),Z(0),Y(y1)+7,f1(zt));lbl(v,Y((y0+y1)/2),Z(0)+14,CFG.det.lab)}
+drawDet();
+document.getElementById('pretoBtn').addEventListener('click',()=>{drawDet()});
+}
+
+run([{"id":"tab1","g":"tampo","b":[0,0,85,120,25,90],"m":"madeira","u":"tabua"},{"id":"tab2","g":"tampo","b":[0,25,85,120,50,90],"m":"madeira","u":"tabua"},{"id":"grav1","g":"tampo","b":[27.5,20,89.5,32.5,30,90.1],"m":"madeira","u":"gravata","peg":1,"bow":1,"thin":1},{"id":"grav2","g":"tampo","b":[87.5,20,89.5,92.5,30,90.1],"m":"madeira","u":"gravata","peg":1,"bow":1,"thin":1},{"id":"perna00","g":"pernas","b":[3,3,0,10,10,85],"m":"madeira","u":"perna"},{"id":"perna01","g":"pernas","b":[3,40,0,10,47,85],"m":"madeira","u":"perna"},{"id":"perna10","g":"pernas","b":[110,3,0,117,10,85],"m":"madeira","u":"perna"},{"id":"perna11","g":"pernas","b":[110,40,0,117,47,85],"m":"madeira","u":"perna"},{"id":"saiaFE","g":"saias","b":[10,4,71,35,6.5,85],"m":"madeira","u":"saiaF"},{"id":"saiaFD","g":"saias","b":[85,4,71,110,6.5,85],"m":"madeira","u":"saiaF"},{"id":"saiaFB","g":"saias","b":[35,4,71,85,6.5,72.5],"m":"madeira","u":"regua"},{"id":"saiaE","g":"saias","b":[4,10,71,6.5,40,85],"m":"madeira","u":"saiaL"},{"id":"saiaD","g":"saias","b":[113.5,10,71,116,40,85],"m":"madeira","u":"saiaL"},{"id":"saiaT","g":"saias","b":[10,43.5,71,110,46,85],"m":"madeira","u":"saiaT"},{"id":"guiaE","g":"saias","b":[33.5,6.5,71,37,43.5,73],"m":"madeira","u":"guia"},{"id":"guiaD","g":"saias","b":[83,6.5,71,86.5,43.5,73],"m":"madeira","u":"guia"},{"id":"trF","g":"prateleira","b":[10,4.5,14,110,8.5,19],"m":"madeira","u":"trPrat"},{"id":"trT","g":"prateleira","b":[10,41.5,14,110,45.5,19],"m":"madeira","u":"trPrat"},{"id":"trE","g":"prateleira","b":[4.5,10,14,8.5,40,19],"m":"madeira","u":"trLado"},{"id":"trD","g":"prateleira","b":[111.5,10,14,115.5,40,19],"m":"madeira","u":"trLado"},{"id":"ripa0","g":"prateleira","b":[12.7,4.5,19,19.7,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa1","g":"prateleira","b":[22.5,4.5,19,29.5,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa2","g":"prateleira","b":[32.2,4.5,19,39.2,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa3","g":"prateleira","b":[41.9,4.5,19,48.9,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa4","g":"prateleira","b":[51.6,4.5,19,58.6,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa5","g":"prateleira","b":[61.4,4.5,19,68.4,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa6","g":"prateleira","b":[71.1,4.5,19,78.1,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa7","g":"prateleira","b":[80.8,4.5,19,87.8,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa8","g":"prateleira","b":[90.6,4.5,19,97.6,45.5,21],"m":"madeira","u":"ripa"},{"id":"ripa9","g":"prateleira","b":[100.3,4.5,19,107.3,45.5,21],"m":"madeira","u":"ripa"},{"id":"toal","g":"detalhes","b":[112.3,10,60.8,114.8,40,63.3],"m":"madeira","u":"toalheiro","cyl":"y"},{"id":"ganc0","g":"detalhes","b":[-3,15.1,76.1,4.3,16.9,77.9],"m":"madeira","u":"gancho","peg":1,"cyl":"x"},{"id":"ganc1","g":"detalhes","b":[-3,24.1,76.1,4.3,25.9,77.9],"m":"madeira","u":"gancho","peg":1,"cyl":"x"},{"id":"ganc2","g":"detalhes","b":[-3,33.1,76.1,4.3,34.9,77.9],"m":"madeira","u":"gancho","peg":1,"cyl":"x"},{"id":"cav0","g":"cavilhas","b":[5.7,2.7,74.2,7.3,3.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav1","g":"cavilhas","b":[5.7,2.7,80.2,7.3,3.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav2","g":"cavilhas","b":[5.7,2.7,15.7,7.3,3.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav3","g":"cavilhas","b":[112.7,2.7,74.2,114.3,3.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav4","g":"cavilhas","b":[112.7,2.7,80.2,114.3,3.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav5","g":"cavilhas","b":[112.7,2.7,15.7,114.3,3.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav6","g":"cavilhas","b":[5.7,46.7,74.2,7.3,47.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav7","g":"cavilhas","b":[5.7,46.7,80.2,7.3,47.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav8","g":"cavilhas","b":[5.7,46.7,15.7,7.3,47.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav9","g":"cavilhas","b":[112.7,46.7,74.2,114.3,47.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav10","g":"cavilhas","b":[112.7,46.7,80.2,114.3,47.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav11","g":"cavilhas","b":[112.7,46.7,15.7,114.3,47.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"y","thin":1},{"id":"cav12","g":"cavilhas","b":[2.7,5.7,74.2,3.3,7.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav13","g":"cavilhas","b":[2.7,5.7,80.2,3.3,7.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav14","g":"cavilhas","b":[2.7,5.7,15.7,3.3,7.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav15","g":"cavilhas","b":[2.7,42.7,74.2,3.3,44.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav16","g":"cavilhas","b":[2.7,42.7,80.2,3.3,44.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav17","g":"cavilhas","b":[2.7,42.7,15.7,3.3,44.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav18","g":"cavilhas","b":[116.7,5.7,74.2,117.3,7.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav19","g":"cavilhas","b":[116.7,5.7,80.2,117.3,7.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav20","g":"cavilhas","b":[116.7,5.7,15.7,117.3,7.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav21","g":"cavilhas","b":[116.7,42.7,74.2,117.3,44.3,75.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav22","g":"cavilhas","b":[116.7,42.7,80.2,117.3,44.3,81.8],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"cav23","g":"cavilhas","b":[116.7,42.7,15.7,117.3,44.3,17.3],"m":"madeira","u":"cavilha","peg":1,"cyl":"x","thin":1},{"id":"gF","g":"gaveta","b":[35.3,4,72.8,84.7,6.5,84.6],"m":"madeira","u":"gF","drawer":1},{"id":"gP","g":"gaveta","b":[58.5,1.3,77.2,61.5,4.1,80.2],"m":"madeira","u":"puxador","drawer":1,"peg":1,"cyl":"y"},{"id":"gLE","g":"gaveta","b":[37.2,6.5,73.5,38.7,42,82.5],"m":"madeira","u":"gL","drawer":1},{"id":"gLD","g":"gaveta","b":[81.3,6.5,73.5,82.8,42,82.5],"m":"madeira","u":"gL","drawer":1},{"id":"gT","g":"gaveta","b":[38.7,40.5,73.5,81.3,42,82],"m":"madeira","u":"gT","drawer":1},{"id":"gFu","g":"gaveta","b":[37.2,6.5,73,82.8,42,73.5],"m":"comp","u":"gFu","drawer":1}],[{"a":[20,6.5,80],"b":[20,3,87.5],"t":"m50"},{"a":[20,43.5,80],"b":[20,47,87.5],"t":"m50"},{"a":[45,6.5,80],"b":[45,3,87.5],"t":"m50"},{"a":[45,43.5,80],"b":[45,47,87.5],"t":"m50"},{"a":[75,6.5,80],"b":[75,3,87.5],"t":"m50"},{"a":[75,43.5,80],"b":[75,47,87.5],"t":"m50"},{"a":[100,6.5,80],"b":[100,3,87.5],"t":"m50"},{"a":[100,43.5,80],"b":[100,47,87.5],"t":"m50"},{"a":[6.5,20,80],"b":[3,20,87.5],"t":"m50"},{"a":[113.5,20,80],"b":[117,20,87.5],"t":"m50"},{"a":[6.5,30,80],"b":[3,30,87.5],"t":"m50"},{"a":[113.5,30,80],"b":[117,30,87.5],"t":"m50"},{"a":[35.3,8,71],"b":[35.3,8,74.5],"t":"m40"},{"a":[35.3,41,71],"b":[35.3,41,74.5],"t":"m40"},{"a":[84.8,8,71],"b":[84.8,8,74.5],"t":"m40"},{"a":[84.8,41,71],"b":[84.8,41,74.5],"t":"m40"},{"a":[16.2,6.5,21.2],"b":[16.2,6.5,16],"t":"m30"},{"a":[16.2,43.5,21.2],"b":[16.2,43.5,16],"t":"m30"},{"a":[26,6.5,21.2],"b":[26,6.5,16],"t":"m30"},{"a":[26,43.5,21.2],"b":[26,43.5,16],"t":"m30"},{"a":[35.7,6.5,21.2],"b":[35.7,6.5,16],"t":"m30"},{"a":[35.7,43.5,21.2],"b":[35.7,43.5,16],"t":"m30"},{"a":[45.4,6.5,21.2],"b":[45.4,6.5,16],"t":"m30"},{"a":[45.4,43.5,21.2],"b":[45.4,43.5,16],"t":"m30"},{"a":[55.1,6.5,21.2],"b":[55.1,6.5,16],"t":"m30"},{"a":[55.1,43.5,21.2],"b":[55.1,43.5,16],"t":"m30"},{"a":[64.9,6.5,21.2],"b":[64.9,6.5,16],"t":"m30"},{"a":[64.9,43.5,21.2],"b":[64.9,43.5,16],"t":"m30"},{"a":[74.6,6.5,21.2],"b":[74.6,6.5,16],"t":"m30"},{"a":[74.6,43.5,21.2],"b":[74.6,43.5,16],"t":"m30"},{"a":[84.3,6.5,21.2],"b":[84.3,6.5,16],"t":"m30"},{"a":[84.3,43.5,21.2],"b":[84.3,43.5,16],"t":"m30"},{"a":[94.1,6.5,21.2],"b":[94.1,6.5,16],"t":"m30"},{"a":[94.1,43.5,21.2],"b":[94.1,43.5,16],"t":"m30"},{"a":[103.8,6.5,21.2],"b":[103.8,6.5,16],"t":"m30"},{"a":[103.8,43.5,21.2],"b":[103.8,43.5,16],"t":"m30"}],{"L":120,"D":50,"H":90,"GROUPS":[["tampo","Tampo e gravatas"],["cavilhas","Cavilhas"],["pernas","Pernas"],["saias","Saias e guias"],["prateleira","Prateleira de ripas"],["detalhes","Ganchos e toalheiro"],["gaveta","Gaveta"]],"PINFO":{"tabua":["Tábua do tampo","120 × 25 × 5","2","Prancha de 30 × 5 (ou duas de 2,5 coladas). Corte com 5 cm a mais e acerte depois de colado. Cantos de fora com raio de 1,5 cm e quinas quebradas com lixa"],"gravata":["Gravata-borboleta","10 × 5 × 0,6","2","Em cambará sem tingidor. Risque em volta da gravata, rebaixe 6 mm com tupia ou formão e cole por cima da emenda. Lixe rente depois de seca"],"perna":["Perna","85 × 7 × 7","4","Duas pranchas de 5 × 7 coladas e aplainadas para 7 × 7 (ou caibro de cambará). Furos (mortises) para as saias e as travessas de baixo"],"saiaF":["Saia da frente","25 × 14 × 2,5","2","Das pernas até a abertura da gaveta. Espigão de 3 cm na ponta da perna"],"regua":["Régua embaixo da gaveta","50 × 2,5 × 1,5","1","Fecha a abertura por baixo. Colada nas duas saias da frente"],"saiaL":["Saia do lado","37 × 14 × 2,5","2","Com espigão de 3,5 cm em cada ponta. A da esquerda leva os 3 ganchos"],"saiaT":["Saia do fundo","107 × 14 × 2,5","1","Com espigão de 3,5 cm em cada ponta"],"guia":["Guia da gaveta","37 × 3,5 × 2","2","Da saia da frente à do fundo, dos dois lados da gaveta. Vela em cima"],"trPrat":["Travessa da prateleira","107 × 5 × 4","2","Frente e fundo, a 14 cm do chão, com espigão nas pernas. As ripas apoiam em cima"],"cavilha":["Cavilha","Ø 1,6 × 7","24","Vareta de cambará claro (ou cabo de vassoura torneado). Atravessam o encaixe e travam o espigão. Cola, martelo e corte rente deixando 2 mm"],"trLado":["Travessa do lado","37 × 5 × 4","2","Com espigão nas pernas"],"ripa":["Ripa","41 × 7 × 2","10","Ripas de 7 com 2,7 cm de vão, aparafusadas por cima nas travessas (parafuso escondido com tampa de madeira)"],"toalheiro":["Toalheiro","Ø 2,5 × 37","1","Entra 3,5 cm em cada perna do lado direito, com cola"],"gancho":["Gancho","Ø 1,8 × 9","3","Cavilha grossa entrando 2 cm na saia do lado esquerdo, inclinada 10° para cima. Para pano, avental e pegador"],"gF":["Frente da gaveta","49,4 × 11,8 × 2,5","1","Folga de 3 mm em volta. Furo de 8 mm no meio para o puxador"],"puxador":["Puxador torneado","Ø 3 × 2,8","1","Em cambará claro, com espiga de 8 mm colada na frente"],"gL":["Lateral da gaveta","35,5 × 9 × 1,5","2","Ripa de 1,5. Cola + 2 cavilhas de 6 mm na frente"],"gT":["Traseira da gaveta","42,6 × 8,5 × 1,5","1","Entre as laterais, 0,5 cm mais baixa"],"gFu":["Fundo da gaveta","45,6 × 35,5 × 0,5","1","Compensado 6 mm, pregado e colado por baixo"]},"det":{"gs":["pernas","saias","prateleira","detalhes","cavilhas"],"lab":"lado esquerdo"},"fdims":[[85,90,"5"],[72.5,85,"gaveta"],[0,21,"21"]]});
+</script>
+</html>

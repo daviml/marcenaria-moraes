@@ -1,0 +1,30 @@
+CRISTALEIRA VEIO - Marcenaria Moraes
+Atualizado em 10/10/2026
+
+Linha de cristaleiras rústicas de madeira maciça com vidro nos três lados, em três larguras. Todas com
+2 m de altura e 40 de fundo, com as mesmas laterais, vidros das laterais e alturas de nicho:
+  1 porta  · 200 × 50 × 40 cm · ~57 kg · 4 a 5 semanas
+  2 portas · 200 × 90 × 40 cm · ~88 kg · 5 a 6 semanas
+  4 portas · 200 × 160 × 40 cm · ~151 kg · 6 a 8 semanas
+Madeira: nogueira (cambará tingido, principal) ou jatobá (madeira de lei).
+
+Cristaleira-Veio.html
+  Ficha completa, com botão no alto para escolher o modelo (1, 2 ou 4 portas). A ficha inteira muda:
+  - O produto: ficha técnica, custo e preço sugerido (USO INTERNO, não vai no post):
+      1 porta: ~R$ 860 de material · R$ 2.500 a 2.800 (jatobá R$ 3.000 a 3.300)
+      2 portas: ~R$ 1.210 de material · R$ 3.600 a 4.000 (jatobá R$ 4.400 a 4.800)
+      4 portas: ~R$ 1.980 de material · R$ 5.600 a 6.200 (jatobá R$ 7.200 a 7.800)
+  - Vista 3D: toque numa peça para ver as medidas; botões Nogueira / Jatobá, portas abertas e raio-X
+  - Vistas cotadas, lista de corte, vidros, como cada peça se prende, montagem e o que comprar
+
+Cristaleira-Veio-video-vertical-instagram.mp4
+  Reels 9:16 (38 s), nogueira, com música: a de 4 portas montando, depois a de 2, a de 1 e as três juntas.
+
+Cristaleira-Veio-video-horizontal-jatoba.mp4
+  Comercial 16:9 (38 s), jatobá, com música.
+
+A pasta "arquivos-de-origem" (ao lado) tem o modelo 3D (model.mjs, as três versões) e os scripts.
+Para rodar: npm install, depois node stills.mjs · node posts.mjs · node build-ficha.mjs saida.html ·
+node texts.mjs · node rendervideo.mjs 916 nog saida.mp4 musica.mp3 (precisa do Chrome e do ffmpeg).
+
+A pasta "_antigo" tem as pastas separadas de antes (uma por cristaleira) e a versão de 1,80 m da 1 porta.

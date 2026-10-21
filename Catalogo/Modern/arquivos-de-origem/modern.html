@@ -1,0 +1,250 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<style>
+/* Linha Modern: post (1080 × 1350), stories e capas de destaque (1080 × 1920) */
+@font-face{font-family:"Young Serif";src:url(/node_modules/@fontsource/young-serif/files/young-serif-latin-400-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:400;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:500;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-500-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:600;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-600-normal.woff2)}
+:root{--amora:#4A1C3C;--amora-d:#2E1028;--cerne:#B0782C;--cerne-c:#DDAE62;--papel:#FAF7F3;--carvao:#1C1519;--cinza:#6B5E66;--rosa:#D7A3C6;--creme:#F6F1EC;--ferro:#1D1B1C}
+*{box-sizing:border-box;margin:0}
+body{background:#888;font-family:"Instrument Sans",sans-serif}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;margin-bottom:20px}
+.st{width:1080px;height:1920px;position:relative;overflow:hidden;margin-bottom:20px}
+.hd{position:absolute;left:72px;top:64px;display:flex;align-items:center;gap:26px}
+.hd img{width:100px;height:100px}
+.hd span{font:500 26px/1.22 "Instrument Sans";letter-spacing:.3em;color:var(--creme)}
+.num{position:absolute;right:76px;top:86px;font:500 26px "Instrument Sans";letter-spacing:.2em;color:#B9AEB4}
+.eb{font:600 28px "Instrument Sans";letter-spacing:.3em;text-transform:uppercase;color:var(--cerne-c)}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pill{display:inline-flex;height:70px;border-radius:35px;background:var(--cerne-c);align-items:center;gap:14px;padding:0 32px;color:#1C1519}
+.pill b{font:600 32px "Instrument Sans"}.pill span{font:400 24px "Instrument Sans"}
+.ferro-tag{display:inline-flex;align-items:center;gap:12px;font:600 22px "Instrument Sans";letter-spacing:.2em;color:var(--creme);border:2px solid rgba(221,174,98,.6);border-radius:30px;padding:10px 20px}
+.ferro-tag svg{width:34px;height:34px}
+
+/* 1 capa: dois painéis lado a lado */
+#p1{background:#101114}
+#p1 .pn{position:absolute;top:0;width:540px;height:840px}
+#p1 .pn img{width:100%;height:100%;display:block}
+#p1 .pn.l{left:0}#p1 .pn.r{left:540px}
+#p1 .pn em{position:absolute;bottom:110px;left:0;right:0;text-align:center;font:600 22px "Instrument Sans";letter-spacing:.24em;color:#E8DFE4;font-style:normal;text-transform:uppercase}
+#p1 .sep{position:absolute;left:539px;top:170px;width:2px;height:560px;background:linear-gradient(180deg,rgba(221,174,98,0),rgba(221,174,98,.55),rgba(221,174,98,0))}
+#p1 .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,.75) 0%,rgba(16,17,20,0) 16%,rgba(16,17,20,0) 50%,rgba(46,16,40,.9) 64%,#2B0F25 78%)}
+#p1 .txt{position:absolute;left:72px;top:800px}
+#p1 h1{font:400 150px/1 "Young Serif";color:var(--creme);margin-top:16px}
+#p1 .sub{font:400 36px/1.38 "Instrument Sans";color:#EDE5EA;margin-top:26px}
+#p1 .pill{position:absolute;left:72px;top:1194px}
+#p1 .arr{position:absolute;right:76px;top:1213px;font:500 27px "Instrument Sans";letter-spacing:.06em;color:#D9D0D5}
+
+/* 2 ferragens */
+#p2{background:#17141A}
+#p2 .eb{position:absolute;left:72px;top:200px}
+#p2 h2{position:absolute;left:72px;top:242px;font:400 92px/1 "Young Serif";color:var(--creme)}
+#p2 .d{position:absolute;left:72px;top:356px;width:936px;font:400 29px/1.4 "Instrument Sans";color:#C9BFC5}
+#p2 .grid{position:absolute;left:72px;top:470px;width:936px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+#p2 .c{position:relative;height:400px;border-radius:18px;overflow:hidden;background:#0f1013}
+#p2 .c img{width:100%;height:100%;object-fit:cover;display:block}
+#p2 .c div{position:absolute;left:0;right:0;bottom:0;padding:50px 22px 18px;background:linear-gradient(180deg,rgba(15,16,19,0),rgba(15,16,19,.92))}
+#p2 .c b{display:block;font:600 28px "Instrument Sans";color:var(--creme)}
+#p2 .c span{font:400 21px "Instrument Sans";color:var(--cerne-c);letter-spacing:.06em}
+
+/* 3 e 4 produto */
+.prod{background:#101114}
+.prod .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,.7) 0%,rgba(16,17,20,0) 14%,rgba(16,17,20,0) 52%,rgba(46,16,40,.88) 66%,#2B0F25 80%)}
+.prod .txt{position:absolute;left:72px;top:820px;right:72px}
+.prod h2{font:400 96px/1.02 "Young Serif";color:var(--creme);margin-top:14px}
+.prod .sub{font:400 32px/1.38 "Instrument Sans";color:#EDE5EA;margin-top:20px}
+.prod .chips{position:absolute;left:72px;top:1190px;display:flex;gap:14px}
+.prod .chips div{border:2px solid var(--cerne-c);border-radius:999px;padding:12px 24px;font:500 26px "Instrument Sans";color:var(--creme)}
+.prod .chips div b{color:var(--cerne-c);font-weight:600}
+
+/* 5 madeiras */
+#p5{background:#1C181B}
+#p5 .eb{position:absolute;left:72px;top:200px}
+#p5 h2{position:absolute;left:72px;top:242px;font:400 100px/1 "Young Serif";color:var(--creme)}
+#p5 .d{position:absolute;left:72px;top:368px;width:936px;font:400 30px/1.4 "Instrument Sans";color:#C9BFC5}
+#p5 .card{position:absolute;top:470px;width:480px;height:808px;border-radius:22px;overflow:hidden;background:#0f1013}
+#p5 .card img{position:absolute;inset:0;width:100%;height:100%}
+#p5 .card .sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,16,19,0) 62%,rgba(15,16,19,.92) 84%)}
+#p5 .tag{position:absolute;left:24px;top:24px;background:var(--cerne-c);color:#1C1519;font:600 22px "Instrument Sans";letter-spacing:.2em;padding:9px 16px;border-radius:24px}
+#p5 .card b{position:absolute;left:30px;bottom:96px;font:400 54px "Young Serif";color:var(--creme)}
+#p5 .card span{position:absolute;left:30px;right:24px;bottom:28px;font:400 23px/1.38 "Instrument Sans";color:#D9D0D5}
+
+/* 6 encomendar */
+#p6{background:var(--papel)}
+#p6 .hd span{color:var(--amora)}#p6 .num{color:var(--cinza)}
+#p6 .eb{position:absolute;left:72px;top:206px;color:var(--cerne)}
+#p6 h2{position:absolute;left:72px;top:276px;font:400 86px/1 "Young Serif";color:var(--amora)}
+#p6 .side{position:absolute;left:760px;top:282px}
+#p6 .side b{display:block;font:600 30px "Instrument Sans";color:var(--cerne)}
+#p6 .side span{display:block;font:400 26px "Instrument Sans";color:var(--cinza);margin-top:8px}
+#p6 .steps{position:absolute;left:72px;top:428px;width:936px}
+#p6 .stp{display:grid;grid-template-columns:92px 1fr;border-top:2px solid #E6DCDB;padding:26px 0 24px}
+#p6 .stp:last-child{border-bottom:2px solid #E6DCDB}
+#p6 .stp i{font:400 46px/1 "Young Serif";color:var(--cerne);font-style:normal}
+#p6 .stp b{display:block;font:500 34px "Instrument Sans";color:var(--carvao)}
+#p6 .stp span{display:block;font:400 25px "Instrument Sans";color:var(--cinza);margin-top:6px}
+#p6 .strip{position:absolute;left:72px;top:832px;width:936px;height:250px;border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;background:#101114}
+#p6 .strip img{width:100%;height:100%;object-fit:cover;display:block}
+#p6 .foot{position:absolute;left:0;bottom:0;width:1080px;height:170px;background:var(--amora);display:flex;align-items:center;justify-content:center;gap:22px}
+#p6 .foot b{font:600 36px "Instrument Sans";color:var(--creme)}#p6 .foot span{font:400 27px "Instrument Sans";color:var(--rosa)}
+
+/* stories (topo e base livres para os botões do Instagram) */
+.st .top{position:absolute;left:80px;right:80px;top:260px}
+.st .top h2{font:400 120px/1 "Young Serif";color:var(--creme);margin-top:18px}
+.st .top p{font:400 38px/1.38 "Instrument Sans";color:#EDE5EA;margin-top:22px}
+.st .low{position:absolute;left:80px;right:80px;bottom:330px}
+.st .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,.92) 0%,rgba(16,17,20,.6) 22%,rgba(16,17,20,0) 34%,rgba(16,17,20,0) 70%,rgba(43,15,37,.92) 84%)}
+#s1{background:#101114}
+#s1 .pn{position:absolute;top:620px;width:540px;height:840px}
+#s1 .pn img{width:100%;height:100%;display:block;-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 98%);mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 98%)}
+#s1 .pn.l{left:0}#s1 .pn.r{left:540px}
+#s1 .pn em{position:absolute;bottom:90px;left:0;right:0;text-align:center;font:600 24px "Instrument Sans";letter-spacing:.24em;color:#E8DFE4;font-style:normal;text-transform:uppercase}
+#s1 .fadeT{position:absolute;left:0;right:0;top:600px;height:140px;background:linear-gradient(180deg,#101114,rgba(16,17,20,0))}
+#s4{background:#17141A}
+#s4 .grid{position:absolute;left:80px;right:80px;top:700px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+#s4 .c{position:relative;height:420px;border-radius:18px;overflow:hidden}
+#s4 .c img{width:100%;height:100%;object-fit:cover;display:block}
+#s4 .c span{position:absolute;left:18px;bottom:16px;font:600 24px "Instrument Sans";color:var(--creme);text-shadow:0 2px 12px rgba(0,0,0,.8)}
+#s5{background:var(--amora)}
+#s5 .seal{position:absolute;left:390px;top:380px;width:300px;height:300px}
+#s5 .c{position:absolute;left:80px;right:80px;top:760px;text-align:center}
+#s5 h2{font:400 104px/1.05 "Young Serif";color:var(--creme)}
+#s5 p{font:400 38px/1.4 "Instrument Sans";color:var(--rosa);margin-top:26px}
+#s5 .box{position:absolute;left:190px;right:190px;top:1220px;height:170px;border:3px dashed rgba(221,174,98,.7);border-radius:28px;display:flex;align-items:center;justify-content:center;font:500 28px "Instrument Sans";color:var(--cerne-c);text-align:center;padding:0 30px}
+
+/* capas de destaque */
+.dq{background:var(--amora)}
+.dq svg{position:absolute}
+#p5 .card img{object-fit:cover}
+</style></head><body>
+
+<!-- ===== POST ===== -->
+<section class="s prod" id="p1">
+  <img class="bg" src="renders/line-capa.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="txt" style="top:800px"><div class="eb">Nova linha</div><h2 style="font-size:150px;line-height:1">Modern</h2>
+    <div class="sub">Madeira maciça, linhas retas e nada à vista.<br>Escrivaninha, mesa de centro e aparador.</div></div>
+  <div class="pill" style="position:absolute;left:72px;top:1194px"><b>Sob encomenda</b><span>em Uberlândia</span></div>
+  <div style="position:absolute;right:76px;top:1213px;font:500 27px 'Instrument Sans';letter-spacing:.06em;color:#D9D0D5">arraste →</div>
+</section>
+
+<section class="s" id="p2">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">03</div>
+  <div class="eb">O que une a linha</div>
+  <h2>Nada à vista</h2>
+  <div class="d">Nenhum parafuso, cantoneira ou puxador de metal. Só madeira, e preto se quiser.</div>
+  <div class="grid">
+    <div class="c"><img src="renders/es-detalhe.png"><div><b>Borda de 4 cm</b><span>CANTOS ARREDONDADOS</span></div></div>
+    <div class="c"><img src="renders/mc-detalhe.png"><div><b>Pernas de painel</b><span>TÁBUA INTEIRA EM PÉ</span></div></div>
+    <div class="c"><img src="renders/ap-detalhe.png"><div><b>Gaveta com cava</b><span>SEM PUXADOR</span></div></div>
+    <div class="c"><img src="renders/es-preto.png"><div><b>Detalhes pretos</b><span>OPÇÃO, MESMO PREÇO</span></div></div>
+  </div>
+</section>
+
+<section class="s prod" id="p3">
+  <img class="bg" src="renders/line-es.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">04</div>
+  <div class="txt"><div class="eb">Linha Modern · escritório</div><h2>Escrivaninha Cerne</h2>
+    <div class="sub">Tampo de 1,50 m, saia que esconde os fios e desmonta em 4 partes.</div></div>
+  <div class="chips"><div><b>150</b> × 60 × 76 cm</div></div>
+</section>
+
+<section class="s prod" id="p4">
+  <img class="bg" src="renders/line-mc.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">05</div>
+  <div class="txt"><div class="eb">Linha Modern · sala</div><h2>Mesa de Centro Modern</h2>
+    <div class="sub">Prateleira embaixo e zero ferragem.</div></div>
+  <div class="chips"><div><b>100</b> × 60 × 40 cm</div></div>
+</section>
+
+<section class="s prod" id="p4b">
+  <img class="bg" src="renders/line-ap.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">06</div>
+  <div class="txt"><div class="eb">Linha Modern · hall</div><h2>Aparador Modern</h2>
+    <div class="sub">Duas gavetas com cava e prateleira baixa.</div></div>
+  <div class="chips"><div><b>120</b> × 35 × 80 cm</div></div>
+</section>
+
+<section class="s" id="p5">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">07</div>
+  <div class="eb">Escolha o visual</div>
+  <h2>Madeira ou preto</h2>
+  <div class="d">Nogueira ou jatobá, inteira ou com a base em preto fosco. Mesmo preço.</div>
+  <div class="card" style="left:48px"><img src="renders/ap-madeira.png"><div class="sh"></div><div class="tag">MADEIRA INTEIRA</div><b>Madeira</b><span>Nogueira (cambará tingido) ou jatobá, do tampo às pernas</span></div>
+  <div class="card" style="left:552px"><img src="renders/ap-preto.png"><div class="sh"></div><div class="tag">OPÇÃO</div><b>Detalhes pretos</b><span>Base em preto fosco, tampo em madeira</span></div>
+</section>
+
+<section class="s" id="p6">
+  <div class="hd"><img src="brand/moraes-selo-amora.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">08</div>
+  <div class="eb">Como encomendar</div>
+  <h2>Sob encomenda</h2>
+  <div class="side"><b>valor sob consulta</b><span>orçamento grátis</span></div>
+  <div class="steps">
+    <div class="stp"><i>1</i><div><b>Chame no direct ou no WhatsApp</b><span>Diga a peça, a madeira e se quer detalhes pretos</span></div></div>
+    <div class="stp"><i>2</i><div><b>Sinal de 50% para reservar</b><span>O restante na entrega</span></div></div>
+    <div class="stp"><i>3</i><div><b>Pronta em 2 a 4 semanas</b><span>Conforme a peça. Feita à mão, em Uberlândia</span></div></div>
+  </div>
+  <div class="strip"><img src="renders/es-detalhe.png"><img src="renders/mc-detalhe.png"><img src="renders/ap-detalhe.png"><img src="renders/es-preto.png"></div>
+  <div class="foot"><b>Linha Modern</b><span>· feita à mão em Uberlândia</span></div>
+</section>
+
+<!-- ===== STORIES ===== -->
+<section class="st" id="s1">
+  <img class="bg" src="renders/line-story.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Nova linha · Marcenaria Moraes</div><h2>Modern</h2><p>Escrivaninha, mesa de centro e aparador. Madeira maciça e nada à vista.</p></div>
+  <div class="low" style="text-align:center"><span class="ferro-tag">VEJA O POST NOVO ↓</span></div>
+</section>
+<section class="st" id="s2">
+  <img class="bg" src="renders/line-esS.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Linha Modern · escritório</div><h2 style="font-size:104px">Escrivaninha Cerne</h2><p>150 × 60 cm · desmonta em 4 partes</p></div>
+  <div class="low"><div class="pill"><b>Sob encomenda</b><span>valor sob consulta</span></div></div>
+</section>
+<section class="st" id="s3">
+  <img class="bg" src="renders/line-mcS.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Linha Modern · sala</div><h2 style="font-size:100px">Mesa de Centro Modern</h2><p>100 × 60 cm · prateleira embaixo</p></div>
+  <div class="low"><div class="pill"><b>Sob encomenda</b><span>valor sob consulta</span></div></div>
+</section>
+<section class="st" id="s3r">
+  <img class="bg" src="renders/line-apS.png"><div class="grad"></div>
+  <div class="top"><div class="eb">Linha Modern · hall</div><h2 style="font-size:104px">Aparador Modern</h2><p>120 × 35 cm · gavetas com cava, sem puxador</p></div>
+  <div class="low"><div class="pill"><b>Sob encomenda</b><span>valor sob consulta</span></div></div>
+</section>
+<section class="st" id="s4">
+  <div class="top"><div class="eb">O que une a linha</div><h2 style="font-size:110px">Nada à vista</h2><p>Nenhum parafuso nem puxador. Só madeira, e preto se quiser.</p></div>
+  <div class="grid">
+    <div class="c"><img src="renders/es-detalhe.png"><span>Borda de 4 cm</span></div>
+    <div class="c"><img src="renders/mc-detalhe.png"><span>Pernas de painel</span></div>
+    <div class="c"><img src="renders/ap-detalhe.png"><span>Gaveta com cava</span></div>
+    <div class="c"><img src="renders/es-preto.png"><span>Detalhes pretos</span></div>
+  </div>
+</section>
+<section class="st" id="s5">
+  <img class="seal" src="brand/moraes-selo-cerne-claro.svg">
+  <div class="c"><div class="eb">Linha Modern</div><h2 style="margin-top:20px">Peça seu orçamento</h2><p>Valor sob consulta · orçamento grátis<br>Feita à mão em Uberlândia</p></div>
+  <div class="box">coloque aqui a figurinha "Link" para o WhatsApp</div>
+</section>
+
+<!-- ===== DESTAQUE: mesa de pernas de painel (quadro 100 × 100) ===== -->
+<section class="st dq" id="d1">
+  <svg viewBox="0 0 100 100" width="520" height="520" style="left:280px;top:700px">
+    <g fill="#DDAE62">
+      <rect x="4" y="22" width="92" height="9" rx="4.5"/>
+      <rect x="14" y="31" width="13" height="56" rx="2"/>
+      <rect x="73" y="31" width="13" height="56" rx="2"/>
+    </g>
+    <rect x="27" y="31" width="46" height="5" fill="#4A1C3C" opacity=".35"/>
+  </svg>
+</section>
+<section class="st dq" id="d2">
+  <svg viewBox="0 0 100 100" width="260" height="260" style="left:410px;top:640px"><g fill="#DDAE62"><rect x="4" y="22" width="92" height="9" rx="4.5"/><rect x="14" y="31" width="13" height="56" rx="2"/><rect x="73" y="31" width="13" height="56" rx="2"/></g></svg>
+  <div style="position:absolute;left:0;right:0;top:1130px;text-align:center;font:600 104px 'Instrument Sans';color:#F3ECEF">Modern</div>
+</section>
+
+<script>window.ready = true;</script>
+</body></html>

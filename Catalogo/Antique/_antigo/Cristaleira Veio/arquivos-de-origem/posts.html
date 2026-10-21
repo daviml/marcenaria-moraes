@@ -1,0 +1,189 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"Young Serif";src:url(/node_modules/@fontsource/young-serif/files/young-serif-latin-400-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:400;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:500;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-500-normal.woff2)}
+@font-face{font-family:"Instrument Sans";font-weight:600;src:url(/node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-600-normal.woff2)}
+:root{--amora:#4A1C3C;--amora-d:#2E1028;--cerne:#B0782C;--cerne-c:#DDAE62;--papel:#FAF7F3;--carvao:#1C1519;--cinza:#6B5E66;--rosa:#D7A3C6;--creme:#F6F1EC}
+*{box-sizing:border-box;margin:0}
+body{background:#888;font-family:"Instrument Sans",sans-serif}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;margin-bottom:20px}
+.hd{position:absolute;left:72px;top:64px;display:flex;align-items:center;gap:26px}
+.hd img{width:100px;height:100px}
+.hd span{font:500 26px/1.22 "Instrument Sans";letter-spacing:.3em;color:var(--creme)}
+.num{position:absolute;right:76px;top:86px;font:500 26px "Instrument Sans";letter-spacing:.2em;color:#B9AEB4}
+.eb{font:600 28px "Instrument Sans";letter-spacing:.3em;text-transform:uppercase;color:var(--cerne-c)}
+.ys{font-family:"Young Serif";font-weight:400}
+/* 1 capa */
+#s1{background:#101114}
+#s1 .bg{position:absolute;inset:0;width:100%;height:100%}
+#s1 .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,0) 46%,rgba(46,16,40,.78) 70%,#2B0F25 88%)}
+#s1 .txt{position:absolute;left:72px;top:735px}
+#s1 h1{font:400 128px/1 "Young Serif";color:var(--creme);margin-top:22px;letter-spacing:-.01em}
+#s1 .sub{font:400 37px/1.38 "Instrument Sans";color:#EDE5EA;margin-top:30px}
+#s1 .pill{position:absolute;left:72px;top:1194px;height:70px;border-radius:35px;background:var(--cerne-c);display:flex;align-items:center;gap:14px;padding:0 32px;color:#1C1519}
+#s1 .pill b{font:600 32px "Instrument Sans"}#s1 .pill span{font:400 24px "Instrument Sans"}
+#s1 .arr{position:absolute;right:76px;top:1213px;font:500 27px "Instrument Sans";letter-spacing:.06em;color:#D9D0D5}
+/* 3 detalhes */
+#s3{background:var(--papel)}
+#s3 .img{position:absolute;left:0;top:0;width:1080px;height:700px}
+#s3 .fade{position:absolute;left:0;top:420px;width:1080px;height:290px;background:linear-gradient(180deg,rgba(250,247,243,0),var(--papel) 92%)}
+#s3 .eb{position:absolute;left:72px;top:600px;color:var(--cerne)}
+#s3 h2{position:absolute;left:72px;top:650px;font:400 74px/1.08 "Young Serif";color:var(--amora)}
+#s3 .grid{position:absolute;left:72px;top:850px;width:936px;display:grid;grid-template-columns:1fr 1fr;gap:34px 44px}
+#s3 .it{border-top:3px solid var(--cerne);padding-top:20px}
+#s3 .it b{display:block;font:600 33px "Instrument Sans";color:var(--carvao)}
+#s3 .it span{display:block;font:400 25px/1.38 "Instrument Sans";color:var(--cinza);margin-top:8px}
+#s3 .num{color:#E9E2DD}
+/* 4 medidas */
+#s4{background:var(--amora)}
+#s4 .eb{position:absolute;left:72px;top:200px}
+#s4 h2{position:absolute;left:72px;top:242px;font:400 104px/1 "Young Serif";color:var(--creme)}
+#s4 .d{position:absolute;left:72px;top:368px;width:930px;font:400 30px/1.4 "Instrument Sans";color:var(--rosa)}
+#s4 svg{position:absolute;left:0;top:470px}
+#s4 .stats{position:absolute;left:72px;top:1112px;width:936px;display:grid;grid-template-columns:repeat(4,1fr);gap:34px}
+#s4 .st{border-top:3px solid var(--cerne-c);padding-top:20px}
+#s4 .st b{display:block;font:400 56px/1 "Young Serif";color:var(--creme)}
+#s4 .st span{display:block;font:400 25px "Instrument Sans";color:var(--rosa);margin-top:12px}
+/* 5 acabamentos */
+#s5{background:#1C181B}
+#s5 .eb{position:absolute;left:72px;top:200px}
+#s5 h2{position:absolute;left:72px;top:242px;font:400 100px/1 "Young Serif";color:var(--creme)}
+#s5 .d{position:absolute;left:72px;top:368px;width:936px;font:400 30px/1.4 "Instrument Sans";color:#C9BFC5}
+#s5 .card{position:absolute;top:470px;width:480px;height:808px;border-radius:22px;overflow:hidden;background:#0f1013}
+#s5 .card img{position:absolute;inset:0;width:100%;height:100%}
+#s5 .card .sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,16,19,0) 62%,rgba(15,16,19,.92) 84%)}
+#s5 .tag{position:absolute;left:24px;top:24px;background:var(--cerne-c);color:#1C1519;font:600 22px "Instrument Sans";letter-spacing:.2em;padding:9px 16px;border-radius:24px}
+#s5 .card b{position:absolute;left:30px;bottom:96px;font:400 54px "Young Serif";color:var(--creme)}
+#s5 .card span{position:absolute;left:30px;right:24px;bottom:28px;font:400 23px/1.38 "Instrument Sans";color:#D9D0D5}
+/* 6 como encomendar */
+#s6{background:var(--papel)}
+#s6 .hd span{color:var(--amora)}#s6 .num{color:var(--cinza)}
+#s6 .eb{position:absolute;left:72px;top:206px;color:var(--cerne)}
+#s6 h2{position:absolute;left:72px;top:276px;font:400 86px/1 "Young Serif";color:var(--amora)}
+#s6 .side{position:absolute;left:760px;top:282px}
+#s6 .side b{display:block;font:600 30px "Instrument Sans";color:var(--cerne)}
+#s6 .side span{display:block;font:400 26px "Instrument Sans";color:var(--cinza);margin-top:8px}
+#s6 .steps{position:absolute;left:72px;top:428px;width:936px}
+#s6 .stp{display:grid;grid-template-columns:92px 1fr;border-top:2px solid #E6DCDB;padding:26px 0 24px}
+#s6 .stp:last-child{border-bottom:2px solid #E6DCDB}
+#s6 .stp i{font:400 46px/1 "Young Serif";color:var(--cerne);font-style:normal}
+#s6 .stp b{display:block;font:500 34px "Instrument Sans";color:var(--carvao)}
+#s6 .stp span{display:block;font:400 25px "Instrument Sans";color:var(--cinza);margin-top:6px}
+#s6 .strip{position:absolute;left:72px;top:832px;width:936px;height:250px;border-radius:20px;overflow:hidden}
+#s6 .strip img{width:100%;height:100%;display:block}
+#s6 .strip em{position:absolute;left:24px;bottom:22px;background:rgba(20,18,20,.86);color:var(--cerne-c);font:600 22px "Instrument Sans";letter-spacing:.2em;padding:10px 18px;border-radius:24px;font-style:normal}
+#s6 .foot{position:absolute;left:0;bottom:0;width:1080px;height:170px;background:var(--amora);display:flex;align-items:center;justify-content:center;gap:22px}
+#s6 .foot b{font:600 36px "Instrument Sans";color:var(--creme)}#s6 .foot span{font:400 27px "Instrument Sans";color:var(--rosa)}
+
+/* 7 e 8 por dentro */
+.pd{background:#101114}
+.pd .bg{position:absolute;inset:0;width:100%;height:100%}
+.pd .grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,17,20,.92) 0%,rgba(16,17,20,.55) 17%,rgba(16,17,20,0) 30%,rgba(16,17,20,0) 70%,rgba(43,15,37,.9) 88%)}
+.pd .eb{position:absolute;left:72px;top:190px}
+.pd h2{position:absolute;left:72px;top:232px;font:400 84px/1 "Young Serif";color:var(--creme)}
+.pd ul{position:absolute;left:72px;right:72px;bottom:70px;margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 40px}
+.pd li{font:400 27px/1.3 "Instrument Sans";color:#EDE5EA;border-top:2px solid var(--cerne-c);padding-top:12px}
+.pd li b{display:block;font:600 30px "Instrument Sans";color:var(--creme)}
+.pd .num{color:#B9AEB4}
+</style></head><body>
+
+<section class="s" id="s1">
+  <img class="bg" data-r="capa.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="txt"><div class="eb" id="t1eb">Lançamento · 1, 2 e 4 portas</div><h1>Cristaleira<br>Veio</h1>
+    <div class="sub" id="t1sub"></div></div>
+  <div class="pill"><b>Sob encomenda</b><span>em Uberlândia</span></div>
+  <div class="arr">arraste →</div>
+</section>
+
+<section class="s" id="s3">
+  <img class="img" data-r="detalhe.png"><div class="fade"></div>
+  <div class="num">03</div>
+  <div class="eb">Os detalhes</div>
+  <h2>Feita para mostrar<br>o que você guarda</h2>
+  <div class="grid" id="t3grid"></div>
+</section>
+
+<section class="s" id="s4">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">04</div>
+  <div class="eb">Medidas</div>
+  <h2 id="t4h">Dois tamanhos</h2>
+  <div class="d" id="t4d"></div>
+  <svg width="1080" height="610" viewBox="0 0 1080 610" id="msvg"></svg>
+  <div class="stats" id="t4st"></div>
+</section>
+
+<section class="s" id="s5">
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">05</div>
+  <div class="eb">Madeiras</div>
+  <h2>Escolha a sua</h2>
+  <div class="d">Dois tons escuros de madeira maciça, sempre com óleo de linhaça e cera de abelha por cima.</div>
+  <div class="card" style="left:48px"><img data-r="card1.png"><div class="sh"></div><div class="tag">PRINCIPAL</div><b>Nogueira</b><span>Cambará tingido em tom de chocolate, com brilho suave de óleo e cera</span></div>
+  <div class="card" style="left:552px"><img data-r="card2.png"><div class="sh"></div><div class="tag">MADEIRA DE LEI</div><b>Jatobá</b><span>Escura por natureza, sem tingidor. Pesada, dura e escurece com o tempo</span></div>
+</section>
+
+<section class="s" id="s6">
+  <div class="hd"><img src="brand/moraes-selo-amora.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">06</div>
+  <div class="eb">Como encomendar</div>
+  <h2>Sob encomenda</h2>
+  <div class="side"><b>valor sob consulta</b><span>orçamento grátis</span></div>
+  <div class="steps">
+    <div class="stp"><i>1</i><div><b>Chame no direct ou no WhatsApp</b><span>Escolha a madeira: nogueira ou jatobá</span></div></div>
+    <div class="stp"><i>2</i><div><b>Sinal de 50% para reservar</b><span>O restante na entrega</span></div></div>
+    <div class="stp"><i>3</i><div><b id="t6p">Pronta em 4 a 8 semanas</b><span>Conforme o modelo. Feita à mão, peça por peça. Entrega em Uberlândia</span></div></div>
+  </div>
+  <div class="strip"><img data-r="faixa.png"><em id="t6e"></em></div>
+  <div class="foot"><b>Peça a sua</b><span>· feita à mão em Uberlândia</span></div>
+</section>
+
+
+<section class="s pd" id="s7">
+  <img class="bg" data-r="aberta4.png"><div class="grad"></div>
+  <div class="hd"><img src="brand/moraes-selo-cerne-claro.svg"><span>MARCENARIA<br>MORAES</span></div>
+  <div class="num">07</div>
+  <div class="eb">Abre e guarda · 4 portas</div><h2>Vitrine inteira</h2>
+  <ul><li><b>Vidro nos três lados</b>frente e laterais</li><li><b>Prateleiras soltas</b>3 por vão, a 36 cm</li><li><b>Gavetas</b>para talheres e toalhas</li><li><b>Ferro preto</b>borboleta, tramela e concha</li></ul>
+</section>
+
+<script type="module">
+import { make } from './model.mjs';
+const MS = { 1: make(1), 2: make(2), 4: make(4) }, $ = id => document.getElementById(id);
+document.querySelectorAll('img[data-r]').forEach(im => im.src = 'renders/' + im.dataset.r);
+$('t1sub').innerHTML = 'Madeira maciça e vidro nos três lados.<br>Feita à mão, para mostrar o que importa.';
+const s3 = [['Madeira maciça escura', 'Cambará nogueira ou jatobá, nada de MDF. Pode ser lixada e renovada daqui a 20 anos'], ['Vidro nos três lados', 'Portas e laterais em vidro de 3 mm, com prateleiras soltas por dentro'], ['Ferragens de ferro', 'Dobradiças borboleta, tramela e puxador concha em ferro preto'], ['Gaveta embaixo', 'Para talheres, toalhas e guardanapos: uma ou duas, conforme o modelo']];
+$('t3grid').innerHTML = s3.map(([b, s]) => `<div class="it"><b>${b}</b><span>${s}</span></div>`).join('');
+$('t4h').textContent = 'Três tamanhos';
+$('t4d').textContent = 'Todas com 200 cm de altura e 40 de fundo. Muda só a largura.';
+$('t4st').innerHTML = [['200 cm', 'de altura'], ['40 cm', 'de fundo'], ['36 cm', 'entre prateleiras'], ['3 lados', 'de vidro']].map(([b, s]) => `<div class="st"><b>${b}</b><span>${s}</span></div>`).join('');
+$('t6e').textContent = 'CRISTALEIRA VEIO · 1, 2 OU 4 PORTAS';
+// Desenho das medidas: as três frentes lado a lado, na mesma escala
+const sv = $('msvg'), NS = 'http://www.w3.org/2000/svg';
+const E = (t, a, txt) => { const e = document.createElementNS(NS, t); for (const n in a) e.setAttribute(n, a[n]); if (txt != null) e.textContent = txt; sv.appendChild(e); return e; };
+const G = '#DDAE62', W = '#8E5E3A', GL = 'rgba(214,226,228,.22)', GS = 'rgba(246,241,236,.35)', Lc = 'rgba(246,241,236,.5)', base = 500;
+const k = 2.15, gap = 64;
+const R = (x, y, w, h, f, st) => E('rect', { x, y, width: Math.max(w, .5), height: Math.max(h, .5), fill: f, stroke: st || 'none', 'stroke-width': 1.2 });
+const dimH = (x0, x1, y, t) => { E('line', { x1: x0, y1: y, x2: x1, y2: y, stroke: G, 'stroke-width': 2.5 }); [x0, x1].forEach(x => E('line', { x1: x, y1: y - 12, x2: x, y2: y + 12, stroke: G, 'stroke-width': 2.5 })); E('text', { x: (x0 + x1) / 2, y: y - 16, 'text-anchor': 'middle', fill: G, 'font-family': 'Instrument Sans', 'font-weight': 600, 'font-size': 32 }, t); };
+const dimV = (y0, y1, x, t) => { E('line', { x1: x, y1: y0, x2: x, y2: y1, stroke: G, 'stroke-width': 2.5 }); [y0, y1].forEach(y => E('line', { x1: x - 12, y1: y, x2: x + 12, y2: y, stroke: G, 'stroke-width': 2.5 })); const ty = (y0 + y1) / 2; E('text', { x: x - 16, y: ty, 'text-anchor': 'middle', fill: G, 'font-family': 'Instrument Sans', 'font-weight': 600, 'font-size': 34, transform: `rotate(-90 ${x - 16} ${ty})` }, t); };
+const lab = (x, t) => E('text', { x, y: base + 100, 'text-anchor': 'middle', fill: '#CDBFC7', 'font-family': 'Instrument Sans', 'font-weight': 500, 'font-size': 22, 'letter-spacing': '.2em' }, t);
+const Z = z => base - z * k;
+const tot = [1, 2, 4].reduce((s, v) => s + (MS[v].L + 6) * k, 0) + 2 * gap;
+let x = (1080 - tot) / 2 + 3 * k + 22;
+const fill = p => p.m === 'vidro' ? [GL, GS] : (p.g === 'gaveta' || (p.g === 'chapeu' && p.id !== 'topo')) ? ['#6B4329'] : [W];
+const xs = {};
+for (const v of [1, 2, 4]) {
+  const M = MS[v], ox = x, X = xx => ox + xx * k; xs[v] = ox;
+  E('line', { x1: X(-10), y1: base, x2: X(M.L + 10), y2: base, stroke: Lc, 'stroke-width': 2 });
+  M.PARTS.filter(p => p.b[1] < 4.5 && p.g !== 'prateleiras' && !p.thin).sort((a, b) => b.b[1] - a.b[1]).forEach(p => { const [x0, , z0, x1, , z1] = p.b; R(X(x0), Z(z1), (x1 - x0) * k, (z1 - z0) * k, ...fill(p)); });
+  M.PULLS.forEach(pl => R(X(pl.x - 3), Z(pl.z + 1.5), 6 * k, 3 * k, '#151314'));
+  M.DOORS.forEach(d => M.HINGES.forEach(z => { const h = d.hinge; E('path', { d: `M${X(h - 3.7)} ${Z(z) - 8} L${X(h)} ${Z(z) - 4} L${X(h + 3.7)} ${Z(z) - 8} L${X(h + 3.7)} ${Z(z) + 8} L${X(h)} ${Z(z) + 4} L${X(h - 3.7)} ${Z(z) + 8}Z`, fill: '#151314' }); }));
+  dimH(X(0), X(M.L), base + 54, M.L + ' cm'); lab(X(M.L / 2), M.short.toUpperCase());
+  x += (M.L + 6) * k + gap;
+}
+dimV(Z(200), Z(0), xs[1] - 36, '200 cm');
+window.ready = true;
+</script>
+</body></html>

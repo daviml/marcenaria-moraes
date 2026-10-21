@@ -1,0 +1,21 @@
+RACK ANTIQUE - Marcenaria Moraes
+Atualizado em 10/10/2026
+
+Rack de sala de madeira maciça da linha Antique, em duas medidas:
+  180 cm · 180 × 55 × 42 cm · TV de até 75" · ~59 kg
+  140 cm · 140 × 55 × 42 cm · TV de até 55" · ~48 kg
+Portas almofadadas com dobradiça borboleta e tramela de ferro, nicho aberto com prateleira, gaveta rasa
+para os controles, furo para os fios e pés de 10 cm. Madeira: nogueira (principal) ou jatobá.
+
+Rack-Antique.html
+  Ficha completa, com botão no alto para escolher 180 ou 140 cm:
+  - Custo e preço sugerido (USO INTERNO, não vai no post):
+      180 cm: ~R$ 700 de material · R$ 2.000 a 2.300 (jatobá R$ 2.600 a 2.900)
+      140 cm: ~R$ 640 de material · R$ 1.700 a 2.000 (jatobá R$ 2.200 a 2.500)
+  - Vista 3D com raio-X dos parafusos, vistas cotadas, lista de corte, ligações, montagem e compras
+
+Rack-Antique-video-vertical-instagram.mp4 · Reels 9:16 (34 s), nogueira, com música
+Rack-Antique-video-horizontal-jatoba.mp4  · comercial 16:9 (34 s), jatobá, com música
+
+É a peça mais fácil da linha: tábuas curtas, 2 portas e 1 gaveta, ~25 a 28 h de trabalho.
+A pasta "arquivos-de-origem" tem o modelo 3D (rk-model.mjs) e os scripts, os mesmos da linha inteira.

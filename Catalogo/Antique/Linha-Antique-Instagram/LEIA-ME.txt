@@ -1,0 +1,14 @@
+LINHA ANTIQUE · INSTAGRAM
+Marcenaria Moraes · 10/10/2026
+
+A linha Antique junta as peças com ferragens de época em ferro: a Cristaleira Antique (1, 2 ou 4 portas),
+o Guarda-Roupa Antique (2 ou 4 portas) e o Rack Antique (140 ou 180 cm). Cada peça tem a própria pasta, com ficha, vídeos e post.
+Esta pasta é para apresentar a linha inteira.
+
+previa-do-post.html  · abra com dois cliques: post, stories e destaque, com botões para copiar os textos
+LEGENDA-E-TEXTOS.txt · legenda, textos alternativos, roteiro dos stories, destaque e status do WhatsApp
+video/               · vídeo da linha: story/Reels 9:16 e versão 4:5 para o carrossel (41 s, com música)
+post/                · 7 imagens 1080 × 1350 (formato 4:5), na ordem
+post-2x/             · as mesmas em 2160 × 2700
+stories/             · 6 stories 1080 × 1920, com espaço livre em cima e embaixo para os botões
+destaque/            · capa do destaque Antique (ícone de dobradiça borboleta) e a reserva com texto

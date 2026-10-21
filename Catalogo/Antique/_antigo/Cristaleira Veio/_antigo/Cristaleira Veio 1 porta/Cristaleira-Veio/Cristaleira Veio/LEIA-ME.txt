@@ -1,0 +1,32 @@
+CRISTALEIRA VEIO - Marcenaria Moraes
+Atualizado em 10/10/2026
+
+ATUALIZADO EM 10/10/2026: a cristaleira passou a ter 2 m de altura (era 1,80 m),
+para ficar igual às versões de 2 e 4 portas. A versão antiga está em "versao-anterior-180cm".
+
+Linha Cristaleira Veio: 1, 2 e 4 portas, todas com 2 m de altura e 40 cm de fundo, com as mesmas
+laterais, os mesmos vidros das laterais e as mesmas alturas de nicho. Esta é a de 1 porta: 200 × 50 × 40 cm.
+1 porta de vidro, laterais de vidro, 3 prateleiras, gaveta embaixo, chapéu com friso e ferragens de ferro preto.
+
+Cristaleira-Veio.html
+  Ficha completa do produto. Abra com dois cliques (Chrome ou Edge).
+  - O produto: ficha técnica, custo (~R$ 860 de material) e preço sugerido (R$ 2.500 a 2.800),
+    só para USO INTERNO e fora do post. Acabamentos, texto de venda (botão Copiar) e cuidados para o cliente
+  - Vista 3D: toque numa peça para ver as medidas dela; botões Nogueira / Jatobá,
+    "Porta e gaveta abertas" e "Ver parafusos (raio-X)"
+  - Vistas cotadas (frente, lateral, porta e corte) + tabela de conferência das medidas
+  - Lista de corte, vidros e baguetes, como cada peça se prende (cavilha 8 × 40,
+    parafusos 4 × 30 e 4 × 40, furos ovais), como esconder os parafusos,
+    ordem de montagem e o que comprar
+
+Cristaleira-Veio-video-vertical-instagram.mp4
+  Reels 9:16 (35 s), acabamento nogueira, com música.
+
+Cristaleira-Veio-video-horizontal-jatoba.mp4
+  Comercial 16:9 (35 s), em jatobá, com música.
+
+A pasta "arquivos-de-origem" (ao lado) tem o modelo 3D e os scripts que geraram tudo. São os mesmos
+nas três cristaleiras: model.mjs monta as peças da versão 1, 2 ou 4 portas e info.mjs tem os textos e as contas.
+Para rodar: npm install, depois (trocando 4 pela versão):
+  node stills.mjs 4 · node posts.mjs 4 · node build-ficha.mjs 4 saida.html · node texts.mjs 4
+  V=4 node rendervideo.mjs 916 nog saida.mp4 musica.mp3   (precisa do Chrome e do ffmpeg instalados)

@@ -1,0 +1,26 @@
+CRISTALEIRA VEIO 4 PORTAS · POST DE LANÇAMENTO NO INSTAGRAM
+Marcenaria Moraes · 10/10/2026
+
+previa-do-post.html
+  Abra com dois cliques para ver o post inteiro, com botões para copiar a legenda.
+
+LEGENDA-E-TEXTOS.txt
+  Legenda, hashtags, ordem do carrossel, textos alternativos, stories e status do WhatsApp.
+
+1-carrossel-para-postar/
+  Os 6 itens do post, na ordem, prontos para o Instagram (1080 × 1350, formato 4:5).
+  O vídeo 2-video.mp4 é a versão 4:5 feita para o carrossel, já com música.
+  Não use o vídeo vertical no carrossel: o Instagram corta ele.
+
+2-imagens-alta-resolucao/
+  As mesmas 5 imagens em 2160 × 2700 (o dobro), para impressão, site ou WhatsApp.
+
+3-outros-videos/
+  Reels vertical 9:16 em nogueira (stories, Reels e status) e o comercial horizontal 16:9 em jatobá.
+  Todos com música (Wind Leaves, Mixkit: uso comercial liberado, sem precisar dar crédito).
+
+4-ficha-do-produto/
+  Ficha completa da Cristaleira Veio 4 Portas: 3D com medidas e raio-X dos parafusos, vistas cotadas,
+  lista de corte, vidros, ligações, montagem e compras.
+
+Nenhuma imagem nem a legenda tem preço: no post a cristaleira aparece como "valor sob consulta".

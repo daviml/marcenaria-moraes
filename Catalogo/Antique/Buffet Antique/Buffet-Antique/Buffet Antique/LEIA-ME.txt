@@ -1,0 +1,21 @@
+BUFFET ANTIQUE - Marcenaria Moraes
+Atualizado em 10/10/2026
+
+Buffet de sala de jantar em madeira maciça da linha Antique, em duas medidas:
+  150 cm · 150 × 90 × 45 cm · 3 gavetas e 3 portas · ~83 kg · 4 a 5 semanas
+  110 cm · 110 × 90 × 45 cm · 2 gavetas e 2 portas · ~62 kg · 3 a 4 semanas
+Portas almofadadas com dobradiças rústicas de ferro e argola, gavetas com puxador concha, prateleira em
+cada armário, montante de 5 cm entre as portas e pés de 10 cm. Madeira: nogueira (principal) ou jatobá.
+
+Buffet-Antique.html
+  Ficha completa, com botão no alto para escolher 150 ou 110 cm:
+  - Custo e preço sugerido (USO INTERNO, não vai no post):
+      150 cm: ~R$ 1.000 de material · R$ 3.000 a 3.400 (jatobá R$ 3.900 a 4.300)
+      110 cm: ~R$ 750 de material · R$ 2.300 a 2.700 (jatobá R$ 2.900 a 3.300)
+  - Vista 3D com raio-X dos parafusos, vistas cotadas, lista de corte, ligações, montagem e compras
+
+Buffet-Antique-video-vertical-instagram.mp4 · Reels 9:16 (34 s), nogueira, com música
+Buffet-Antique-video-horizontal-jatoba.mp4  · comercial 16:9 (34 s), jatobá, com música
+
+Feito em série: as portas e as gavetas são iguais entre si. ~34 a 44 h de trabalho.
+Os scripts (bf-model.mjs e os outros) estão em Rack Antique/arquivos-de-origem, junto com o motor da linha inteira.

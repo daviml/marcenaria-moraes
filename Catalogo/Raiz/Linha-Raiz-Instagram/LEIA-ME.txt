@@ -1,0 +1,14 @@
+LINHA RAIZ · INSTAGRAM
+Marcenaria Moraes · 10/10/2026
+
+A linha Raiz junta as peças de madeira grossa e encaixe à mostra: a Mesa de Jantar Raiz, o Banco Raiz
+e a Bancada Gourmet Raiz, com cavilhas, cunhas e gravatas em cambará claro. Cada peça tem a própria pasta, com ficha, vídeos e post.
+Esta pasta é para apresentar a linha inteira.
+
+previa-do-post.html  · abra com dois cliques: post, stories e destaque, com botões para copiar os textos
+LEGENDA-E-TEXTOS.txt · legenda, textos alternativos, roteiro dos stories, destaque e status do WhatsApp
+video/               · vídeo da linha: story/Reels 9:16 e versão 4:5 para o carrossel (38 s, com música)
+post/                · 7 imagens 1080 × 1350 (formato 4:5), na ordem
+post-2x/             · as mesmas em 2160 × 2700
+stories/             · 6 stories 1080 × 1920, com espaço livre em cima e embaixo para os botões
+destaque/            · capa do destaque Raiz (ícone de gravata-borboleta) e a reserva com texto

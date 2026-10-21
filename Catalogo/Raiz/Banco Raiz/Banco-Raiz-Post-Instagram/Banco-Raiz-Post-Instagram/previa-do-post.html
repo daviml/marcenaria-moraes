@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Post Banco Raiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: mesa de aprovação do post — o carrossel em ordem de publicação, depois o texto pronto para copiar e os extras */
+:root{
+  --bg:#FAF7F3; --paper:#FFFFFF; --ink:#1C1519; --muted:#6B5E66; --line:#E6DCDD;
+  --amora:#4A1C3C; --cerne:#B0782C; --soft:#F3ECEF;
+  --f-display:"Young Serif",Georgia,serif; --f-body:"Instrument Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1C1519; --paper:#251C22; --ink:#F3ECEF; --muted:#B5A6AE; --line:#3B2E36;
+  --amora:#D7A3C6; --cerne:#DDAE62; --soft:#2E2229; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1C1519; --paper:#251C22; --ink:#F3ECEF; --muted:#B5A6AE; --line:#3B2E36;
+  --amora:#D7A3C6; --cerne:#DDAE62; --soft:#2E2229; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);padding-inline:16px;padding-block:32px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+h1,h2{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance;color:var(--ink)}
+h1{font-size:clamp(32px,6vw,52px);line-height:1.05}
+h2{font-size:26px;line-height:1.2}
+.eyebrow{font:600 12px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--cerne)}
+header{display:flex;flex-direction:column;gap:12px}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+.note{font-size:14px;color:var(--muted);margin:0;max-width:70ch}
+.car{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.item{display:flex;flex-direction:column;gap:8px;min-width:0}
+.item img,.item video{width:100%;max-width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:block;background:#0F1013;border:1px solid var(--line)}
+.item .cap{display:flex;gap:8px;align-items:baseline;font-size:14px}
+.item .cap b{font:400 18px var(--f-display);color:var(--amora)}
+.item .cap span{color:var(--muted)}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+pre.copy{white-space:pre-wrap;font:15px/1.6 var(--f-body);margin:0;color:var(--ink);word-break:break-word}
+.btn{align-self:flex-start;font:600 14px var(--f-body);border:0;background:var(--amora);color:var(--bg);padding:9px 16px;border-radius:999px;cursor:pointer}
+.btn:focus-visible{outline:2px solid var(--cerne);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+ol.list,ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:70ch}
+ol.list li::marker{color:var(--cerne);font-weight:600}
+dl.alt{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin:0;font-size:15px}
+dl.alt dt{font:400 18px var(--f-display);color:var(--amora)}
+dl.alt dd{margin:0;color:var(--muted)}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Marcenaria Moraes · Instagram</div>
+    <h1>Post de lançamento: Banco Raiz</h1>
+    <p class="lead">Carrossel de 6 itens no formato 4:5 (1080 × 1350), na ordem em que entram no post. O item 2 é o vídeo, numa versão 4:5 feita para o carrossel, porque o Instagram corta todos os itens no formato do primeiro.</p>
+  </header>
+
+  <section>
+    <h2>O carrossel</h2>
+    <div class="car">
+      <div class="item"><img src="1-carrossel-para-postar/1-capa.png" alt="Capa"><div class="cap"><b>1</b><span>Capa · sob encomenda</span></div></div>
+      <div class="item"><video src="1-carrossel-para-postar/2-video.mp4" controls muted playsinline loop preload="metadata" poster="1-carrossel-para-postar/1-capa.png"></video><div class="cap"><b>2</b><span>Vídeo 4:5 · 31 s</span></div></div>
+      <div class="item"><img src="1-carrossel-para-postar/3-detalhes.png" alt="Detalhes"><div class="cap"><b>3</b><span>Os detalhes</span></div></div>
+      <div class="item"><img src="1-carrossel-para-postar/4-medidas.png" alt="Medidas"><div class="cap"><b>4</b><span>Medidas</span></div></div>
+      <div class="item"><img src="1-carrossel-para-postar/5-madeiras.png" alt="Madeiras"><div class="cap"><b>5</b><span>Nogueira ou jatobá</span></div></div>
+      <div class="item"><img src="1-carrossel-para-postar/6-como-encomendar.png" alt="Como encomendar"><div class="cap"><b>6</b><span>Como encomendar</span></div></div>
+    </div>
+    <p class="note">Nenhum slide nem a legenda tem preço: no post a cristaleira aparece como "valor sob consulta". Confira o prazo de 2 a 3 semanas no slide 6 e na legenda.</p>
+  </section>
+
+  <section>
+    <h2>Legenda</h2>
+    <div class="box">
+<pre class="copy" id="cap">Banco Raiz 🌳 · linha Raiz
+
+O par da Mesa de Jantar Raiz: assento de 5 cm de duas pranchas coladas, com gravatas-borboleta na emenda, e o mesmo cavalete com cunha passante.
+
+✔️ 160 × 35 × 45 cm
+✔️ Madeira maciça escura: cambará nogueira ou jatobá
+✔️ Cavilhas e gravatas em cambará claro, ou discretas na mesma madeira
+✔️ 3 lugares: substitui duas cadeiras de um lado da mesa
+✔️ 45 cm de altura, a medida certa para a mesa
+✔️ Cavilhas claras à mostra
+
+📦 Sob encomenda, feita à mão em Uberlândia. Pronta em 2 a 3 semanas.
+💬 Valor sob consulta: chame no direct ou no WhatsApp (link na bio).
+
+Arraste para ver os detalhes 👉
+
+Imagens do projeto em 3D. Cada peça sai com o veio único da sua madeira.
+
+#marcenariamoraes #linharaiz #bancodemadeira #banco #saladejantar #moveisrusticos #madeiramacica #moveisdemadeira #moveisrusticos #feitoamao #marcenariaartesanal #uberlandia #udi #uberlandiamg #triangulomineiro</pre>
+      <button type="button" class="btn" data-copy="cap">Copiar legenda</button>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section>
+      <h2>Como publicar</h2>
+      <ol class="list">
+        <li>Novo post → selecione os 6 itens na ordem acima (capa primeiro). Mantenha o formato 4:5.</li>
+        <li>O vídeo já tem música (Wind Leaves, Mixkit). Não adicione outra no Instagram.</li>
+        <li>Cole a legenda. Em "Configurações avançadas → Acessibilidade", cole os textos alternativos ao lado.</li>
+        <li>Em "Local", marque Uberlândia.</li>
+        <li>Poste entre 18h e 21h, de terça a quinta, quando mais gente vê.</li>
+        <li>Na primeira hora, responda todo comentário e direct.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Texto alternativo</h2>
+      <dl class="alt">
+        <dt>1</dt><dd>Banco Raiz de madeira maciça escura, com tampo de 5 cm e cavilhas e gravatas-borboleta em madeira clara, título Banco Raiz, linha Raiz.</dd>
+        <dt>2</dt><dd>Vídeo da peça sendo montada, com as medidas, um detalhe, a opção com cavilhas discretas e as duas madeiras.</dd>
+        <dt>3</dt><dd>Detalhe da gravata-borboleta de madeira clara na emenda do assento.</dd>
+        <dt>4</dt><dd>Desenho com as medidas: 160 cm de largura, 35 de profundidade e 45 de altura.</dd>
+        <dt>5</dt><dd>A peça em nogueira e em jatobá, lado a lado.</dd>
+        <dt>6</dt><dd>Como encomendar: chamar no direct ou WhatsApp, sinal de 50% e entrega em 2 a 3 semanas.</dd>
+      </dl>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section>
+      <h2>Stories no mesmo dia</h2>
+      <ol class="list">
+        <li><b>Compartilhe o post</b> no story com a figurinha "Link" para o WhatsApp.</li>
+        <li><b>Enquete</b> com o slide 5: "Banco ou cadeira de um lado da mesa?". Quem votar já é um contato para chamar.</li>
+        <li><b>Caixa de perguntas</b>: "Ficou com dúvida sobre a Banco Raiz? Pergunta aqui". Guarde as respostas no destaque Encomendas.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Status do WhatsApp</h2>
+      <div class="box">
+<pre class="copy" id="wa">Linha Raiz da Marcenaria Moraes 🌳
+Banco Raiz: madeira maciça, 160 × 35 × 45 cm, nogueira ou jatobá, tampo de 5 cm e encaixes à mostra em cambará claro.
+Feita sob encomenda. Me chama aqui para pedir seu orçamento!</pre>
+        <button type="button" class="btn" data-copy="wa">Copiar texto</button>
+      </div>
+      <p class="note">Poste o vídeo vertical (pasta 3-outros-videos) junto com esse texto.</p>
+    </section>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+  const el=document.getElementById(b.dataset.copy),label=b.textContent;
+  const done=()=>{b.textContent='Copiado';setTimeout(()=>b.textContent=label,1600)};
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Texto selecionado, copie com Ctrl+C'};
+  try{navigator.clipboard.writeText(el.textContent).then(done,fallback)}catch(e){fallback()}
+}));
+</script>
+
+</html>

@@ -1,0 +1,20 @@
+LINHA ANTIQUE - Marcenaria Moraes
+Atualizado em 10/10/2026
+
+Móveis de madeira maciça escura (nogueira ou jatobá) com ferragens de época em ferro preto:
+dobradiças borboleta e rústicas, tramelas, puxadores concha e argola. Mesmas madeiras, mesmo acabamento
+e mesmas ferragens, para sala e quarto combinarem.
+
+Cristaleira Antique/      1, 2 ou 4 portas (50, 90 ou 160 cm) · ficha com seletor, vídeo das três, post
+Guarda-Roupa Antique/     2 ou 4 portas (130 ou 200 cm) · ficha com seletor, vídeo dos dois, post
+Rack Antique/             140 ou 180 cm (TV até 55" ou 75") · ficha com seletor, vídeo dos dois, post
+Buffet Antique/           110 ou 150 cm (2 ou 3 portas, com gavetas) · ficha com seletor, vídeo dos dois, post
+Linha-Antique-Instagram/  post da linha (7 slides + vídeo peça a peça), vídeo para story/Reels, 6 stories e destaque
+_antigo/                  versões anteriores (quando as peças se chamavam "Veio" e o post da linha sem o rack)
+
+Ordem sugerida no Instagram: primeiro o post da linha (com o vídeo no story, os stories e o destaque), depois
+o post de cada peça, com uns 3 dias entre eles: Cristaleira, Guarda-Roupa, Rack e Buffet Antique.
+O Buffet entrou depois do post da linha: ele tem só o post próprio (o vídeo da linha não mudou).
+O vídeo e o post da linha saem de Rack Antique/arquivos-de-origem: lá o scene.js monta as peças
+(cristaleira, guarda-roupa, rack e buffet) com as ferragens de cada uma. video-line.js é o vídeo da linha;
+bf-model.mjs, bf-info.mjs, bf-build-ficha.mjs, bf-posts.html, bf-texts.mjs e video-bf.js são do buffet.

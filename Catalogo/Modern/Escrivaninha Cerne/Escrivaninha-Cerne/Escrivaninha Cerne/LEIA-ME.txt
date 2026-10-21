@@ -1,0 +1,16 @@
+ESCRIVANINHA CERNE - Marcenaria Moraes · linha Modern
+Atualizado em 10/10/2026
+
+150 × 60 × 76 cm · ~32 kg (nogueira) · 3 a 4 semanas
+Madeira: nogueira (principal) ou jatobá. Opção com detalhes pretos (base em preto fosco), mesmo preço.
+Nenhum parafuso, cantoneira ou puxador à vista.
+
+Escrivaninha-Cerne.html
+  Ficha completa: ficha técnica, custo (~R$ 410) e preço sugerido (R$ 1.600 a 1.900;
+  jatobá R$ 2.000 a 2.300), só para USO INTERNO. Vista 3D com botões Nogueira / Jatobá / Detalhes pretos
+  e raio-X dos parafusos, vistas cotadas, lista de corte, ligações, montagem e compras.
+
+Escrivaninha-Cerne-video-vertical-instagram.mp4 · Reels 9:16 (31 s), nogueira, com música
+Escrivaninha-Cerne-video-horizontal-jatoba.mp4  · comercial 16:9 (31 s), jatobá, com música
+
+A pasta "arquivos-de-origem" da linha Modern tem o modelo 3D (models.mjs) e os scripts das três peças.

@@ -1,0 +1,26 @@
+GUARDA-ROUPA ANTIQUE - Marcenaria Moraes
+Atualizado em 10/10/2026
+
+Guarda-roupa rústico de madeira maciça, baseado na foto de referência (2 m × 1,30 m), em duas versões:
+  2 portas · 200 × 130 × 58 cm · prateleiras + cabideiro com maleiro · 3 gavetas · ~172 kg
+  4 portas · 200 × 200 × 58 cm · cabideiro inteiro + prateleiras · 2 maleiros · 6 gavetas · ~257 kg
+Madeira: nogueira (cambará tingido, principal) ou jatobá (madeira de lei).
+
+Guarda-Roupa-Antique.html
+  Ficha completa, com botão no alto para escolher o modelo (2 ou 4 portas). A ficha inteira muda:
+  - O produto: ficha técnica, custo e preço sugerido (USO INTERNO, não vai no post):
+      2 portas: ~R$ 1.870 de material · R$ 5.100 a 5.600 (jatobá R$ 6.900 a 7.400)
+      4 portas: ~R$ 2.900 de material · R$ 7.800 a 8.500 (jatobá R$ 10.500 a 11.200)
+  - Vista 3D: toque numa peça para ver as medidas; botões Nogueira / Jatobá, "Portas e gavetas abertas"
+    e "Ver parafusos (raio-X)"
+  - Vistas cotadas, lista de corte, como cada peça se prende, ordem de montagem e o que comprar
+
+Guarda-Roupa-Antique-video-vertical-instagram.mp4
+  Reels 9:16 (38 s), nogueira, com música. Mostra o 2 portas e depois o 4 portas.
+
+Guarda-Roupa-Antique-video-horizontal-jatoba.mp4
+  Comercial 16:9 (38 s), jatobá, com música.
+
+A pasta "arquivos-de-origem" (ao lado) tem o modelo 3D (model.mjs, as duas versões) e os scripts.
+Para rodar: npm install, depois node stills.mjs · node posts.mjs · node build-ficha.mjs saida.html ·
+node texts.mjs · node rendervideo.mjs 916 nog saida.mp4 musica.mp3 (precisa do Chrome e do ffmpeg).
