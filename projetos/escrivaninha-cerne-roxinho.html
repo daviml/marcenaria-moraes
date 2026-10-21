@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Escrivaninha Cerne Roxinho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: folha de projeto de marcenaria — 3D no topo, depois vistas cotadas, peças, corte, compras e montagem */
+:root {
+  --bg: #f3f4f2;
+  --sheet: #ffffff;
+  --fg: #1f2420;
+  --muted: #5d665f;
+  --line: #d5d9d4;
+  --dim: #2f6f8f;
+  --rox: #5b2740;
+  --rox-soft: #e9d9e0;
+  --camb: #c9965f;
+  --camb-soft: #f1e3d2;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141716; --sheet: #1c201e; --fg: #e6e9e5; --muted: #9aa39c; --line: #343a36;
+    --dim: #7cb8d6; --rox: #a5587c; --rox-soft: #3a2530; --camb: #c99a68; --camb-soft: #3a2f22;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141716; --sheet: #1c201e; --fg: #e6e9e5; --muted: #9aa39c; --line: #343a36;
+  --dim: #7cb8d6; --rox: #a5587c; --rox-soft: #3a2530; --camb: #c99a68; --camb-soft: #3a2f22;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.05; text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h1 { font-size: clamp(34px, 6vw, 54px); }
+h2 { font-size: 28px; }
+h3 { font-size: 20px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+p { margin: 0; max-width: 66ch; }
+
+header { display: grid; gap: 12px; }
+.eyebrow { font-family: var(--f-mono); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+.lede { color: var(--muted); font-size: 17px; }
+.woods { display: flex; flex-wrap: wrap; gap: 8px; }
+.wood { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; padding: 4px 12px 4px 6px; border: 1px solid var(--line); border-radius: 999px; background: var(--sheet); }
+.sw { width: 18px; height: 18px; border-radius: 50%; }
+.sw.rox { background: var(--rox); } .sw.camb { background: var(--camb); }
+
+/* 3D */
+.stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 72vh; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: radial-gradient(ellipse 70% 60% at 50% 40%, var(--sheet), var(--bg)); touch-action: none; }
+.stage canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+.stage .msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 15px; padding: 24px; text-align: center; pointer-events: none; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 13px; color: var(--muted); pointer-events: none; }
+@media (max-width: 560px) { .stage { aspect-ratio: 4 / 5; } }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.bar .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+button.b { font: 600 14px/1 var(--f-body); color: var(--fg); background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 9px 13px; cursor: pointer; }
+button.b:hover { border-color: var(--muted); }
+button.b[aria-pressed="true"] { background: var(--fg); color: var(--sheet); border-color: var(--fg); }
+button.b:focus-visible { outline: 2px solid var(--dim); outline-offset: 2px; }
+
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.fact { background: var(--sheet); padding: 14px 16px; display: grid; gap: 2px; }
+.fact b { font-family: var(--f-mono); font-size: 22px; font-weight: 600; }
+.fact span { font-size: 14px; color: var(--muted); }
+
+section { display: grid; gap: 14px; }
+.views { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+figure { margin: 0; background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 8px; min-width: 0; }
+figure.wide { grid-column: 1 / -1; }
+figcaption { font-family: var(--f-display); font-size: 18px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+figure svg { width: 100%; height: auto; display: block; }
+.note { font-size: 14px; color: var(--muted); }
+
+/* SVG */
+.p-rox { fill: var(--rox); }
+.p-camb { fill: var(--camb); }
+.p-camb-back { fill: var(--camb-soft); stroke: var(--camb); stroke-width: .3; }
+.p-top { fill: var(--camb-soft); stroke: var(--camb); stroke-width: .4; stroke-dasharray: 2 1.2; }
+.floor { stroke: var(--muted); stroke-width: .35; }
+.dl { stroke: var(--dim); stroke-width: .25; fill: none; }
+.dt { fill: var(--dim); font-family: var(--f-mono); font-size: 3.4px; }
+.lt { fill: var(--muted); font-family: var(--f-body); font-size: 3.2px; }
+.lt-in { fill: var(--fg); font-family: var(--f-body); font-size: 3px; font-weight: 600; }
+.glue { stroke: var(--rox-soft); stroke-width: .08; stroke-dasharray: .3 .2; }
+.glue2 { stroke: var(--sheet); stroke-width: .06; stroke-dasharray: .3 .2; }
+.p-camb.seg { stroke: var(--sheet); }
+.board { fill: none; stroke: var(--fg); stroke-width: .5; }
+.rip { stroke: var(--fg); stroke-width: .4; stroke-dasharray: 2 1.5; }
+.seg { stroke: var(--sheet); stroke-width: .8; }
+.waste { fill: var(--line); }
+.ct { fill: var(--sheet); font-family: var(--f-body); font-size: 4.4px; font-weight: 600; }
+.cm { fill: var(--fg); font-family: var(--f-mono); font-size: 4.6px; }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-display); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; color: var(--muted); }
+td.n, th.n { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td .tag { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+td .tag i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+tfoot td { font-weight: 700; border-bottom: none; }
+ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
+ol.steps li::marker { font-family: var(--f-mono); color: var(--dim); }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.callout { border-left: 3px solid var(--dim); padding: 4px 0 4px 14px; color: var(--fg); }
+footer { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">MARCENARIA · PROJETO · OUT/2026</div>
+  <h1>Escrivaninha Cerne com pernas de roxinho</h1>
+  <p class="lede">O mesmo tampo da Cerne, de 150 × 60 cm com borda de 4 cm, sobre 4 pernas de roxinho que afinam para o pé, com uma gaveta rasa no meio. As saias e a gaveta são de cambará, como o tampo. Medidas em centímetros.</p>
+  <div class="woods">
+    <span class="wood"><i class="sw camb"></i>Cambará: tampo, saias, gaveta</span>
+    <span class="wood"><i class="sw rox"></i>Roxinho: só as 4 pernas</span>
+  </div>
+</header>
+
+<section aria-label="Modelo 3D">
+  <div class="stage" id="stage">
+    <div class="msg" id="msg">Carregando o 3D…</div>
+    <div class="hint" id="hint" hidden>Arraste para girar · pinça ou rolagem para aproximar</div>
+  </div>
+  <div class="bar">
+    <button class="b" id="o-L" type="button" aria-pressed="true">Roxinho em L</button>
+    <button class="b" id="o-Q" type="button" aria-pressed="false">Cambará maciça</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="b" id="v-tres" type="button">3/4</button>
+    <button class="b" id="v-frente" type="button">Frente</button>
+    <button class="b" id="v-lado" type="button">Lado</button>
+    <button class="b" id="v-cima" type="button">De cima</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="b" id="t-tampo" type="button" aria-pressed="false">Sem tampo</button>
+    <button class="b" id="t-gira" type="button" aria-pressed="false">Girar</button>
+    <button class="b" id="t-gav" type="button" aria-pressed="false">Abrir gaveta</button>
+    <button class="b" id="t-monta" type="button">Montar de novo</button>
+  </div>
+</section>
+
+<div class="facts">
+  <div class="fact"><b>150 × 60 × 76</b><span>largura × profundidade × altura</span></div>
+  <div class="fact"><b>127 × 66,5</b><span>vão livre para as pernas (largura × altura)</span></div>
+  <div class="fact"><b>7,5 × 7,5 em L</b><span>seção da perna no topo, afinando para 5 × 5 no pé</span></div>
+  <div class="fact"><b>3,10 m ≈ R$ 87</b><span>de tábua de roxinho 15 × 2,5 a R$ 28/m</span></div>
+</div>
+
+<section>
+  <h2>Vistas</h2>
+  <div class="views">
+
+    <figure class="wide">
+      <figcaption>Frente</figcaption>
+      <svg viewBox="-18 -2 190 100" role="img" aria-label="Vista de frente: tampo de 150 por 4, pernas de 7,5 de largura, vão livre de 127 por 66,5 e altura total de 76">
+        <polygon class="p-rox" points="4,8 11.5,8 11.5,13.5 9,80 4,80"/>
+        <polygon class="p-rox" points="146,8 138.5,8 138.5,13.5 141,80 146,80"/>
+        <rect class="p-camb" x="11.5" y="8" width="127" height="5.5"/>
+        <path d="M50 8v5.5M100 8v5.5" style="stroke:var(--sheet);stroke-width:.4"/>
+        <rect x="68" y="10.8" width="14" height="2.7" style="fill:var(--fg);opacity:.55"/>
+        <text class="lt-in" x="75" y="10.3" text-anchor="middle" style="font-size:2.2px">gaveta · cava</text>
+        <text class="lt-in" x="30.75" y="11.9" text-anchor="middle">saia</text>
+        <text class="lt-in" x="119.25" y="11.9" text-anchor="middle">saia</text>
+        <rect class="p-camb" x="0" y="4" width="150" height="4"/>
+        <line class="floor" x1="-12" y1="80" x2="162" y2="80"/>
+        <path class="dl" d="M0 84v8M150 84v8M0 90h150"/>
+        <text class="dt" x="75" y="95.5" text-anchor="middle">150</text>
+        <path class="dl" d="M4 82v4M9 82v4M4 84.5h5"/>
+        <text class="dt" x="6.5" y="88.5" text-anchor="middle">5</text>
+        <path class="dl" d="M11.5 17h127M11.5 15v4M138.5 15v4"/>
+        <text class="dt" x="75" y="21.5" text-anchor="middle">127 livres entre as pernas (132 no chão)</text>
+        <path class="dl" d="M32 80V13.5M30 13.5h4"/>
+        <text class="dt" x="33.5" y="48">66,5 livre</text>
+        <path class="dl" d="M-6 4h-6M-6 80h-6M-9 4v76"/>
+        <text class="dt" x="-10.5" y="42" text-anchor="middle" transform="rotate(-90 -10.5 42)">76</text>
+        <path class="dl" d="M152 4h5M152 8h5M155 4v4"/>
+        <text class="dt" x="158" y="7.2">4</text>
+      </svg>
+    </figure>
+
+    <figure>
+      <figcaption>Lado</figcaption>
+      <svg viewBox="-18 -2 96 100" role="img" aria-label="Vista de lado: tampo de 60, pernas em L de 7,5 recuadas 6 na frente e 2 atrás, saia lateral entre elas">
+        <polygon class="p-rox" points="6,8 13.5,8 13.5,13.5 11,80 6,80"/>
+        <polygon class="p-rox" points="58,8 50.5,8 50.5,13.5 53,80 58,80"/>
+        <line class="glue" x1="8.2" y1="8" x2="8.2" y2="80"/>
+        <line class="glue" x1="55.8" y1="8" x2="55.8" y2="80"/>
+        <rect class="p-camb" x="13.5" y="8" width="37" height="5.5"/>
+        <text class="lt-in" x="32" y="11.9" text-anchor="middle">saia lateral</text>
+        <rect class="p-camb" x="0" y="4" width="60" height="4"/>
+        <line class="floor" x1="-8" y1="80" x2="70" y2="80"/>
+        <text class="lt" x="0" y="-0.2">frente</text>
+        <text class="lt" x="60" y="-0.2" text-anchor="end">trás</text>
+        <path class="dl" d="M0 84v8M60 84v8M0 90h60"/>
+        <text class="dt" x="30" y="95.5" text-anchor="middle">60</text>
+        <path class="dl" d="M6 82v4M58 82v4M6 84.5h52"/>
+        <text class="dt" x="32" y="88.3" text-anchor="middle">52 por fora das pernas</text>
+        <path class="dl" d="M0 20h6M0 18v4"/>
+        <text class="dt" x="3" y="17.5" text-anchor="middle">6</text>
+        <path class="dl" d="M58 20h2M60 18v4"/>
+        <text class="dt" x="62" y="21">2</text>
+        <path class="dl" d="M-6 8h-6M-6 13.5h-6M-9 8v5.5"/>
+        <text class="dt" x="-10.5" y="10.75" text-anchor="middle" transform="rotate(-90 -10.5 10.75)">7,5</text>
+        <path class="dl" d="M-6 80h-6M-9 8v72"/>
+        <text class="dt" x="-10.5" y="48" text-anchor="middle" transform="rotate(-90 -10.5 48)">perna 74 (72 visível)</text>
+      </svg>
+      <p class="note">A perna sobe até encostar no tampo, por dentro da borda. Por isso aparecem 72 cm, embora a peça tenha 74. A linha pontilhada é a quina colada do L.</p>
+    </figure>
+
+    <figure>
+      <figcaption>Seção da perna</figcaption>
+      <svg viewBox="-4 -2.5 17 14" role="img" aria-label="Seção da perna da frente esquerda, vista de cima: L de 7,5 por 7,5 feito de uma tira de 7,5 na frente e uma de 5,3 no lado, com 2,2 de espessura">
+        <rect class="p-camb-back" x="2.2" y="0" width="5.3" height="5.3" style="stroke-width:.05;fill:none;stroke-dasharray:.3 .2"/>
+        <rect class="p-rox" x="0" y="5.3" width="7.5" height="2.2"/>
+        <rect class="p-rox" x="0" y="0" width="2.2" height="5.3"/>
+        <line class="glue" x1="0" y1="5.3" x2="2.2" y2="5.3" style="stroke-width:.06"/>
+        <path class="dl" d="M0 8.1v1.4M7.5 8.1v1.4M0 9h7.5" style="stroke-width:.06"/>
+        <text class="dt" x="3.75" y="10.5" text-anchor="middle" style="font-size:.85px">7,5 (frente)</text>
+        <path class="dl" d="M-.6 0h-1.4M-.6 7.5h-1.4M-1.4 0v7.5" style="stroke-width:.06"/>
+        <text class="dt" x="-2" y="3.75" text-anchor="middle" transform="rotate(-90 -2 3.75)" style="font-size:.85px">7,5</text>
+        <text class="lt" x="4.85" y="2.6" text-anchor="middle" style="font-size:.7px">saias</text>
+        <text class="lt" x="4.85" y="3.5" text-anchor="middle" style="font-size:.7px">encaixam aqui</text>
+        <text class="lt" x="7.5" y="-1" text-anchor="end" style="font-size:.7px">perna da frente, esquerda</text>
+        <text class="lt" x="8.3" y="6.8" style="font-size:.7px">tira 7,5 × 2,2</text>
+        <text class="lt" x="2.6" y="1" style="font-size:.7px">tira 5,3</text>
+      </svg>
+      <p class="note">A tira de 7,5 fica na frente (ou atrás), inteira, sem emenda. A tira de 5,3 é colada pelo lado dela, formando o L, e a linha de cola só aparece na lateral. O canto de dentro fica aberto, e é ali que as saias encaixam. Abaixo da saia a perna afina: no pé, a tira da frente fica com 5 e a do lado, com 2,8.</p>
+    </figure>
+
+    <figure class="wide">
+      <figcaption>De cima, sem o tampo</figcaption>
+      <svg viewBox="-18 -4 190 84" role="img" aria-label="Vista de cima: quatro pernas de roxinho nos cantos, saias e travessa do meio de cambará, dentro do contorno do tampo">
+        <rect class="p-top" x="0" y="4" width="150" height="60" rx="6"/>
+        <rect class="p-camb" x="6.2" y="8.2" width="137.6" height="2"/>
+        <rect class="p-top" x="50.3" y="15.8" width="49.4" height="38" rx="0"/>
+        <rect class="p-camb" x="6.2" y="53.8" width="43.8" height="2"/>
+        <rect class="p-camb" x="100" y="53.8" width="43.8" height="2"/>
+        <rect class="p-camb" x="50.2" y="53.8" width="49.6" height="2" style="opacity:.7"/>
+        <rect class="p-camb" x="6.2" y="10.2" width="2" height="43.6"/>
+        <rect class="p-camb" x="141.8" y="10.2" width="2" height="43.6"/>
+        <rect class="p-camb" x="48" y="10.2" width="2" height="43.6"/>
+        <rect class="p-camb" x="100" y="10.2" width="2" height="43.6"/>
+        <rect class="p-rox" x="4" y="55.8" width="7.5" height="2.2"/><rect class="p-rox" x="4" y="50.5" width="2.2" height="5.3"/>
+        <rect class="p-rox" x="138.5" y="55.8" width="7.5" height="2.2"/><rect class="p-rox" x="143.8" y="50.5" width="2.2" height="5.3"/>
+        <rect class="p-rox" x="4" y="6" width="7.5" height="2.2"/><rect class="p-rox" x="4" y="8.2" width="2.2" height="5.3"/>
+        <rect class="p-rox" x="138.5" y="6" width="7.5" height="2.2"/><rect class="p-rox" x="143.8" y="8.2" width="2.2" height="5.3"/>
+        <text class="lt" x="75" y="3" text-anchor="middle">saia de trás · 137,6 × 7,5 × 2</text>
+        <text class="lt" x="75" y="51.5" text-anchor="middle">frente da gaveta · 49,6</text>
+        <text class="lt" x="75" y="36" text-anchor="middle">gaveta · 38 de fundo</text>
+        <text class="lt" x="104" y="32">guias da gaveta</text>
+        <text class="lt" x="9" y="33">saia lateral</text>
+        <path class="dl" d="M0 66v6M150 66v6M0 70h150"/>
+        <text class="dt" x="75" y="75.5" text-anchor="middle">150 · frente</text>
+        <path class="dl" d="M-4 4h-8M-4 64h-8M-9 4v60"/>
+        <text class="dt" x="-10.5" y="34" text-anchor="middle" transform="rotate(-90 -10.5 34)">60</text>
+      </svg>
+      <p class="note">O tracejado é o contorno do tampo, com cantos arredondados de raio 6. As duas guias da gaveta ligam a saia da frente à de trás. Elas fazem o papel da travessa do meio e seguram o tampo de 2 cm no centro.</p>
+    </figure>
+
+  </div>
+</section>
+
+<section>
+  <h2>Peças</h2>
+  <div class="card tbl">
+    <table>
+      <thead><tr><th>Peça</th><th class="n">Qtd</th><th class="n">Medida final</th><th>Madeira</th><th>Observação</th></tr></thead>
+      <tbody>
+        <tr><td>Tampo + engrosso</td><td class="n">1</td><td class="n">150 × 60 × 4</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>O que você já está fazendo, igual à Cerne</td></tr>
+        <tr><td>Perna em L</td><td class="n">4</td><td class="n">74 × 7,5 × 7,5</td><td><span class="tag"><i style="background:var(--rox)"></i>roxinho</span></td><td>1 tira de 7,5 × 2,2 + 1 de 5,3 × 2,2, coladas na quina. Afina para 5 × 5 no pé</td></tr>
+        <tr><td>Saia da frente</td><td class="n">2</td><td class="n">43,8 × 7,5 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>Uma de cada lado da gaveta, por dentro do L</td></tr>
+        <tr><td>Saia de trás</td><td class="n">1</td><td class="n">137,6 × 7,5 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>Igual à da frente</td></tr>
+        <tr><td>Saia lateral</td><td class="n">2</td><td class="n">43,6 × 7,5 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>Entre a saia da frente e a de trás, encostada na tira de 5,3</td></tr>
+        <tr><td>Guia da gaveta</td><td class="n">2</td><td class="n">43,6 × 7,5 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>Da saia da frente à de trás. Substitui a travessa do meio</td></tr>
+        <tr><td>Trilho</td><td class="n">2</td><td class="n">43,6 × 2 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>Colado embaixo, por dentro da guia. A gaveta corre em cima</td></tr>
+        <tr><td>Frente da gaveta</td><td class="n">1</td><td class="n">49,6 × 7,3 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>Cava de 14 × 2,6 na borda de baixo, sem puxador</td></tr>
+        <tr><td>Lateral da gaveta</td><td class="n">2</td><td class="n">38 × 4,2 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td></td></tr>
+        <tr><td>Traseira da gaveta</td><td class="n">1</td><td class="n">45,4 × 3,8 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td></td></tr>
+        <tr><td>Fundo da gaveta</td><td class="n">1</td><td class="n">49,4 × 38 × 0,6</td><td>compensado</td><td>Pregado e colado por baixo da caixa</td></tr>
+        <tr><td>Taco de canto</td><td class="n">4</td><td class="n">7 × 4 × 4</td><td><span class="tag"><i style="background:var(--camb)"></i>cambará</span></td><td>Opcional: no canto de dentro, preso nas duas saias</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Cambará além do tampo: 1,90 m de tábua 30 × 2,5 rasgada em tiras de 7,5. Ela dá todas as saias, as guias e a gaveta. Meça as saias na hora, pelo lado de dentro das pernas já coladas. Os fios podem correr numa calha de cabos presa embaixo do tampo.</p>
+</section>
+
+<section>
+  <h2>Plano de corte do roxinho</h2>
+  <p>Peça <b>1 tábua de 15 × 2,5 com 3,10 m</b>. Pode ser 3,20 m, se a madeireira cortar só de 10 em 10. Corte 4 trechos de 74 e rasgue cada um ao meio, o que dá 2 tiras de 7,5 por trecho. Uma das duas é estreitada para 5,3 e forma o lado do L. Uma de 3,00 m exatos não serve: as 4 pernas somam 2,96 m e não sobra espaço para as pontas e as serradas.</p>
+  <figure class="wide">
+    <figcaption>Tábua de 3,10 m · 4 pernas</figcaption>
+    <svg viewBox="-2 -9 316 30" role="img" aria-label="Tábua de 310 cm: quatro trechos de 74 para as pernas, rasgados ao meio, e 14 cm de sobra">
+      <rect class="p-rox seg" x="0" y="0" width="74" height="15"/>
+      <rect class="p-rox seg" x="74" y="0" width="74" height="15"/>
+      <rect class="p-rox seg" x="148" y="0" width="74" height="15"/>
+      <rect class="p-rox seg" x="222" y="0" width="74" height="15"/>
+      <rect class="waste" x="296" y="0" width="14" height="15"/>
+      <line class="rip" x1="0" y1="7.5" x2="296" y2="7.5"/>
+      <rect class="board" x="0" y="0" width="310" height="15"/>
+      <text class="ct" x="37" y="5.4" text-anchor="middle">perna 1</text><text class="ct" x="37" y="13" text-anchor="middle">perna 1</text>
+      <text class="ct" x="111" y="5.4" text-anchor="middle">perna 2</text><text class="ct" x="111" y="13" text-anchor="middle">perna 2</text>
+      <text class="ct" x="185" y="5.4" text-anchor="middle">perna 3</text><text class="ct" x="185" y="13" text-anchor="middle">perna 3</text>
+      <text class="ct" x="259" y="5.4" text-anchor="middle">perna 4</text><text class="ct" x="259" y="13" text-anchor="middle">perna 4</text>
+      <text class="cm" x="37" y="-2.5" text-anchor="middle">74</text><text class="cm" x="111" y="-2.5" text-anchor="middle">74</text>
+      <text class="cm" x="185" y="-2.5" text-anchor="middle">74</text><text class="cm" x="259" y="-2.5" text-anchor="middle">74</text>
+      <text class="cm" x="303" y="-2.5" text-anchor="middle">14</text>
+    </svg>
+    <p class="note">Cada perna usa as 2 tiras do mesmo trecho, que ficam com o veio parecido. A sobra de 14 cm absorve as pontas e as serradas. 3,10 m × R$ 28 = R$ 86,80.</p>
+  </figure>
+  <p class="callout">Entre a serra e a plaina, a tira de "7,5" costuma chegar a <b>7 a 7,2 cm</b>. Não tem problema: faça a tira da frente com o que der (7 a 7,2) e a do lado com 2,2 a menos, para o L continuar quadrado por fora. Depois, meça as saias pelas pernas prontas.</p>
+</section>
+
+<section>
+  <h2>Opção: pernas quadradas de cambará</h2>
+  <p>Cada perna leva 4 tiras de 74 × 7,5, coladas cara com cara, de frente para trás. Como cada tira tem 2,2 depois de plainada, as 4 juntas dão 7,5 × 8,8. Para fechar o quadrado, plaine as 2 tiras de fora até a perna ficar com <b>7,5 × 7,5</b>. Corte com 74, e não 72, porque a perna sobe até encostar no tampo. No 3D, aperte <b>Cambará maciça</b> para ver.</p>
+  <div class="views">
+    <figure>
+      <figcaption>Seção da perna maciça</figcaption>
+      <svg viewBox="-4 -2.5 17 14" role="img" aria-label="Seção da perna quadrada de cambará: 7,5 por 7,5, quatro tiras coladas de frente para trás">
+        <rect class="p-camb" x="0" y="0" width="7.5" height="7.5"/>
+        <line class="glue2" x1="0" y1="1.55" x2="7.5" y2="1.55"/>
+        <line class="glue2" x1="0" y1="3.75" x2="7.5" y2="3.75"/>
+        <line class="glue2" x1="0" y1="5.95" x2="7.5" y2="5.95"/>
+        <path class="dl" d="M0 8.1v1.4M7.5 8.1v1.4M0 9h7.5" style="stroke-width:.06"/>
+        <text class="dt" x="3.75" y="10.5" text-anchor="middle" style="font-size:.85px">7,5 (frente)</text>
+        <path class="dl" d="M-.6 0h-1.4M-.6 7.5h-1.4M-1.4 0v7.5" style="stroke-width:.06"/>
+        <text class="dt" x="-2" y="3.75" text-anchor="middle" transform="rotate(-90 -2 3.75)" style="font-size:.85px">7,5</text>
+        <text class="lt" x="8.1" y=".9" style="font-size:.7px">1,55 (plainada)</text>
+        <text class="lt" x="8.1" y="2.9" style="font-size:.7px">2,2</text>
+        <text class="lt" x="8.1" y="5.1" style="font-size:.7px">2,2</text>
+        <text class="lt" x="8.1" y="7" style="font-size:.7px">1,55 (plainada)</text>
+        <text class="lt" x="3.75" y="-1" text-anchor="middle" style="font-size:.7px">trás</text>
+      </svg>
+      <p class="note">A frente é a face inteira de uma tira, sem emenda. As 3 linhas de cola aparecem só nas laterais e, no cambará, ficam discretas. Abaixo da saia, a perna afina até 5 × 5 no pé, tirando 2,5 das duas faces de dentro.</p>
+    </figure>
+    <figure>
+      <figcaption>Como encaixa</figcaption>
+      <ul class="plain">
+        <li>As saias ficam <b>entre</b> as pernas, recuadas 1 cm da face de fora. Esse degrau deixa a junta bonita, sem precisar de acabamento perfeito.</li>
+        <li>Cada encontro leva 2 cavilhas de 8 mm e cola, ou parafuso escondido por dentro.</li>
+        <li>Saia de trás com 127. A da frente vai em 2 pedaços de 38,5, um de cada lado da gaveta. Laterais com 37 e guias da gaveta com 46.</li>
+        <li>As 4 pernas pesam uns 10,8 kg, contra 7,9 kg das de roxinho em L. A mesa fica bem firme.</li>
+      </ul>
+    </figure>
+    <figure class="wide">
+      <figcaption>Plano de corte · cambará 30 × 2,5</figcaption>
+      <svg viewBox="-2 -9 316 100" role="img" aria-label="Tábua de cambará de 310 cm com quatro trechos de 74 rasgados em 4 tiras cada, e tábua de 130 cm com as saias e a travessa">
+        <rect class="p-camb seg" x="0" y="0" width="74" height="30"/>
+        <rect class="p-camb seg" x="74" y="0" width="74" height="30"/>
+        <rect class="p-camb seg" x="148" y="0" width="74" height="30"/>
+        <rect class="p-camb seg" x="222" y="0" width="74" height="30"/>
+        <rect class="waste" x="296" y="0" width="14" height="30"/>
+        <path class="rip" d="M0 7.5h296M0 15h296M0 22.5h296"/>
+        <rect class="board" x="0" y="0" width="310" height="30"/>
+        <text class="ct" x="37" y="16.6" text-anchor="middle">perna 1 · 4 tiras</text>
+        <text class="ct" x="111" y="16.6" text-anchor="middle">perna 2 · 4 tiras</text>
+        <text class="ct" x="185" y="16.6" text-anchor="middle">perna 3 · 4 tiras</text>
+        <text class="ct" x="259" y="16.6" text-anchor="middle">perna 4 · 4 tiras</text>
+        <text class="cm" x="37" y="-2.5" text-anchor="middle">74</text><text class="cm" x="111" y="-2.5" text-anchor="middle">74</text>
+        <text class="cm" x="185" y="-2.5" text-anchor="middle">74</text><text class="cm" x="259" y="-2.5" text-anchor="middle">74</text>
+        <text class="cm" x="303" y="-2.5" text-anchor="middle">14</text>
+        <rect class="p-camb seg" x="0" y="45" width="127" height="7.5"/>
+        <rect class="waste" x="127" y="45" width="3" height="7.5"/>
+        <rect class="p-camb seg" x="0" y="52.5" width="38.5" height="7.5"/>
+        <rect class="p-camb seg" x="38.5" y="52.5" width="38.5" height="7.5"/>
+        <rect class="p-camb seg" x="77" y="52.5" width="37" height="7.5"/>
+        <rect class="waste" x="114" y="52.5" width="16" height="7.5"/>
+        <rect class="p-camb seg" x="0" y="60" width="37" height="7.5"/>
+        <rect class="p-camb seg" x="37" y="60" width="46" height="7.5"/>
+        <rect class="p-camb seg" x="83" y="60" width="46" height="7.5"/>
+        <rect class="p-camb seg" x="0" y="67.5" width="49.6" height="7.5"/>
+        <rect class="p-camb seg" x="49.6" y="67.5" width="38" height="7.5"/>
+        <rect class="p-camb seg" x="87.6" y="67.5" width="38" height="7.5"/>
+        <rect class="waste" x="125.6" y="67.5" width="4.4" height="7.5"/>
+        <rect class="board" x="0" y="45" width="130" height="30"/>
+        <text class="ct" x="63.5" y="50.4" text-anchor="middle">saia de trás 127</text>
+        <text class="ct" x="19.25" y="57.9" text-anchor="middle">frente 38,5</text>
+        <text class="ct" x="57.75" y="57.9" text-anchor="middle">frente 38,5</text>
+        <text class="ct" x="95.5" y="57.9" text-anchor="middle">lateral 37</text>
+        <text class="ct" x="18.5" y="65.4" text-anchor="middle">lateral 37</text>
+        <text class="ct" x="60" y="65.4" text-anchor="middle">guia 46</text>
+        <text class="ct" x="106" y="65.4" text-anchor="middle">guia 46</text>
+        <text class="ct" x="24.8" y="72.9" text-anchor="middle">frente gaveta</text>
+        <text class="ct" x="68.6" y="72.9" text-anchor="middle">lat. gaveta 38</text>
+        <text class="ct" x="106.6" y="72.9" text-anchor="middle">lat. gaveta 38</text>
+        <text class="cm" x="65" y="42.5" text-anchor="middle">130</text>
+        <rect class="p-camb seg" x="150" y="45" width="45.4" height="7.5"/>
+        <rect class="p-camb seg" x="150" y="52.5" width="46" height="7.5"/>
+        <rect class="waste" x="150" y="60" width="50" height="15"/>
+        <rect class="board" x="150" y="45" width="50" height="30"/>
+        <text class="ct" x="172.7" y="50.4" text-anchor="middle">traseira 45,4</text>
+        <text class="ct" x="173" y="57.9" text-anchor="middle">2 trilhos 46</text>
+        <text class="ct" x="175" y="69" text-anchor="middle" style="fill:var(--muted);font-weight:400">sobra: tacos</text>
+        <text class="cm" x="175" y="42.5" text-anchor="middle">50</text>
+        <text class="cm" x="0" y="86">3 pedaços: 3,10 m + 1,30 m + 0,50 m = 4,90 m × R$ 17,50 = R$ 85,75</text>
+      </svg>
+      <p class="note">A tábua de 30 rasgada em 4 tiras dá exatamente uma perna por trecho. Com a serra, cada tira fica com uns 7,2, então a perna sai com 7,2 × 7,2. Plaine as tiras de fora até fechar o quadrado.</p>
+    </figure>
+  </div>
+  <div class="card tbl">
+    <table>
+      <thead><tr><th></th><th class="n">Roxinho em L</th><th class="n">Cambará maciça</th></tr></thead>
+      <tbody>
+        <tr><td>Pernas</td><td class="n">3,10 m × R$ 28 = R$ 86,80</td><td class="n">3,10 m × R$ 17,50 = R$ 54,25</td></tr>
+        <tr><td>Saias, guias e gaveta (cambará 30 × 2,5)</td><td class="n">1,90 m = R$ 33,25</td><td class="n">1,80 m = R$ 31,50</td></tr>
+        <tr><td>Madeira da base</td><td class="n">R$ 120,05</td><td class="n">R$ 85,75</td></tr>
+        <tr><td>Fundo da gaveta, compensado 6 mm</td><td class="n">≈ R$ 15</td><td class="n">≈ R$ 15</td></tr>
+        <tr><td>Cola, cavilhas, fixadores, parafusos, lixas, acabamento</td><td class="n">≈ R$ 150</td><td class="n">≈ R$ 150</td></tr>
+        <tr><td>Colagens por perna</td><td class="n">1</td><td class="n">3</td></tr>
+        <tr><td>Peso das 4 pernas</td><td class="n">~7,9 kg</td><td class="n">~10,8 kg</td></tr>
+        <tr><td>Visual</td><td class="n">Contraste roxo × cambará</td><td class="n">Tudo da mesma cor</td></tr>
+      </tbody>
+      <tfoot><tr><td>Total sem o tampo</td><td class="n">≈ R$ 285</td><td class="n">≈ R$ 251</td></tr></tfoot>
+    </table>
+  </div>
+  <p class="callout">A diferença fica em <b>uns R$ 34</b>. A perna maciça usa o dobro de madeira da perna em L, por isso o cambará mais barato economiza menos do que parece. Se for de cambará, a perna em L também funciona e custaria só R$ 28 de madeira, mas a maciça tem mais cara de móvel robusto.</p>
+</section>
+
+<section class="two">
+  <div class="card">
+    <h2>Compras</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Item</th><th class="n">Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Tábua de roxinho 15 × 2,5, 3,10 m (pernas)</td><td class="n">R$ 87</td></tr>
+          <tr><td>Tábua de cambará 30 × 2,5, 1,90 m (saias, guias e gaveta)</td><td class="n">R$ 33,25</td></tr>
+          <tr><td>Compensado 6 mm, 50 × 40 (fundo da gaveta)</td><td class="n">≈ R$ 15</td></tr>
+          <tr><td>Cola PVA para madeira, 500 g (Cascorez Extra ou Titebond)</td><td class="n">≈ R$ 30</td></tr>
+          <tr><td>Cavilhas de 8 mm × 40, pacote</td><td class="n">≈ R$ 10</td></tr>
+          <tr><td>Fixadores em "8" para tampo, 10 un.</td><td class="n">≈ R$ 25</td></tr>
+          <tr><td>Parafusos 4,0 × 40 e 4,5 × 50</td><td class="n">≈ R$ 20</td></tr>
+          <tr><td>Lixas 80, 120 e 220</td><td class="n">≈ R$ 15</td></tr>
+          <tr><td>Óleo ou verniz com filtro UV</td><td class="n">≈ R$ 50</td></tr>
+        </tbody>
+        <tfoot><tr><td>Total aproximado</td><td class="n">≈ R$ 285</td></tr></tfoot>
+      </table>
+    </div>
+    <p class="note">A madeira tem o preço dos seus fornecedores (out/2026): roxinho da Madeireira Uberlândia Vendas, cambará da Escore Bem. O resto é estimativa de loja de ferragens e pode variar. O tampo não entra na conta.</p>
+  </div>
+
+  <div class="card">
+    <h2>Montagem</h2>
+    <ol class="steps">
+      <li>Corte os 4 trechos de roxinho, rasgue ao meio e plaine as tiras para 2,2. Corte as saias e a travessa de cambará. Deixe tudo descansar 1 ou 2 dias no ambiente.</li>
+      <li>Lixe as faces de colagem do roxinho logo antes de colar, porque ele é oleoso. Cole o lado da tira de 5,3 na face da tira de 7,5, formando o L. Confira 90° com o esquadro e prenda com grampos a cada 15 cm. Faça 2 pernas espelhadas para a esquerda e 2 para a direita.</li>
+      <li>Depois de 24 h, corte todas com 74 exatos, as 4 juntas. Para afinar, marque nas duas faces de dentro uma linha que começa 7,5 abaixo do topo (onde termina a saia) e tira 2,5 no pé. Desbaste com serra de fita ou plaina antes de furar.</li>
+      <li>Encaixe as saias da frente e de trás no canto de dentro das pernas e parafuse por dentro, da saia para a perna, com cola e pré-furo. Depois coloque as saias laterais entre elas, também parafusadas nas pernas. Se quiser mais firmeza, cole e parafuse um taco em cada canto.</li>
+      <li>Confira o esquadro medindo as duas diagonais do quadro, que devem dar iguais, antes de a cola secar.</li>
+      <li>Parafuse as duas guias da gaveta entre a saia da frente e a de trás, e cole os trilhos embaixo, pelo lado de dentro. Monte a caixa da gaveta (laterais, traseira e fundo de compensado pregado por baixo), cole a frente com a cava e passe cera de vela nos trilhos para correr macio. Faça pré-furo em todo parafuso que entrar no roxinho.</li>
+      <li>Aplique o acabamento na base e no tampo separadamente, usando o mesmo produto nas duas madeiras.</li>
+      <li>Vire o tampo de cabeça para baixo, apoie a base e prenda com os fixadores em "8": 3 na frente, 3 atrás e 1 em cada lateral. Eles deixam o cambará dilatar sem rachar.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="two">
+  <div class="card">
+    <h3>Cuidados com o roxinho</h3>
+    <ul class="plain">
+      <li>Ele é muito duro: use broca e serra boas, e faça pré-furo em qualquer parafuso.</li>
+      <li>A cor roxa vira marrom com o sol. Um acabamento com filtro UV atrasa essa mudança.</li>
+      <li>Compre madeira seca. Roxinho verde empena e solta a cola.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Se quiser mudar</h3>
+    <ul class="plain">
+      <li><b>Desmontável como a Cerne:</b> troque cola e cavilha nas saias laterais por parafuso allen M6 com bucha de rosca. A base desmonta em 3 partes.</li>
+      <li><b>Cadeira com braço batendo:</b> a saia da frente pode ter 6 de altura em vez de 7,5. O vão livre sobe para 68.</li>
+      <li><b>Saias de roxinho:</b> mais 1,80 m de tábua, uns R$ 50, e a base inteira fica roxa.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>Feito a partir do modelo da Escrivaninha Cerne (marcenaria-moraes, js/models/modern.mjs), com a madeira e a luz do motor 3D do site. Medidas em cm. Preço do roxinho de out/2026, em Uberlândia.</footer>
+
+</div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// Madeira, luz e montagem copiadas do motor do site (marcenaria-moraes/js/engine.js). Tudo em cm.
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+function noise1(seed) { const r = rng(seed), g = Array.from({ length: 512 }, r); return x => { const i = Math.floor(x), f = x - i, a = g[i & 511], b = g[(i + 1) & 511]; const t = f * f * (3 - 2 * f); return a + (b - a) * t; }; }
+const FIN = {
+  cla: { base: '#BE9065', light: '#D3A97E', dark: '#8E6440', streak: '#A97C54' }, // cambará natural
+  rox: { base: '#6A2E44', light: '#82405A', dark: '#371222', streak: '#57233A' }, // roxinho
+};
+function woodCanvas(fin, seed, W = 1024) {
+  const H = W, k0 = W / 1024, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), r = rng(seed * 31 + 7), n1 = noise1(seed), n2 = noise1(seed + 5);
+  const F = FIN[fin];
+  x.fillStyle = F.base; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 26; i++) {
+    const y = r() * H, h = (20 + r() * 90) * k0; x.globalAlpha = 0.10 + r() * 0.16;
+    x.fillStyle = r() < 0.5 ? F.light : F.streak; x.fillRect(0, y, W, h);
+  }
+  for (let i = 0; i < 150; i++) {
+    const y0 = r() * H, amp = (3 + r() * 14) * k0, ph = r() * 50, k = 0.4 + r() * 1.4;
+    x.globalAlpha = 0.05 + Math.pow(r(), 2.2) * 0.38;
+    x.strokeStyle = r() < 0.85 ? F.dark : F.light; x.lineWidth = Math.max(0.5, (0.6 + Math.pow(r(), 3) * 3.2) * k0);
+    x.beginPath();
+    for (let u = -8; u <= W + 8; u += 8) {
+      const y = y0 + (n1(u / k0 / 260 * k + ph) - 0.5) * amp * 2 + (n2(u / k0 / 70 + ph) - 0.5) * 2.2 * k0;
+      u < 0 ? x.moveTo(u, y) : x.lineTo(u, y);
+    }
+    x.stroke();
+    x.save(); x.translate(0, y0 > H / 2 ? -H : H); x.stroke(); x.restore();
+  }
+  x.globalAlpha = 0.18; x.fillStyle = F.dark;
+  for (let i = 0; i < 2600 * k0 * k0; i++) x.fillRect(r() * W, r() * H, (2 + r() * 7) * k0, 0.8 * k0);
+  x.globalAlpha = 1;
+  return c;
+}
+const mats = {};
+function woodMat(fin, seed) {
+  const k = fin + seed; if (mats[k]) return mats[k];
+  const t = new THREE.CanvasTexture(woodCanvas(fin, seed));
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return (mats[k] = new THREE.MeshStandardMaterial({ map: t, bumpMap: t, bumpScale: 0.35, roughness: 0.46, metalness: 0 }));
+}
+const AX = { x: 0, y: 1, z: 2 }, GRAIN3 = { x: 'x', y: 'z', z: 'y' };
+function applyUV(geo, grain, off, base = [0, 0, 0]) {
+  const pos = geo.attributes.position, nor = geo.attributes.normal, uv = geo.attributes.uv, g = AX[grain];
+  for (let i = 0; i < pos.count; i++) {
+    const p = [pos.getX(i), pos.getY(i), pos.getZ(i)], n = [Math.abs(nor.getX(i)), Math.abs(nor.getY(i)), Math.abs(nor.getZ(i))];
+    const na = n.indexOf(Math.max(...n)), axes = [0, 1, 2].filter(a => a !== na);
+    const ua = axes.includes(g) ? g : axes[0], va = axes.find(a => a !== ua);
+    uv.setXY(i, (p[ua] + base[ua]) / 60 + off[0], (p[va] + base[va]) / 18 + off[1]);
+  }
+  uv.needsUpdate = true;
+}
+
+// ---------- peças: x = largura, y = profundidade (0 na frente), z = altura ----------
+const L = 150, D = 60, H = 76;
+const toV = (x, y, z) => new THREE.Vector3(x - L / 2, z, D / 2 - y);
+const P = [];
+const add = (id, fin, b, o = {}) => P.push({ id, fin, b, grain: 'x', step: 0, ex: [0, 0, 1], g: id, ...o });
+add('tampo', 'cla', [0, 0, 74, L, D, H], { step: 3.4, rr: 6, g: 'tampo' });
+add('engF', 'cla', [0, 0, 72, L, 6, 74], { step: 3, ex: [0, -1, 0.4], rr: [6, 6, 0, 0], g: 'tampo' });
+add('engE', 'cla', [0, 6, 72, 4, 58, 74], { grain: 'y', step: 3, ex: [-1, 0, 0.4], g: 'tampo' });
+add('engD', 'cla', [L - 4, 6, 72, L, 58, 74], { grain: 'y', step: 3, ex: [1, 0, 0.4], g: 'tampo' });
+// perna afinando: reta até a altura da saia (66,5) e, dali ao chão, as faces de dentro recuam 2,5.
+// Duas peças com a mesma textura (mesmo seed e UV em coordenada de mundo), então a emenda não aparece.
+const TAPER = 2.5;
+let legN = 0;
+function leg(fin, [x0, y0, x1, y1], tp, ex, o) {
+  const k = { grain: 'z', step: 0, ex, ...o, seed: 1 + (legN % 4), uvo: [((legN * 37) % 13) / 13, ((legN * 53) % 7) / 7] }; legN++;
+  add('perna', fin, [x0, y0, 66.5, x1, y1, 74], k);
+  add('perna', fin, [x0, y0, 0, x1, y1, 66.5], { ...k, tp: [...tp, TAPER] });
+}
+function taperGeo(p) {
+  const [x0, y0, z0, x1, y1, z1] = p.b, [tx, ty, d] = p.tp;
+  const bx0 = x0 + (tx < 0 ? d : 0), bx1 = x1 - (tx > 0 ? d : 0), by0 = y0 + (ty < 0 ? d : 0), by1 = y1 - (ty > 0 ? d : 0);
+  const c = toV((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2), V = (x, y, z) => toV(x, y, z).sub(c);
+  const p1 = V(bx0, by0, z0), p2 = V(bx1, by0, z0), p3 = V(bx1, by1, z0), p4 = V(bx0, by1, z0);
+  const q1 = V(x0, y0, z1), q2 = V(x1, y0, z1), q3 = V(x1, y1, z1), q4 = V(x0, y1, z1);
+  const pos = [], quad = (a, b, e, f) => [a, b, e, a, e, f].forEach(v => pos.push(v.x, v.y, v.z));
+  quad(p1, p2, q2, q1); quad(p3, p4, q4, q3); quad(p2, p3, q3, q2); quad(p4, p1, q1, q4); quad(q1, q2, q3, q4); quad(p1, p4, p3, p2);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(new Float32Array(pos.length / 3 * 2), 2));
+  g.computeVertexNormals(); return g;
+}
+// gaveteiro no meio: saia da frente em 2 pedaços, 2 guias (fazem o papel da travessa), trilhos e gaveta com cava
+function gaveteiro(o, fy, by, xf0, xf1) {
+  add('saiaF', 'cla', [xf0, fy, 66.5, 50, fy + 2, 74], { step: 1.6, ex: [0, -1, 0], round: 0.12, ...o });
+  add('saiaF', 'cla', [100, fy, 66.5, xf1, fy + 2, 74], { step: 1.6, ex: [0, -1, 0], round: 0.12, ...o });
+  for (const [a, b] of [[48, 50], [100, 102]]) add('guia', 'cla', [a, fy + 2, 66.5, b, by, 74], { grain: 'y', step: 2, ex: [0, 0, -1], ...o });
+  for (const [a, b] of [[50, 52], [98, 100]]) add('trilho', 'cla', [a, fy + 2, 66.5, b, by, 68.5], { grain: 'y', step: 2.2, ex: [0, 0, -1], ...o });
+  const g = { step: 2.6, ex: [0, -1, 0], drawer: 1, ...o };
+  add('gF', 'cla', [50.2, fy, 69.2, 99.8, fy + 2, 73.9], g);
+  add('gF', 'cla', [50.2, fy, 66.6, 68, fy + 2, 69.2], g);
+  add('gF', 'cla', [82, fy, 66.6, 99.8, fy + 2, 69.2], g);
+  add('gFu', 'cla', [50.3, fy + 2, 68.6, 99.7, fy + 40, 69.2], { ...g, m: 'comp' });
+  add('gL', 'cla', [50.3, fy + 2, 69.2, 52.3, fy + 40, 73.4], { ...g, grain: 'y' });
+  add('gL', 'cla', [97.7, fy + 2, 69.2, 99.7, fy + 40, 73.4], { ...g, grain: 'y' });
+  add('gT', 'cla', [52.3, fy + 38, 69.2, 97.7, fy + 40, 73], g);
+}
+// opção L: pernas de roxinho em L, tira de 7,5 na frente (ou atrás) + tira de 5,3 no lado de fora
+const oL = { opt: 'L' }, oQ = { opt: 'Q' };
+for (const [xa, xb, xs0, xs1, sx] of [[4, 11.5, 4, 6.2, -1], [L - 11.5, L - 4, L - 6.2, L - 4, 1]])
+  for (const [ya, yb, ys0, ys1, sy] of [[6, 8.2, 8.2, 13.5, -1], [55.8, 58, 50.5, 55.8, 1]]) {
+    leg('rox', [xa, ya, xb, yb], [-sx, 0], [sx, sy, 0], oL);
+    leg('rox', [xs0, ys0, xs1, ys1], [0, -sy], [sx, sy, 0], oL);
+  }
+// saias por dentro do L: frente e trás de ponta a ponta, laterais entre elas
+add('saiaE', 'cla', [6.2, 10.2, 66.5, 8.2, 53.8, 74], { grain: 'y', step: 1, ex: [-1, 0, 0], round: 0.12, ...oL });
+add('saiaD', 'cla', [L - 8.2, 10.2, 66.5, L - 6.2, 53.8, 74], { grain: 'y', step: 1, ex: [1, 0, 0], round: 0.12, ...oL });
+add('saiaT', 'cla', [6.2, 53.8, 66.5, L - 6.2, 55.8, 74], { step: 1.6, ex: [0, 1, 0], round: 0.12, ...oL });
+gaveteiro(oL, 8.2, 53.8, 6.2, L - 6.2);
+// opção Q: pernas quadradas de cambará, 4 tiras coladas de frente para trás (a emenda aparece só nas laterais)
+for (const [x0, sx] of [[4, -1], [L - 11.5, 1]])
+  for (const [y0, sy] of [[6, -1], [50.5, 1]])
+    leg('cla', [x0, y0, x0 + 7.5, y0 + 7.5], [-sx, -sy], [sx, sy, 0], oQ);
+// saias entre as pernas, recuadas 1 cm da face de fora
+add('saiaE', 'cla', [5, 13.5, 66.5, 7, 50.5, 74], { grain: 'y', step: 1, ex: [-1, 0, 0], round: 0.12, ...oQ });
+add('saiaD', 'cla', [L - 7, 13.5, 66.5, L - 5, 50.5, 74], { grain: 'y', step: 1, ex: [1, 0, 0], round: 0.12, ...oQ });
+add('saiaT', 'cla', [11.5, 55, 66.5, L - 11.5, 57, 74], { step: 1.6, ex: [0, 1, 0], round: 0.12, ...oQ });
+gaveteiro(oQ, 7, 55, 11.5, L - 11.5);
+
+function boxGeo(p) {
+  if (p.tp) return taperGeo(p);
+  const [x0, y0, z0, x1, y1, z1] = p.b, sx = x1 - x0, sy = z1 - z0, sz = y1 - y0;
+  if (p.rr) {
+    const R = Array.isArray(p.rr) ? p.rr : [p.rr, p.rr, p.rr, p.rr], w = sx / 2, d = sz / 2, sh = new THREE.Shape();
+    const [fl, fr, br, bl] = R;
+    sh.moveTo(-w + fl, -d); sh.lineTo(w - fr, -d); if (fr) sh.quadraticCurveTo(w, -d, w, -d + fr);
+    sh.lineTo(w, d - br); if (br) sh.quadraticCurveTo(w, d, w - br, d);
+    sh.lineTo(-w + bl, d); if (bl) sh.quadraticCurveTo(-w, d, -w, d - bl);
+    sh.lineTo(-w, -d + fl); if (fl) sh.quadraticCurveTo(-w, -d, -w + fl, -d);
+    const b = 0.25, g = new THREE.ExtrudeGeometry(sh, { depth: sy - 2 * b, bevelEnabled: true, bevelThickness: b, bevelSize: b, bevelSegments: 2, curveSegments: 10 });
+    g.rotateX(-Math.PI / 2); g.translate(0, -(sy - 2 * b) / 2, 0); g.computeVertexNormals(); return g;
+  }
+  return p.round ? new RoundedBoxGeometry(sx, sy, sz, 3, p.round) : new THREE.BoxGeometry(sx, sy, sz);
+}
+
+// ---------- cena ----------
+const stage = document.getElementById('stage'), msg = document.getElementById('msg'), hint = document.getElementById('hint');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+catch (e) { msg.textContent = 'Este navegador não abriu o 3D (WebGL desligado). As vistas abaixo mostram o mesmo projeto.'; throw e; }
+renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1)); renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.45;
+const camera = new THREE.PerspectiveCamera(28, 1, 5, 5000);
+const key = new THREE.SpotLight(0xfff1e0, 16000, 0, Math.PI / 3.6, 0.55, 1.6);
+key.position.set(-110, 380, 260); key.target.position.set(0, 40, 0);
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.6; key.shadow.radius = 8;
+key.shadow.camera.near = 100; key.shadow.camera.far = 1000;
+scene.add(key, key.target);
+const rim = new THREE.DirectionalLight(0xdfe6ff, 0.6); rim.position.set(180, 160, -220); scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xfff4ea, 0x1d1c20, 0.3));
+const floor = new THREE.Mesh(new THREE.CircleGeometry(700, 96), new THREE.ShadowMaterial({ opacity: 0.32 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+const compMat = new THREE.MeshStandardMaterial({ color: 0x4a3324, roughness: 0.85 });
+const meshes = P.map((p, i) => {
+  const geo = boxGeo(p);
+  const [x0, y0, z0, x1, y1, z1] = p.b, c = toV((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+  const comp = p.m === 'comp';
+  if (!comp) applyUV(geo, GRAIN3[p.grain], p.uvo ?? [((i * 37) % 13) / 13, ((i * 53) % 7) / 7], [c.x, c.y, c.z]);
+  const m = new THREE.Mesh(geo, comp ? compMat : woodMat(p.fin, p.seed ?? 1 + (i % 4)));
+  m.castShadow = true; m.receiveShadow = true;
+  m.position.copy(c);
+  m.userData = { p, home: c.clone(), dir: new THREE.Vector3(p.ex[0], p.ex[2], -p.ex[1]).normalize() };
+  scene.add(m); return m;
+});
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.08; controls.enablePan = false;
+controls.minPolarAngle = 0.15; controls.maxPolarAngle = Math.PI / 2 - 0.04;
+controls.minDistance = 140; controls.maxDistance = 1100; controls.autoRotateSpeed = 0.9;
+controls.target.set(0, 36, 0);
+
+// ---------- pose, câmera, animações ----------
+const ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
+let semTampo = false, legOpt = 'L', build = 5, buildAnim = null, camAnim = null, gav = 0, gavAnim = null, gavOpen = false;
+function pose() {
+  meshes.forEach(m => {
+    const p = m.userData.p, k = ease(build - p.step);
+    m.position.copy(m.userData.home).addScaledVector(m.userData.dir, 70 * (1 - k));
+    if (p.drawer) m.position.z += gav * 28;
+    m.visible = k > 0.001 && !(semTampo && p.g === 'tampo') && (!p.opt || p.opt === legOpt);
+  });
+}
+const VIEWS = { tres: [32, 16], frente: [0, 5], lado: [90, 5], cima: [18, 60] };
+function camPos([az, el]) {
+  const a = az * Math.PI / 180, e = el * Math.PI / 180, asp = camera.aspect || 1.6;
+  const dist = 420 * Math.max(1, 1.5 / asp);
+  return new THREE.Vector3(dist * Math.sin(a) * Math.cos(e), 36 + dist * Math.sin(e), dist * Math.cos(a) * Math.cos(e));
+}
+let curView = 'tres';
+function view(name, animate = true) {
+  curView = name;
+  const to = camPos(VIEWS[name]);
+  if (!animate || reduce) { camera.position.copy(to); controls.update(); return; }
+  camAnim = { from: camera.position.clone(), to, t0: performance.now(), ms: 700 };
+}
+function assemble() {
+  if (reduce) { build = 5; pose(); return; }
+  buildAnim = { t0: performance.now(), ms: 2100 };
+}
+function resize() {
+  const w = stage.clientWidth || 1, h = stage.clientHeight || 1;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+resize(); view('tres', false);
+new ResizeObserver(() => { resize(); if (!camAnim) view(curView, false); }).observe(stage);
+
+let first = true;
+renderer.setAnimationLoop(() => {
+  const now = performance.now();
+  if (buildAnim) { const t = Math.min(1, (now - buildAnim.t0) / buildAnim.ms); build = t * 4.6; pose(); if (t >= 1) buildAnim = null; }
+  if (gavAnim) { const t = ease((now - gavAnim.t0) / 600); gav = gavAnim.a + (gavAnim.b - gavAnim.a) * t; pose(); if (t >= 1) gavAnim = null; }
+  if (camAnim) {
+    const t = ease((now - camAnim.t0) / camAnim.ms);
+    camera.position.lerpVectors(camAnim.from, camAnim.to, t);
+    if (t >= 1) camAnim = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+  if (first) { first = false; msg.hidden = true; hint.hidden = false; }
+});
+build = 0; pose(); assemble();
+
+// ---------- botões ----------
+for (const v of Object.keys(VIEWS)) document.getElementById('v-' + v).addEventListener('click', () => view(v));
+const bT = document.getElementById('t-tampo'), bG = document.getElementById('t-gira');
+bT.addEventListener('click', () => { semTampo = !semTampo; bT.setAttribute('aria-pressed', semTampo); pose(); });
+bG.addEventListener('click', () => { controls.autoRotate = !controls.autoRotate; bG.setAttribute('aria-pressed', controls.autoRotate); });
+document.getElementById('t-monta').addEventListener('click', () => { build = 0; pose(); assemble(); });
+const bL = document.getElementById('o-L'), bQ = document.getElementById('o-Q');
+const setLeg = v => { legOpt = v; bL.setAttribute('aria-pressed', v === 'L'); bQ.setAttribute('aria-pressed', v === 'Q'); pose(); };
+bL.addEventListener('click', () => setLeg('L'));
+bQ.addEventListener('click', () => setLeg('Q'));
+const bGv = document.getElementById('t-gav');
+bGv.addEventListener('click', () => {
+  gavOpen = !gavOpen; bGv.setAttribute('aria-pressed', gavOpen); bGv.textContent = gavOpen ? 'Fechar gaveta' : 'Abrir gaveta';
+  if (reduce) { gav = gavOpen ? 1 : 0; pose(); } else gavAnim = { t0: performance.now(), a: gav, b: gavOpen ? 1 : 0 };
+});
+controls.addEventListener('start', () => { hint.hidden = true; });
+</script>
+</body>
+</html>

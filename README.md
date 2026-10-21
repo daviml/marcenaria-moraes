@@ -31,6 +31,7 @@ ou `python -m http.server` e abra `http://localhost:8000`.
 | Página e seções | `index.html` |
 | Visual e animações | `css/style.css` |
 | Imagens e vídeos | `assets/` |
+| Projetos de oficina (3D, vistas cotadas, plano de corte, custo) | `projetos/` (têm preço: não linkar no site) |
 
 Peça nova: copie o modelo para `js/models/`, registre o id em `js/engine.js` (MAKE) e em `js/app.js` (MAKE),
 acrescente a peça em `js/data.js` e coloque a imagem em `assets/img/pecas/<id>.webp` e o vídeo em `assets/video/`.
