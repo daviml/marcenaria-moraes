@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tábuas de Corte Roxinho</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: folha de projeto de marcenaria, igual à da escrivaninha — 3D no topo, vista cotada de cada modelo, comparativo, corte, compras e passo a passo */
+:root {
+  --bg: #f3f4f2;
+  --sheet: #ffffff;
+  --fg: #1f2420;
+  --muted: #5d665f;
+  --line: #d5d9d4;
+  --dim: #2f6f8f;
+  --rox: #5b2740;
+  --rox-soft: #e9d9e0;
+  --groove: #b98aa0;
+  --on-rox: #f1e4ea;
+  --ok: #2e7d4f;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141716; --sheet: #1c201e; --fg: #e6e9e5; --muted: #9aa39c; --line: #343a36;
+    --dim: #7cb8d6; --rox: #a5587c; --rox-soft: #3a2530; --groove: #e2bfd0; --on-rox: #241218; --ok: #6cc093;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141716; --sheet: #1c201e; --fg: #e6e9e5; --muted: #9aa39c; --line: #343a36;
+  --dim: #7cb8d6; --rox: #a5587c; --rox-soft: #3a2530; --groove: #e2bfd0; --on-rox: #241218; --ok: #6cc093;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.05; text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h1 { font-size: clamp(34px, 6vw, 54px); }
+h2 { font-size: 28px; }
+h3 { font-size: 20px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+p { margin: 0; max-width: 66ch; }
+
+header { display: grid; gap: 12px; }
+.eyebrow { font-family: var(--f-mono); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+.lede { color: var(--muted); font-size: 17px; }
+
+/* 3D */
+.stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 72vh; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: radial-gradient(ellipse 70% 60% at 50% 40%, var(--sheet), var(--bg)); touch-action: none; }
+.stage canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+.stage .msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 15px; padding: 24px; text-align: center; pointer-events: none; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 13px; color: var(--muted); pointer-events: none; }
+@media (max-width: 560px) { .stage { aspect-ratio: 4 / 5; } }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.bar .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+button.b { font: 600 14px/1 var(--f-body); color: var(--fg); background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 9px 13px; cursor: pointer; }
+button.b:hover { border-color: var(--muted); }
+button.b[aria-pressed="true"] { background: var(--fg); color: var(--sheet); border-color: var(--fg); }
+button.b:focus-visible { outline: 2px solid var(--dim); outline-offset: 2px; }
+button.b .k { font-family: var(--f-mono); opacity: .7; margin-right: 4px; }
+
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.fact { background: var(--sheet); padding: 14px 16px; display: grid; gap: 2px; }
+.fact b { font-family: var(--f-mono); font-size: 22px; font-weight: 600; }
+.fact span { font-size: 14px; color: var(--muted); }
+
+section { display: grid; gap: 14px; }
+.views { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+.sec-fig svg { max-width: 640px; }
+figure { margin: 0; background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 8px; min-width: 0; align-content: start; }
+figure.wide { grid-column: 1 / -1; }
+figure.on { border-color: var(--dim); box-shadow: 0 0 0 1px var(--dim); }
+figcaption { font-family: var(--f-display); font-size: 18px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+figcaption b { color: var(--fg); font-weight: 700; }
+figcaption button.b { font-size: 13px; padding: 6px 10px; text-transform: none; letter-spacing: 0; }
+figure svg { width: 100%; height: auto; display: block; }
+.note { font-size: 14px; color: var(--muted); }
+.note b { color: var(--fg); }
+
+/* SVG — vista de cima de cada tábua, em cm */
+.p-rox { fill: var(--rox); }
+.cut { fill: var(--sheet); }
+.cav { fill: none; stroke: var(--on-rox); stroke-width: .18; stroke-dasharray: .5 .35; }
+.gr { fill: none; stroke: var(--groove); stroke-width: 1; }
+.ar { fill: var(--on-rox); font-family: var(--f-body); font-size: 1.5px; font-weight: 600; }
+.pv .dl { stroke: var(--dim); stroke-width: .08; fill: none; }
+.pv .dt { fill: var(--dim); font-family: var(--f-mono); font-size: 1.7px; }
+.pv .lt { fill: var(--muted); font-family: var(--f-body); font-size: 1.5px; }
+.sec .dl { stroke: var(--dim); stroke-width: .05; fill: none; }
+.sec .dt { fill: var(--dim); font-family: var(--f-mono); font-size: .95px; }
+.sec .lt { fill: var(--muted); font-family: var(--f-body); font-size: .85px; }
+.plan .board { fill: none; stroke: var(--fg); stroke-width: .25; }
+.plan .seg { stroke: var(--sheet); stroke-width: .4; }
+.plan .waste { fill: var(--line); }
+.plan .ct { fill: var(--sheet); font-family: var(--f-body); font-size: 2.6px; font-weight: 600; }
+.plan .cm { fill: var(--fg); font-family: var(--f-mono); font-size: 2.4px; }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-display); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; color: var(--muted); }
+td.n, th.n { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.k { font-family: var(--f-mono); font-weight: 600; }
+tfoot td { font-weight: 700; border-bottom: none; }
+.pill { display: inline-block; font-size: 13px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.pill.sim { color: var(--ok); border-color: var(--ok); }
+.pill.nao { color: var(--muted); }
+ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
+ol.steps li::marker { font-family: var(--f-mono); color: var(--dim); }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.callout { border-left: 3px solid var(--dim); padding: 4px 0 4px 14px; color: var(--fg); }
+footer { font-size: 13px; color: var(--muted); }
+
+/* painel do modelo escolhido, em cima do 3D */
+.info { position: absolute; left: 12px; top: 12px; max-width: min(300px, calc(100% - 24px)); background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 12px 38px 12px 14px; display: grid; gap: 4px; box-shadow: 0 4px 18px rgb(0 0 0 / .14); }
+.info[hidden], .stage .msg[hidden] { display: none; }
+.info .i-nome { font-family: var(--f-display); font-size: 21px; font-weight: 700; line-height: 1.1; }
+.info .i-med { font-family: var(--f-mono); font-size: 15px; font-weight: 600; color: var(--dim); }
+.info .i-obs { font-size: 13px; color: var(--muted); line-height: 1.4; }
+.info .x { position: absolute; right: 6px; top: 6px; width: 30px; height: 30px; border: 0; border-radius: 6px; background: none; color: var(--muted); font: 400 22px/1 var(--f-body); cursor: pointer; }
+.info .x:hover { color: var(--fg); background: var(--bg); }
+.info .x:focus-visible { outline: 2px solid var(--dim); }
+@media (max-width: 560px) { .info .i-obs { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">MARCENARIA · PROJETO · OUT/2026</div>
+  <h1>Tábuas de corte de roxinho</h1>
+  <p class="lede">Três tábuas de carne de 30 × 20 × 2,5 cm, tiradas de 1 metro de roxinho 20 × 2,5. São quatro modelos com o mesmo tamanho, que mudam só no jeito de pegar. A canaleta (canal para o caldo) é opcional em todos e fica numa face só: a outra face fica lisa, para pão e legumes. Medidas em centímetros.</p>
+</header>
+
+<section aria-label="Modelo 3D">
+  <div class="stage" id="stage">
+    <div class="msg" id="msg">Carregando o 3D…</div>
+    <div class="hint" id="hint" hidden>Arraste para girar · use a roda ou o pinça para aproximar</div>
+    <div class="info" id="info" aria-live="polite">
+      <button class="x" id="info-x" type="button" aria-label="Fechar painel">×</button>
+      <b class="i-nome" id="i-nome"></b>
+      <span class="i-med" id="i-med"></span>
+      <span class="i-obs" id="i-obs"></span>
+    </div>
+  </div>
+  <div class="bar">
+    <button class="b" id="m-A" type="button" aria-pressed="true"><span class="k">A</span>Cavas</button>
+    <button class="b" id="m-B" type="button" aria-pressed="false"><span class="k">B</span>Audi</button>
+    <button class="b" id="m-C" type="button" aria-pressed="false"><span class="k">C</span>Alça</button>
+    <button class="b" id="m-D" type="button" aria-pressed="false"><span class="k">D</span>Pendurar</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="b" id="t-canal" type="button" aria-pressed="true">Canaleta</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="b" id="v-tres" type="button">3/4</button>
+    <button class="b" id="v-cima" type="button">De cima</button>
+    <button class="b" id="v-baixo" type="button">Por baixo</button>
+    <button class="b" id="t-gira" type="button" aria-pressed="false">Girar</button>
+  </div>
+</section>
+
+<div class="facts">
+  <div class="fact"><b>30 × 20 × 2,5</b><span>comprimento × largura × espessura</span></div>
+  <div class="fact"><b>3 tábuas</b><span>de 1 m de roxinho 20 × 2,5, com sobra de uns 7 cm</span></div>
+  <div class="fact"><b>≈ 1,3 kg</b><span>cada uma: pesada o bastante para não andar na pia</span></div>
+  <div class="fact"><b>≈ R$ 85</b><span>madeira, óleo, lixas e couro para as 3 (sem ferramentas)</span></div>
+</div>
+
+<section>
+  <h2>Os 4 modelos</h2>
+  <p>Vista de cima de cada tábua. A ponta da pega fica à direita, e a lateral de cima do desenho é a do fundo, a mais longe de você. O botão <b>Canaleta</b>, lá em cima, liga e desliga a canaleta nos desenhos e no 3D. Nos modelos B a D ela termina antes da pega, para não cruzar com o furo ou o recorte.</p>
+  <div class="views" id="views">
+    <figure class="wide sec-fig">
+      <figcaption><span>Corte da canaleta</span></figcaption>
+      <svg class="sec" viewBox="-2.6 -3.2 25.4 9.6" role="img" aria-label="Corte da tábua na largura: 20 de largura por 2,5 de espessura, canaleta meia-cana de 1 de largura e 0,5 de fundo a 1,8 da borda, arestas boleadas com raio de 0,3">
+        <path class="p-rox" d="M.3 0H1.8A.5 .5 0 0 0 2.8 0H17.2A.5 .5 0 0 0 18.2 0H19.7Q20 0 20 .3V2.2Q20 2.5 19.7 2.5H.3Q0 2.5 0 2.2V.3Q0 0 .3 0Z"/>
+        <path class="dl" d="M0 -.5v-1.4M1.8 -.6v-1.3M0 -1.5h1.8"/>
+        <text class="dt" x=".9" y="-2" text-anchor="middle">1,8</text>
+        <path class="dl" d="M2.8 -.6v-1.3M1.8 -1.5h1"/>
+        <text class="dt" x="2.5" y="-2" text-anchor="middle">1</text>
+        <path class="dl" d="M3.3 0h1.2M3.3 .5h1.2M4.1 0v.5"/>
+        <text class="dt" x="4.7" y=".7">0,5</text>
+        <path class="dl" d="M0 3.1v1M20 3.1v1M0 3.6h20"/>
+        <text class="dt" x="10" y="4.85" text-anchor="middle">20</text>
+        <path class="dl" d="M-.4 0h-1M-.4 2.5h-1M-.9 0v2.5"/>
+        <text class="dt" x="-1.3" y="1.25" text-anchor="middle" transform="rotate(-90 -1.3 1.25)">2,5</text>
+        <text class="lt" x="10" y="6" text-anchor="middle">boleado de 0,3 em todas as arestas</text>
+        <text class="lt" x="10" y="1.8" text-anchor="middle" style="fill:var(--on-rox);font-weight:600">face de baixo lisa</text>
+      </svg>
+      <p class="note">Fresa <b>meia-cana de 10 mm</b> (3/8") na tupia, com a guia a 1,8 cm da borda. Faça 2 ou 3 passadas até 5 mm de fundo, porque o roxinho queima se você forçar. Com a guia paralela, os cantos da canaleta ficam retos. Para cantos redondos, como no desenho, use um gabarito de MDF com bucha copiadora.</p>
+      <p class="note"><b>Sem tupia:</b> faça um <b>raspador de perfil</b>. Pegue um pedaço de lâmina de serra velha ou de espátula de aço e dê a ponta em meia-cana de 10 mm na esmerilhadeira, com acabamento na lima. Prenda a lâmina num bloco de madeira com um degrau de 1,8 cm, que corre encostado na borda da tábua como guia. Puxe o raspador de um lado para o outro até chegar a 5 mm, tirando lasquinhas finas: leva uns 15 minutos por lado. Acerte os cantos com o formão e uma goiva. Teste primeiro na sobra de 7 cm. Não use a esmerilhadeira direto na tábua, nem fresa de tupia na furadeira: as duas escapam e podem machucar.</p>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>Comparativo</h2>
+  <div class="card tbl">
+    <table>
+      <thead><tr><th></th><th>Modelo</th><th>Como pega</th><th>Ferramenta</th><th>Área útil com canaleta</th><th>Dá para fazer hoje?</th></tr></thead>
+      <tbody>
+        <tr><td class="k">A</td><td>Cavas</td><td>Mãos por baixo das duas pontas</td><td>Tupia + fresa meia-cana de 1", ou formão e goiva, devagar</td><td class="n">24 × 14</td><td><span class="pill nao">falta tupia ou goiva</span></td></tr>
+        <tr><td class="k">B</td><td>Audi</td><td>4 dedos nos furos da ponta</td><td>Furadeira + broca Forstner 25 mm</td><td class="n">20 × 14</td><td><span class="pill nao">falta a Forstner 25</span></td></tr>
+        <tr><td class="k">C</td><td>Alça</td><td>Mão inteira no rasgo da ponta</td><td>Furadeira (2 furos de 30) + tico-tico</td><td class="n">20 × 14</td><td><span class="pill sim">sim, com broca de 30</span></td></tr>
+        <tr><td class="k">D</td><td>Pendurar</td><td>Pela borda; fica pendurada pela tira de couro</td><td>Furadeira (furo de 20) + tico-tico nos cantos</td><td class="n">21 × 14</td><td><span class="pill sim">sim, com broca de 20</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="callout">Com a furadeira e o tico-tico que você já tem, o <b>C</b> e o <b>D</b> saem comprando só a broca, e o <b>B</b> com uma Forstner de 25. O A e a canaleta são mais fáceis com tupia. Sem ela, veja no corte da canaleta, acima, como fazer na mão, ou faça as tábuas lisas agora: dá para abrir a canaleta depois.</p>
+</section>
+
+<section>
+  <h2>Plano de corte</h2>
+  <p>Peça na madeireira <b>1 tábua de roxinho 20 × 2,5 com 1 m</b>, refilada nas pontas e cortada em 3 de 30 na serra deles. O corte sai no esquadro, coisa difícil com o tico-tico.</p>
+  <figure class="wide">
+    <figcaption><span>Roxinho 20 × 2,5 · 1 m</span></figcaption>
+    <div class="tbl">
+    <svg class="plan" viewBox="-2 -6 104 31" style="min-width:520px" role="img" aria-label="Tábua de roxinho de 100 cm por 20: 1 cm de refilo na ponta, três tábuas de 30 separadas por cortes de 3 mm, e cerca de 8 cm de sobra no fim">
+      <rect class="waste" x="0" y="0" width="1" height="20"/>
+      <rect class="p-rox seg" x="1" y="0" width="30" height="20"/>
+      <rect class="p-rox seg" x="31.3" y="0" width="30" height="20"/>
+      <rect class="p-rox seg" x="61.6" y="0" width="30" height="20"/>
+      <rect class="waste" x="91.6" y="0" width="8.4" height="20"/>
+      <rect class="board" x="0" y="0" width="100" height="20"/>
+      <text class="ct" x="16" y="11" text-anchor="middle">tábua 1</text>
+      <text class="ct" x="46.3" y="11" text-anchor="middle">tábua 2</text>
+      <text class="ct" x="76.6" y="11" text-anchor="middle">tábua 3</text>
+      <text class="cm" x="16" y="-1.8" text-anchor="middle">30</text>
+      <text class="cm" x="46.3" y="-1.8" text-anchor="middle">30</text>
+      <text class="cm" x="76.6" y="-1.8" text-anchor="middle">30</text>
+      <text class="cm" x="95.8" y="-1.8" text-anchor="middle">8,4</text>
+      <text class="cm" x=".5" y="-1.8" text-anchor="middle">1</text>
+      <text class="cm" x="95.8" y="24" text-anchor="middle" style="fill:var(--muted)">sobra</text>
+      <text class="cm" x="0" y="24">refilo</text>
+    </svg>
+    </div>
+    <p class="note">1 + 3 × 30 + 2 cortes de 0,3 = 91,6 cm. Os 8,4 do fim levam o refilo da outra ponta e deixam uns <b>7 cm</b> de sobra, que dão um descanso de colher ou 2 porta-copos de 7 × 7.</p>
+  </figure>
+  <p class="callout">Tábua vendida como "20 × 2,5" costuma chegar com <b>19 × 2,2 a 2,4</b> depois de aparelhada. Meça antes de riscar e ajuste as cotas pela tábua real. Escolha uma <b>reta</b> (olhe de topo, contra a luz) e <b>sem rachadura nas pontas</b>: sem plaina, uma tábua empenada vira uma tábua que balança na pia.</p>
+</section>
+
+<section class="two">
+  <div class="card">
+    <h2>Compras</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Item</th><th class="n">Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Roxinho 20 × 2,5, 1 m (Madeireira Uberlândia Vendas)</td><td class="n">≈ R$ 37</td></tr>
+          <tr><td>Óleo mineral USP, 500 ml</td><td class="n">R$ 21,70</td></tr>
+          <tr><td>Lixas 80, 120, 180 e 220, 2 de cada</td><td class="n">≈ R$ 15</td></tr>
+          <tr><td>Tira de couro de 1,5 cm, 40 cm (modelo D)</td><td class="n">≈ R$ 10</td></tr>
+        </tbody>
+        <tfoot><tr><td>Total</td><td class="n">≈ R$ 85</td></tr></tfoot>
+      </table>
+    </div>
+    <p class="note">O preço do roxinho é estimado: a cotação de out/2026 é de R$ 28/m na largura de 15. Pergunte o de 20 no telefone (34) 9778-8890. Se já tiver o kit de cera e óleo da etapa 2, use a cera no fim.</p>
+    <h3>Ferramentas, se for fazer</h3>
+    <div class="tbl">
+      <table>
+        <tbody>
+          <tr><td>Broca chata 20 mm (D) e 30 mm (C)</td><td class="n">≈ R$ 15 cada</td></tr>
+          <tr><td>Broca Forstner 25 mm (B)</td><td class="n">≈ R$ 30</td></tr>
+          <tr><td>Tupia laminadora + fresas meia-cana e boleada (A, canaleta)</td><td class="n">≈ R$ 350 a 450</td></tr>
+          <tr><td>Goiva meia-cana de 10 a 12 mm (A sem tupia, cantos da canaleta)</td><td class="n">≈ R$ 40</td></tr>
+          <tr><td>Lâmina de tico-tico para madeira dura</td><td class="n">≈ R$ 15</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Para os furos sobrepostos do B, use broca Forstner. A serra-copo não tem ponta de centro e escapa quando o furo cruza o outro.</p>
+  </div>
+
+  <div class="card">
+    <h2>Passo a passo</h2>
+    <ol class="steps">
+      <li>Na madeireira, escolha a tábua reta e sem racha e peça o refilo e os 3 cortes de 30. Em casa, deixe as peças 2 dias no ambiente antes de trabalhar.</li>
+      <li>Meça a largura e a espessura reais. Lixe as duas faces com a 80 até sumir a marca de serra.</li>
+      <li>Recorte um gabarito de papelão de 30 × 20 com o modelo escolhido e risque com lápis nas 3 tábuas. Assim as três saem iguais.</li>
+      <li>Faça os furos e recortes. <b>C:</b> 2 furos de 30 nas pontas do rasgo e tico-tico entre eles. <b>B:</b> Forstner 25 nos furos 1 e 3, depois no 2 e no 4, com uma madeira de sacrifício por baixo para não lascar. <b>D:</b> furo de 20 e cantos de raio 3 no tico-tico. <b>A:</b> tupia de baixo para cima, com a tábua bem presa.</li>
+      <li>Se for fazer a canaleta, abra-a agora (veja o corte acima). Ela fica na face mais bonita.</li>
+      <li>Bolear todas as arestas e as bordas dos furos com 3 mm, na tupia ou na lixa 80 à mão.</li>
+      <li>Lixe com 80, 120, 180 e 220. Passe um pano úmido, deixe secar 1 hora e lixe de novo com a 220. Isso levanta a fibra agora, e não na primeira lavagem.</li>
+      <li>Passe bastante óleo mineral, espere 20 minutos e tire o excesso. Repita 3 vezes, com 1 dia entre cada demão. No modelo D, passe a tira de couro no furo e dê um nó.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="two">
+  <div class="card">
+    <h3>Cuidados com o roxinho</h3>
+    <ul class="plain">
+      <li>Use máscara PFF2 para lixar: o pó irrita o nariz e a pele.</li>
+      <li>É mais duro que o ideal para faca e cega um pouco o fio. Para carne, não faz diferença na prática.</li>
+      <li>O roxo vira marrom com o sol e o tempo. Guarde as tábuas longe da janela.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Para quem for usar</h3>
+    <ul class="plain">
+      <li>Lave com água e sabão e seque em pé. Nada de deixar de molho nem pôr na lava-louças.</li>
+      <li>Passe óleo mineral de novo quando a madeira ficar clara e seca, mais ou menos 1 vez por mês.</li>
+      <li>Use a face da canaleta para carne e a face lisa para pão e legumes.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>Feito a partir da folha da Escrivaninha Cerne (projetos/escrivaninha-cerne-roxinho.html), com a madeira e a luz do motor 3D do site. Medidas em cm. Preços de out/2026, em Uberlândia; o do roxinho de 20 é estimativa.</footer>
+
+</div>
+
+<script>
+// Dados dos modelos e vistas cotadas. Script comum (não módulo) para os desenhos aparecerem mesmo sem WebGL.
+// Coordenadas da vista de cima, em cm: x de 0 a 30 (pega à direita), y de 0 (lateral do fundo) a 20.
+(() => {
+  const L = 30, W = 20, T = 2.5;
+  // gx = onde termina a canaleta do lado da pega (borda de fora do canal); r = raio dos cantos
+  const MODELOS = [
+    { k: 'A', nome: 'Cavas', r: 1, gx: 28.2, cavas: [{ x: 0, y: 10 }, { x: 30, y: 10 }],
+      pega: 'Uma cava por baixo de cada lado menor: as duas mãos entram por baixo das pontas e levantam a tábua.',
+      ferr: 'Tupia com fresa meia-cana de 1", ou formão e goiva.',
+      nota: 'Cada cava fica no meio da ponta, tem 7 de largura, entra 3 na tábua e tem 1 de fundo, de baixo para cima. Por cima não aparece nada, então a canaleta dá a volta inteira.' },
+    { k: 'B', nome: 'Audi', r: 1, gx: 23.5, furos: [7.3, 9.1, 10.9, 12.7].map(y => ({ x: 26.25, y, r: 1.25 })),
+      pega: 'Quatro furos de 25 sobrepostos na ponta, como o logo da Audi: os 4 dedos entram ali.',
+      ferr: 'Furadeira com broca Forstner de 25 mm.',
+      nota: 'Centros a 1,8 um do outro e a 3,75 da ponta. A fila tem 7,9 de comprimento. Fure o 1 e o 3 primeiro, depois o 2 e o 4.' },
+    { k: 'C', nome: 'Alça', r: 1, gx: 23.5, rasgo: { x: 26, y0: 5, y1: 15, r: 1.5 },
+      pega: 'Rasgo vazado de 10 × 3 na ponta: a mão inteira passa por ali.',
+      ferr: 'Furadeira (2 furos de 30) e tico-tico.',
+      nota: 'O rasgo fica a 2,5 da ponta. Faça os 2 furos de 30 nas pontas e corte as duas retas entre eles com o tico-tico.' },
+    { k: 'D', nome: 'Pendurar', r: 3, gx: 25, furos: [{ x: 27.5, y: 2.5, r: 1 }],
+      pega: 'Cantos bem redondos e um furo de 20 no canto, com uma tira de couro para pendurar.',
+      ferr: 'Furadeira (broca de 20) e tico-tico para os cantos.',
+      nota: 'Os cantos têm raio 3. O furo fica a 2,5 das duas bordas do canto. Passe o couro e dê um nó por baixo.' },
+  ];
+  window.TAB = { L, W, T, MODELOS };
+
+  const rr = (x0, y0, x1, y1, r) => `M${x0 + r} ${y0}H${x1 - r}A${r} ${r} 0 0 1 ${x1} ${y0 + r}V${y1 - r}A${r} ${r} 0 0 1 ${x1 - r} ${y1}H${x0 + r}A${r} ${r} 0 0 1 ${x0} ${y1 - r}V${y0 + r}A${r} ${r} 0 0 1 ${x0 + r} ${y0}Z`;
+  const dimH = (x0, x1, y, t, ty = -.35) => `<path class="dl" d="M${x0} ${y - .6}v1.2M${x1} ${y - .6}v1.2M${x0} ${y}H${x1}"/><text class="dt" x="${(x0 + x1) / 2}" y="${y + ty}" text-anchor="middle">${t}</text>`;
+  const dimV = (y0, y1, x, t) => `<path class="dl" d="M${x - .6} ${y0}h1.2M${x - .6} ${y1}h1.2M${x} ${y0}V${y1}"/><text class="dt" x="${x + .5}" y="${(y0 + y1) / 2 + .45}">${t}</text>`;
+
+  function svg(m, canal) {
+    const id = 'cl-' + m.k;
+    let s = `<defs><clipPath id="${id}"><path d="${rr(0, 0, L, W, m.r)}"/></clipPath></defs>`;
+    s += `<g clip-path="url(#${id})"><path class="p-rox" d="${rr(0, 0, L, W, m.r)}"/>`;
+    if (canal) s += `<path class="gr" d="${rr(2.3, 2.3, m.gx - .5, W - 2.3, 2)}"/>`;
+    (m.furos || []).forEach(f => { s += `<circle class="cut" cx="${f.x}" cy="${f.y}" r="${f.r}"/>`; });
+    if (m.rasgo) { const { x, y0, y1, r } = m.rasgo; s += `<path class="cut" d="M${x + r} ${y0 + r}V${y1 - r}A${r} ${r} 0 0 1 ${x - r} ${y1 - r}V${y0 + r}A${r} ${r} 0 0 1 ${x + r} ${y0 + r}Z"/>`; }
+    // cava nas pontas: meia-elipse que entra 3 na tábua a partir da borda menor
+    (m.cavas || []).forEach(c => { s += `<path class="cav" d="M${c.x} ${c.y - 3.5}A3 3.5 0 0 ${c.x ? 0 : 1} ${c.x} ${c.y + 3.5}"/>`; });
+    s += '</g>';
+    // área útil dentro da canaleta
+    const cx = canal ? (2.8 + m.gx - 1) / 2 : 13;
+    const t = canal ? `área útil ≈ ${Math.round(m.gx - 3.8)} × 14` : 'sem canaleta: lisa dos dois lados';
+    s += `<text class="ar" x="${cx}" y="10.4" text-anchor="middle">${t}</text>`;
+    // cotas gerais
+    s += dimH(0, L, 23.2, '30', 1.6) + `<path class="dl" d="M-1.6 0h-1.2M-1.6 ${W}h-1.2M-2.2 0V${W}"/><text class="dt" x="-2.7" y="10" text-anchor="middle" transform="rotate(-90 -2.7 10)">20</text>`;
+    s += `<text class="lt" x="0" y="-1.2">fundo</text><text class="lt" x="${L}" y="${W + 1.7}" text-anchor="end">pega →</text>`;
+    // cotas do modelo
+    if (m.k === 'A') s += dimV(6.5, 13.5, 31, '7') + dimH(27, 30, -1.9, '3') + `<text class="lt" x="15" y="-1.2" text-anchor="middle">cava por baixo nas 2 pontas</text>`;
+    if (m.k === 'B') s += dimH(26.25, 30, -1.9, '3,75') + dimV(6.05, 13.95, 31, '7,9') + `<text class="lt" x="30.4" y="16.5">4 × Ø 2,5</text>`;
+    if (m.k === 'C') s += dimH(24.5, 27.5, -1.9, '3') + dimH(27.5, 30, -4.2, '2,5') + dimV(5, 15, 31, '10');
+    if (m.k === 'D') s += `<text class="lt" x="23.6" y="-1.2">Ø 2 · couro</text><text class="lt" x="1" y="${W - 1}" style="fill:var(--on-rox)">R 3</text>` + dimH(27.5, 30, -3.6, '2,5');
+    return s;
+  }
+
+  const views = document.getElementById('views'), secFig = views.querySelector('.sec-fig');
+  const figs = {};
+  for (const m of MODELOS) {
+    const f = document.createElement('figure');
+    f.innerHTML = `<figcaption><span><b>${m.k}</b> · ${m.nome}</span><button class="b" type="button" id="ver-${m.k}">Ver no 3D</button></figcaption>
+      <svg class="pv" viewBox="-4.8 -6.2 42.4 32" role="img" aria-label="Vista de cima do modelo ${m.k}, ${m.nome}: ${m.pega}"></svg>
+      <p class="note"><b>Pega:</b> ${m.pega} <b>Ferramenta:</b> ${m.ferr} ${m.nota}</p>`;
+    views.insertBefore(f, secFig);
+    figs[m.k] = f;
+  }
+
+  // estado compartilhado com o 3D: o módulo escuta o evento 'tabua'
+  // #B, #C... no link abre direto naquele modelo
+  const h = location.hash.slice(1).toUpperCase();
+  const st = window.TABUA = { m: MODELOS.some(m => m.k === h) ? h : 'A', canal: true };
+  const bM = Object.fromEntries(MODELOS.map(m => [m.k, document.getElementById('m-' + m.k)]));
+  const bC = document.getElementById('t-canal');
+  function draw() {
+    for (const m of MODELOS) {
+      figs[m.k].querySelector('svg').innerHTML = svg(m, st.canal);
+      figs[m.k].classList.toggle('on', m.k === st.m);
+      bM[m.k].setAttribute('aria-pressed', m.k === st.m);
+    }
+    bC.setAttribute('aria-pressed', st.canal);
+    document.dispatchEvent(new CustomEvent('tabua', { detail: st }));
+  }
+  for (const m of MODELOS) {
+    bM[m.k].addEventListener('click', () => { st.m = m.k; draw(); });
+    document.getElementById('ver-' + m.k).addEventListener('click', () => {
+      st.m = m.k; draw();
+      document.getElementById('stage').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    });
+  }
+  bC.addEventListener('click', () => { st.canal = !st.canal; draw(); });
+  draw();
+})();
+</script>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/","three-mesh-bvh":"https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.7.8/build/index.module.js","three-bvh-csg":"https://cdn.jsdelivr.net/npm/three-bvh-csg@0.0.16/build/index.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Brush, Evaluator, SUBTRACTION } from 'three-bvh-csg';
+
+// Madeira e luz copiadas da folha da escrivaninha (motor do site). Tudo em cm.
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+function noise1(seed) { const r = rng(seed), g = Array.from({ length: 512 }, r); return x => { const i = Math.floor(x), f = x - i, a = g[i & 511], b = g[(i + 1) & 511]; const t = f * f * (3 - 2 * f); return a + (b - a) * t; }; }
+const FIN = { rox: { base: '#6A2E44', light: '#82405A', dark: '#371222', streak: '#57233A' } };
+function woodCanvas(fin, seed, W = 1024) {
+  const H = W, k0 = W / 1024, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), r = rng(seed * 31 + 7), n1 = noise1(seed), n2 = noise1(seed + 5);
+  const F = FIN[fin];
+  x.fillStyle = F.base; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 26; i++) {
+    const y = r() * H, h = (20 + r() * 90) * k0; x.globalAlpha = 0.10 + r() * 0.16;
+    x.fillStyle = r() < 0.5 ? F.light : F.streak; x.fillRect(0, y, W, h);
+  }
+  for (let i = 0; i < 150; i++) {
+    const y0 = r() * H, amp = (3 + r() * 14) * k0, ph = r() * 50, k = 0.4 + r() * 1.4;
+    x.globalAlpha = 0.05 + Math.pow(r(), 2.2) * 0.38;
+    x.strokeStyle = r() < 0.85 ? F.dark : F.light; x.lineWidth = Math.max(0.5, (0.6 + Math.pow(r(), 3) * 3.2) * k0);
+    x.beginPath();
+    for (let u = -8; u <= W + 8; u += 8) {
+      const y = y0 + (n1(u / k0 / 260 * k + ph) - 0.5) * amp * 2 + (n2(u / k0 / 70 + ph) - 0.5) * 2.2 * k0;
+      u < 0 ? x.moveTo(u, y) : x.lineTo(u, y);
+    }
+    x.stroke();
+    x.save(); x.translate(0, y0 > H / 2 ? -H : H); x.stroke(); x.restore();
+  }
+  x.globalAlpha = 0.18; x.fillStyle = F.dark;
+  for (let i = 0; i < 2600 * k0 * k0; i++) x.fillRect(r() * W, r() * H, (2 + r() * 7) * k0, 0.8 * k0);
+  x.globalAlpha = 1;
+  return c;
+}
+const mats = {};
+function woodMat(fin, seed) {
+  const k = fin + seed; if (mats[k]) return mats[k];
+  const t = new THREE.CanvasTexture(woodCanvas(fin, seed));
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return (mats[k] = new THREE.MeshStandardMaterial({ map: t, bumpMap: t, bumpScale: 0.35, roughness: 0.5, metalness: 0 }));
+}
+// UV plano pela normal de cada face, com o veio ao longo do comprimento (x)
+function applyUV(geo, off) {
+  const pos = geo.attributes.position, nor = geo.attributes.normal, uv = geo.attributes.uv;
+  for (let i = 0; i < pos.count; i++) {
+    const p = [pos.getX(i), pos.getY(i), pos.getZ(i)], n = [Math.abs(nor.getX(i)), Math.abs(nor.getY(i)), Math.abs(nor.getZ(i))];
+    const na = n.indexOf(Math.max(...n)), axes = [0, 1, 2].filter(a => a !== na);
+    const ua = axes.includes(0) ? 0 : axes[0], va = axes.find(a => a !== ua);
+    uv.setXY(i, p[ua] / 40 + off[0], p[va] / 12 + off[1]);
+  }
+  uv.needsUpdate = true;
+}
+
+// ---------- geometria: tábua boleada menos furos, recortes, cavas e canaleta (CSG) ----------
+// vista de cima (x, y) → mundo: X = x − 15, Z = y − 10, altura em Y
+const { L, W, T, MODELOS } = window.TAB;
+const BOL = 0.3;
+function rrShape(x0, y0, x1, y1, r) {
+  const s = new THREE.Shape(), q = Math.max(0.01, r);
+  s.moveTo(x0 + q, y0); s.lineTo(x1 - q, y0); s.absarc(x1 - q, y0 + q, q, -Math.PI / 2, 0, false);
+  s.lineTo(x1, y1 - q); s.absarc(x1 - q, y1 - q, q, 0, Math.PI / 2, false);
+  s.lineTo(x0 + q, y1); s.absarc(x0 + q, y1 - q, q, Math.PI / 2, Math.PI, false);
+  s.lineTo(x0, y0 + q); s.absarc(x0 + q, y0 + q, q, Math.PI, 1.5 * Math.PI, false);
+  return s;
+}
+// extrusão vertical: a forma fica no plano XZ e a peça vai de y0 até y0 + h
+function extrudeUp(shape, h, y0, bevel = 0) {
+  const g = new THREE.ExtrudeGeometry(shape, { depth: h - 2 * bevel, bevelEnabled: bevel > 0, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 3, curveSegments: 16 });
+  g.rotateX(Math.PI / 2); g.translate(0, y0 + h - bevel, 0);
+  return g;
+}
+function slab(r) {
+  return extrudeUp(rrShape(-L / 2 + BOL, -W / 2 + BOL, L / 2 - BOL, W / 2 - BOL, r - BOL), T, 0, BOL);
+}
+// canaleta meia-cana: tubo de raio 0,5 com o centro na face de cima, seguindo um retângulo de cantos redondos
+function grooveGeo(gx) {
+  const x0 = 2.3 - L / 2, x1 = gx - 0.5 - L / 2, z0 = 2.3 - W / 2, z1 = W - 2.3 - W / 2, r = 2, pts = [];
+  const line = (a, b) => { const n = Math.max(2, Math.ceil(a.distanceTo(b) / 0.6)); for (let i = 0; i < n; i++) pts.push(a.clone().lerp(b, i / n)); };
+  const arc = (cx, cz, a0) => { for (let i = 0; i < 8; i++) { const a = a0 + (i / 8) * Math.PI / 2; pts.push(new THREE.Vector3(cx + r * Math.cos(a), T, cz + r * Math.sin(a))); } };
+  const V = (x, z) => new THREE.Vector3(x, T, z);
+  line(V(x0 + r, z0), V(x1 - r, z0)); arc(x1 - r, z0 + r, -Math.PI / 2);
+  line(V(x1, z0 + r), V(x1, z1 - r)); arc(x1 - r, z1 - r, 0);
+  line(V(x1 - r, z1), V(x0 + r, z1)); arc(x0 + r, z1 - r, Math.PI / 2);
+  line(V(x0, z1 - r), V(x0, z0 + r)); arc(x0 + r, z0 + r, Math.PI);
+  const curve = new THREE.CatmullRomCurve3(pts, true, 'catmullrom', 0);
+  return new THREE.TubeGeometry(curve, pts.length * 2, 0.5, 16, true);
+}
+const ev = new Evaluator(); ev.useGroups = false;
+function cutters(m, canal) {
+  const out = [];
+  const at = (geo, x, y, h = T / 2, s) => { const b = new Brush(geo); b.position.set(x - L / 2, h, y - W / 2); if (s) b.scale.set(...s); out.push(b); };
+  for (const f of m.furos || []) at(new THREE.CylinderGeometry(f.r, f.r, T + 2, 48), f.x, f.y);
+  for (const c of m.cavas || []) at(new THREE.SphereGeometry(1, 48, 24), c.x, c.y, 0, [3, 1, 3.5]);
+  if (m.rasgo) {
+    const { x, y0, y1, r } = m.rasgo, cx = x - L / 2, ya = y0 + r - W / 2, yb = y1 - r - W / 2, s = new THREE.Shape();
+    s.moveTo(cx + r, ya); s.lineTo(cx + r, yb); s.absarc(cx, yb, r, 0, Math.PI, false);
+    s.lineTo(cx - r, ya); s.absarc(cx, ya, r, Math.PI, 2 * Math.PI, false);
+    const b = new Brush(extrudeUp(s, T + 2, -1)); out.push(b);
+  }
+  if (canal) out.push(new Brush(grooveGeo(m.gx)));
+  return out;
+}
+const cache = {};
+function boardGeo(k, canal) {
+  const key = k + canal; if (cache[key]) return cache[key];
+  const m = MODELOS.find(o => o.k === k);
+  let res = new Brush(slab(m.r)); res.updateMatrixWorld();
+  for (const c of cutters(m, canal)) { c.updateMatrixWorld(); res = ev.evaluate(res, c, SUBTRACTION); }
+  const g = res.geometry;
+  applyUV(g, [0.13, 0.41]);
+  return (cache[key] = g);
+}
+
+// ---------- cena ----------
+const stage = document.getElementById('stage'), msg = document.getElementById('msg'), hint = document.getElementById('hint');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+catch (e) { msg.textContent = 'Este navegador não abriu o 3D (WebGL desligado). Os desenhos abaixo mostram os mesmos modelos.'; throw e; }
+renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1)); renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.5;
+const camera = new THREE.PerspectiveCamera(28, 1, 1, 2000);
+// mesma luz da escrivaninha, trazida para perto: a tábua é 5 vezes menor
+const key = new THREE.SpotLight(0xfff1e0, 2000, 0, Math.PI / 3.6, 0.55, 1.6);
+key.position.set(-30, 100, 70); key.target.position.set(0, 0, 0);
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.12; key.shadow.radius = 6;
+key.shadow.camera.near = 30; key.shadow.camera.far = 300;
+scene.add(key, key.target);
+const rim = new THREE.DirectionalLight(0xdfe6ff, 0.7); rim.position.set(60, 50, -80); scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xfff4ea, 0x1d1c20, 0.35));
+const floor = new THREE.Mesh(new THREE.CircleGeometry(200, 96), new THREE.ShadowMaterial({ opacity: 0.32 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+const board = new THREE.Mesh(boardGeo('A', true), woodMat('rox', 2));
+board.castShadow = true; board.receiveShadow = true; scene.add(board);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.08; controls.enablePan = false;
+controls.minPolarAngle = 0.05; controls.maxPolarAngle = Math.PI - 0.2;
+controls.minDistance = 35; controls.maxDistance = 300; controls.autoRotateSpeed = 1.2;
+controls.target.set(0, T / 2, 0);
+
+// ---------- câmera ----------
+const ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
+const VIEWS = { tres: [28, 32], cima: [0, 86], baixo: [24, -55] };
+function camPos([az, el]) {
+  const a = az * Math.PI / 180, e = el * Math.PI / 180, asp = camera.aspect || 1.6;
+  const dist = 72 * Math.max(1, 1.5 / asp);
+  return new THREE.Vector3(dist * Math.sin(a) * Math.cos(e), T / 2 + dist * Math.sin(e), dist * Math.cos(a) * Math.cos(e));
+}
+let curView = 'tres', camAnim = null;
+function view(name, animate = true) {
+  curView = name;
+  const to = camPos(VIEWS[name]);
+  if (!animate || reduce) { camera.position.copy(to); controls.update(); return; }
+  camAnim = { from: camera.position.clone(), to, t0: performance.now(), ms: 700 };
+}
+function resize() {
+  const w = stage.clientWidth || 1, h = stage.clientHeight || 1;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+resize(); view('tres', false);
+new ResizeObserver(() => { resize(); if (!camAnim) view(curView, false); }).observe(stage);
+
+let first = true;
+renderer.setAnimationLoop(() => {
+  if (camAnim) {
+    const t = ease((performance.now() - camAnim.t0) / camAnim.ms);
+    camera.position.lerpVectors(camAnim.from, camAnim.to, t);
+    if (t >= 1) camAnim = null;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+  if (first) { first = false; msg.hidden = true; hint.hidden = false; }
+});
+
+// ---------- modelo escolhido (os botões ficam no script comum) ----------
+const info = document.getElementById('info');
+function show({ m, canal }) {
+  board.geometry = boardGeo(m, canal);
+  const o = MODELOS.find(x => x.k === m);
+  document.getElementById('i-nome').textContent = `${o.k} · ${o.nome}`;
+  document.getElementById('i-med').textContent = `30 × 20 × 2,5 cm · ${canal ? 'com canaleta' : 'sem canaleta'}`;
+  document.getElementById('i-obs').textContent = o.pega;
+}
+document.addEventListener('tabua', e => show(e.detail));
+show(window.TABUA);
+document.getElementById('info-x').addEventListener('click', () => { info.hidden = true; });
+document.addEventListener('tabua', () => { info.hidden = false; });
+
+for (const v of Object.keys(VIEWS)) document.getElementById('v-' + v).addEventListener('click', () => view(v));
+const bG = document.getElementById('t-gira');
+bG.addEventListener('click', () => { controls.autoRotate = !controls.autoRotate; bG.setAttribute('aria-pressed', controls.autoRotate); });
+controls.addEventListener('start', () => { hint.hidden = true; });
+</script>
+</body>
+</html>
