@@ -91,6 +91,15 @@ export const PRODUCTS = [
     video: 'assets/video/ap.mp4', opts: ['open', 'preto'],
   },
   {
+    id: 'pf', line: 'modern', name: 'Prateleira Flutuante Modern', room: 'Sala', prazo: '1 a 2 semanas',
+    tagline: 'Sai direto da parede, sem nenhum suporte à vista.',
+    variants: [{ id: 'pf60', label: '60 cm' }, { id: 'pf40', label: '40 cm' }, { id: 'pf90', label: '90 cm' }],
+    about: 'Prateleira de madeira maciça com 6 cm de espessura, que parece sair direto da parede. Por dentro ela é oca e encaixa num suporte de madeira parafusado na parede, que fica escondido. Avulsa ou em jogo.',
+    highlights: [['Suporte escondido', 'Encaixa num pente de madeira preso na parede'], ['6 cm de espessura', 'Cara de bloco maciço, sem ser pesada'], ['20 cm de fundo', 'Livros, plantas e porta-retratos'], ['Até 10 kg', 'Em parede de alvenaria']],
+    imgs: ['assets/img/detalhes/pf-encaixe.webp'],
+    video: null, opts: [],
+  },
+  {
     id: 'mj', line: 'raiz', name: 'Mesa de Jantar Raiz', room: 'Sala de jantar', prazo: '4 a 5 semanas',
     tagline: 'Tampo de 5 cm e cavaletes com cunha passante.',
     variants: [{ id: 'mj', label: '180 × 90 · 6 lugares' }],

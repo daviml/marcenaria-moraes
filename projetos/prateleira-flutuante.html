@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prateleira Flutuante Cambará</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: folha de projeto de marcenaria — 3D no topo, depois vistas cotadas, peças, corte, compras, montagem e instalação */
+:root {
+  --bg: #f3f4f2;
+  --sheet: #ffffff;
+  --fg: #1f2420;
+  --muted: #5d665f;
+  --line: #d5d9d4;
+  --dim: #2f6f8f;
+  --camb: #c9965f;
+  --camb-soft: #f1e3d2;
+  --sup: #8a5a32;
+  --wall: #e4e1dc;
+  --screw: #2b2b2b;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141716; --sheet: #1c201e; --fg: #e6e9e5; --muted: #9aa39c; --line: #343a36;
+    --dim: #7cb8d6; --camb: #c99a68; --camb-soft: #3a2f22; --sup: #9b6a40; --wall: #2c302d; --screw: #d9d9d9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141716; --sheet: #1c201e; --fg: #e6e9e5; --muted: #9aa39c; --line: #343a36;
+  --dim: #7cb8d6; --camb: #c99a68; --camb-soft: #3a2f22; --sup: #9b6a40; --wall: #2c302d; --screw: #d9d9d9;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.05; text-wrap: balance; margin: 0; letter-spacing: .01em; }
+h1 { font-size: clamp(34px, 6vw, 54px); }
+h2 { font-size: 28px; }
+h3 { font-size: 20px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+p { margin: 0; max-width: 66ch; }
+
+header { display: grid; gap: 12px; }
+.eyebrow { font-family: var(--f-mono); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+.lede { color: var(--muted); font-size: 17px; }
+.woods { display: flex; flex-wrap: wrap; gap: 8px; }
+.wood { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; padding: 4px 12px 4px 6px; border: 1px solid var(--line); border-radius: 999px; background: var(--sheet); }
+.sw { width: 18px; height: 18px; border-radius: 50%; }
+.sw.camb { background: var(--camb); } .sw.sup { background: var(--sup); }
+
+/* 3D */
+.stage { position: relative; width: 100%; aspect-ratio: 16 / 10; max-height: 72vh; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: radial-gradient(ellipse 70% 60% at 50% 40%, var(--sheet), var(--bg)); touch-action: none; }
+.stage canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+.stage .msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 15px; padding: 24px; text-align: center; pointer-events: none; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 13px; color: var(--muted); pointer-events: none; }
+.stage [hidden] { display: none; }
+@media (max-width: 560px) { .stage { aspect-ratio: 4 / 5; } }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.bar .sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+button.b { font: 600 14px/1 var(--f-body); color: var(--fg); background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 9px 13px; cursor: pointer; }
+button.b:hover { border-color: var(--muted); }
+button.b[aria-pressed="true"] { background: var(--fg); color: var(--sheet); border-color: var(--fg); }
+button.b:focus-visible { outline: 2px solid var(--dim); outline-offset: 2px; }
+
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.fact { background: var(--sheet); padding: 14px 16px; display: grid; gap: 2px; }
+.fact b { font-family: var(--f-mono); font-size: 22px; font-weight: 600; }
+.fact span { font-size: 14px; color: var(--muted); }
+
+section { display: grid; gap: 14px; }
+.views { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+figure { margin: 0; background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 8px; min-width: 0; }
+figure.wide { grid-column: 1 / -1; }
+figcaption { font-family: var(--f-display); font-size: 18px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+figure svg { width: 100%; height: auto; display: block; }
+.note { font-size: 14px; color: var(--muted); }
+
+/* SVG: os desenhos estão em cm; --k é o tamanho da letra em cm de cada desenho */
+svg { --k: 1.4; }
+.p-camb { fill: var(--camb); }
+.p-sup { fill: var(--sup); }
+.p-top { fill: var(--camb-soft); stroke: var(--camb); stroke-width: calc(var(--k) * .1); stroke-dasharray: .8 .5; }
+.p-wall { fill: var(--wall); }
+.wall-edge { stroke: var(--muted); stroke-width: calc(var(--k) * .12); }
+.scr { stroke: var(--screw); stroke-width: calc(var(--k) * .25); stroke-linecap: round; }
+.scr-head { fill: var(--screw); }
+.floor { stroke: var(--muted); stroke-width: .35; }
+.dl { stroke: var(--dim); stroke-width: calc(var(--k) * .07); fill: none; }
+.dt { fill: var(--dim); font-family: var(--f-mono); font-size: calc(var(--k) * 1px); }
+.lt { fill: var(--muted); font-family: var(--f-body); font-size: calc(var(--k) * .92px); }
+.lt-in { fill: var(--fg); font-family: var(--f-body); font-size: calc(var(--k) * .85px); font-weight: 600; }
+.board { fill: none; stroke: var(--fg); stroke-width: .5; }
+.rip { stroke: var(--fg); stroke-width: .4; stroke-dasharray: 2 1.5; }
+.seg { stroke: var(--sheet); stroke-width: .6; }
+.waste { fill: var(--line); }
+.ct { fill: var(--sheet); font-family: var(--f-body); font-size: 3.4px; font-weight: 600; }
+.ct.dk { fill: var(--fg); }
+.cm { fill: var(--fg); font-family: var(--f-mono); font-size: 4.2px; }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-display); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; color: var(--muted); }
+td.n, th.n { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td .tag { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+td .tag i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+tfoot td { font-weight: 700; border-bottom: none; }
+ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
+ol.steps li::marker { font-family: var(--f-mono); color: var(--dim); }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.callout { border-left: 3px solid var(--dim); padding: 4px 0 4px 14px; color: var(--fg); }
+footer { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">MARCENARIA · PROJETO · OUT/2026</div>
+  <h1>Prateleira Flutuante de cambará</h1>
+  <p class="lede">Uma caixa oca de 60 × 20 × 6,1 que encaixa num suporte em pente parafusado na parede. O suporte fica escondido dentro dela, então a prateleira parece sair direto da parede. Sai tudo de uma tábua de cambará 30 × 2, sem ferragem especial. Medidas em centímetros, para o jogo de 2.</p>
+  <div class="woods">
+    <span class="wood"><i class="sw camb"></i>Caixa: tampo, fundo, frente e laterais</span>
+    <span class="wood"><i class="sw sup"></i>Suporte escondido: travessa e braços</span>
+  </div>
+</header>
+
+<section aria-label="Modelo 3D">
+  <div class="stage" id="stage">
+    <div class="msg" id="msg">Carregando o 3D…</div>
+    <div class="hint" id="hint" hidden>Arraste para girar · pinça ou rolagem para aproximar</div>
+  </div>
+  <div class="bar">
+    <button class="b" id="o-40" type="button" aria-pressed="false">40 cm</button>
+    <button class="b" id="o-60" type="button" aria-pressed="true">60 cm</button>
+    <button class="b" id="o-90" type="button" aria-pressed="false">90 cm</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="b" id="v-tres" type="button">3/4</button>
+    <button class="b" id="v-frente" type="button">Frente</button>
+    <button class="b" id="v-lado" type="button">Lado</button>
+    <button class="b" id="v-tras" type="button">Por trás</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="b" id="t-tira" type="button" aria-pressed="false">Tirar do suporte</button>
+    <button class="b" id="t-tampo" type="button" aria-pressed="false">Sem tampo</button>
+    <button class="b" id="t-parede" type="button" aria-pressed="false">Sem parede</button>
+    <button class="b" id="t-gira" type="button" aria-pressed="false">Girar</button>
+    <button class="b" id="t-monta" type="button">Montar de novo</button>
+  </div>
+</section>
+
+<div class="facts">
+  <div class="fact"><b>60 × 20 × 6,1</b><span>largura × profundidade × altura</span></div>
+  <div class="fact"><b>vão de 2,1</b><span>o braço de 2 entra com 1 mm de folga</span></div>
+  <div class="fact"><b>até 10 kg</b><span>por prateleira, em parede de alvenaria</span></div>
+  <div class="fact"><b>2,40 m ≈ R$ 42</b><span>de tábua 30 × 2 para o par de 60</span></div>
+</div>
+
+<section>
+  <h2>Como ela fica presa</h2>
+  <div class="views">
+
+    <figure class="wide">
+      <figcaption>Corte de lado</figcaption>
+      <svg viewBox="-13 -6.5 54 19" style="--k:.95" role="img" aria-label="Corte de lado: caixa de 20 por 6,1 com tampo, fundo e frente de 2; dentro, o braço de 12 e a travessa de 5 do suporte, presos na parede por um parafuso de 10 cm; um parafuso de 3 cm sobe pelo fundo até o braço">
+        <rect class="p-wall" x="20" y="-5" width="5" height="16"/>
+        <line class="wall-edge" x1="20" y1="-5" x2="20" y2="11"/>
+        <text class="lt" x="22.5" y="-5.6" text-anchor="middle">parede</text>
+        <rect class="p-camb" x="2" y="0" width="18" height="2"/>
+        <rect class="p-camb" x="2" y="4.1" width="18" height="2"/>
+        <rect class="p-camb" x="0" y="0" width="2" height="6.1"/>
+        <rect class="p-sup" x="3" y="2.1" width="12" height="2"/>
+        <rect class="p-sup" x="15" y="2.1" width="5" height="2"/>
+        <line x1="15" y1="2.1" x2="15" y2="4.1" style="stroke:var(--sheet);stroke-width:.08"/>
+        <line class="scr" x1="15.6" y1="3.1" x2="25" y2="3.1"/>
+        <line class="scr" x1="9" y1="6.1" x2="9" y2="3.2"/>
+        <text class="lt-in" x="1" y="3.4" text-anchor="middle" transform="rotate(-90 1 3.05)">frente</text>
+        <text class="lt-in" x="11" y="1.35" text-anchor="middle">tampo</text>
+        <text class="lt-in" x="11" y="5.45" text-anchor="middle">fundo</text>
+        <text class="lt-in" x="7.6" y="3.4" text-anchor="middle" style="fill:var(--sheet)">braço</text>
+        <text class="lt" x="25.6" y="3.4">parafuso 5 × 100 + bucha 8</text>
+        <text class="lt" x="8.4" y="7.6" text-anchor="end">parafuso 3,5 × 30, por baixo</text>
+        <path class="dl" d="M0 7.8v1.6M20 7.8v1.6M0 8.6h20"/>
+        <text class="dt" x="10" y="10.5" text-anchor="middle">20</text>
+        <path class="dl" d="M-1 0h-2.5M-1 6.1h-2.5M-2.2 0v6.1"/>
+        <text class="dt" x="-3" y="3.05" text-anchor="middle" transform="rotate(-90 -3 3.05)">6,1</text>
+        <path class="dl" d="M3 -1.6h12M3 -2.3v1.4M15 -2.3v1.4M20 -2.3v1.4M15 -1.6h5"/>
+        <text class="dt" x="8" y="-2.6" text-anchor="middle">braço 12</text>
+        <text class="dt" x="17.5" y="-2.6" text-anchor="middle">5</text>
+        <text class="lt" x="17.5" y="7.6" text-anchor="middle">travessa</text>
+        <path class="dl" d="M-6.2 2.1h4.6M-6.2 4.1h4.6M-5.6 2.1v2"/>
+        <text class="dt" x="-6" y="1.6" text-anchor="end">vão 2,1</text>
+      </svg>
+      <p class="note">O braço tem 2 de altura e o vão tem 2,1. Esse 1 mm de folga fica em cima: a caixa entra sem forçar e o parafuso de baixo puxa o fundo contra o braço. Entre a ponta do braço e a frente sobra 1 cm de folga.</p>
+    </figure>
+
+    <figure class="wide">
+      <figcaption>De cima, sem o tampo · 60 cm</figcaption>
+      <svg viewBox="-9 -6 80 33" role="img" aria-label="Vista de cima sem o tampo: travessa de 55,4 encostada na parede com 2 parafusos de parede entre os 3 braços de 12 por 5; laterais e frente da caixa em volta">
+        <rect class="p-wall" x="-4" y="-4" width="68" height="4"/>
+        <line class="wall-edge" x1="-4" y1="0" x2="64" y2="0"/>
+        <text class="lt" x="30" y="-1.2" text-anchor="middle">parede</text>
+        <rect class="p-top" x="2" y="0" width="56" height="18"/>
+        <rect class="p-camb" x="0" y="0" width="2" height="18"/>
+        <rect class="p-camb" x="58" y="0" width="2" height="18"/>
+        <rect class="p-camb" x="0" y="18" width="60" height="2"/>
+        <rect class="p-sup" x="2.3" y="0" width="55.4" height="5"/>
+        <rect class="p-sup" x="4.5" y="5" width="5" height="12"/>
+        <rect class="p-sup" x="27.5" y="5" width="5" height="12"/>
+        <rect class="p-sup" x="50.5" y="5" width="5" height="12"/>
+        <path d="M4.5 5h5M27.5 5h5M50.5 5h5" style="stroke:var(--sheet);stroke-width:.12"/>
+        <line class="scr" x1="18.5" y1="-3.2" x2="18.5" y2="5"/>
+        <line class="scr" x1="41.5" y1="-3.2" x2="41.5" y2="5"/>
+        <g style="--k:.6">
+          <line class="scr" x1="5.8" y1="0" x2="5.8" y2="8"/><line class="scr" x1="8.2" y1="0" x2="8.2" y2="8"/>
+          <line class="scr" x1="28.8" y1="0" x2="28.8" y2="8"/><line class="scr" x1="31.2" y1="0" x2="31.2" y2="8"/>
+          <line class="scr" x1="51.8" y1="0" x2="51.8" y2="8"/><line class="scr" x1="54.2" y1="0" x2="54.2" y2="8"/>
+        </g>
+        <circle class="scr-head" cx="7" cy="11" r=".55"/><circle class="scr-head" cx="30" cy="11" r=".55"/><circle class="scr-head" cx="53" cy="11" r=".55"/>
+        <text class="lt-in" x="18.5" y="3.4" text-anchor="middle" style="fill:var(--sheet)">travessa 55,4 × 5</text>
+        <text class="lt" x="18.5" y="11.5" text-anchor="middle">braço 12 × 5</text>
+        <text class="lt" x="41.5" y="11.5" text-anchor="middle">● parafuso por baixo</text>
+        <text class="lt-in" x="30" y="19.35" text-anchor="middle">frente 60 × 6,1</text>
+        <path class="dl" d="M0 21.5v2.4M60 21.5v2.4M0 22.7h60"/>
+        <text class="dt" x="30" y="25.6" text-anchor="middle">60 · frente</text>
+        <path class="dl" d="M61 0h3.5M61 20h3.5M63.3 0v20"/>
+        <text class="dt" x="65.2" y="10.4">20</text>
+        <path class="dl" d="M9.5 14h18M9.5 13.3v1.4M27.5 13.3v1.4"/>
+        <text class="dt" x="18.5" y="16.3" text-anchor="middle">18 livres</text>
+      </svg>
+      <p class="note">Os braços ficam a 7 cm das pontas e no meio. Os 2 parafusos de parede passam pela travessa <b>entre</b> os braços. Cada braço é preso na travessa com cola e 2 parafusos de 4,5 × 80 que entram por trás dela (os traços finos). Na de 90 são 4 braços e 3 parafusos de parede.</p>
+    </figure>
+
+    <figure class="wide">
+      <figcaption>Por trás, antes de encaixar</figcaption>
+      <svg viewBox="-4 -4 68 15.5" style="--k:1.6" role="img" aria-label="Vista de trás da caixa: tampo e fundo de 2, laterais de 2 e o vão de 2,1 entre eles, aberto, onde o suporte entra">
+        <rect class="p-camb" x="0" y="0" width="60" height="2"/>
+        <rect class="p-camb" x="0" y="4.1" width="60" height="2"/>
+        <rect class="p-camb" x="0" y="0" width="2" height="6.1"/>
+        <rect class="p-camb" x="58" y="0" width="2" height="6.1"/>
+        <rect x="2" y="2" width="56" height="2.1" style="fill:var(--fg);opacity:.75"/>
+        <text class="lt-in" x="30" y="3.4" text-anchor="middle" style="fill:var(--sheet)">vão aberto de 56 × 2,1: o suporte entra aqui</text>
+        <path class="dl" d="M0 7.5v1.6M60 7.5v1.6M0 8.3h60"/>
+        <text class="dt" x="30" y="10.2" text-anchor="middle">60</text>
+        <text class="lt" x="0" y="-1">trás da caixa (o lado que encosta na parede)</text>
+      </svg>
+      <p class="note">Atrás a caixa não tem peça nenhuma. O tampo e o fundo vão até a parede, e as laterais escondem o suporte dos lados.</p>
+    </figure>
+
+    <figure class="wide">
+      <figcaption>Frente, já na parede</figcaption>
+      <svg viewBox="-4 -4 68 15.5" style="--k:1.6" role="img" aria-label="Vista de frente: só aparece a frente de 60 por 6,1, sem nenhum parafuso nem suporte">
+        <rect class="p-wall" x="-4" y="-4" width="68" height="15.5"/>
+        <rect class="p-camb" x="0" y="0" width="60" height="6.1"/>
+        <path class="dl" d="M0 7.5v1.6M60 7.5v1.6M0 8.3h60"/>
+        <text class="dt" x="30" y="10.2" text-anchor="middle">60</text>
+        <path class="dl" d="M61 0h2M61 6.1h2M62.3 0v6.1"/>
+        <text class="lt" x="30" y="-1.2" text-anchor="middle">nenhum parafuso nem suporte à vista</text>
+      </svg>
+      <p class="note">De frente só aparece a tábua de 6,1. Os parafusos de baixo só são vistos por quem se abaixar.</p>
+    </figure>
+
+  </div>
+</section>
+
+<section>
+  <h2>Peças · 1 prateleira de 60</h2>
+  <div class="card tbl">
+    <table>
+      <thead><tr><th>Peça</th><th class="n">Qtd</th><th class="n">Medida final</th><th>Parte</th><th>Observação</th></tr></thead>
+      <tbody>
+        <tr><td>Tampo</td><td class="n">1</td><td class="n">56 × 18 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>caixa</span></td><td>Entre as laterais, por trás da frente</td></tr>
+        <tr><td>Fundo</td><td class="n">1</td><td class="n">56 × 18 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>caixa</span></td><td>Igual ao tampo</td></tr>
+        <tr><td>Frente</td><td class="n">1</td><td class="n">60 × 6,1 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>caixa</span></td><td>De ponta a ponta. Cobre o topo das laterais</td></tr>
+        <tr><td>Lateral</td><td class="n">2</td><td class="n">18 × 6,1 × 2</td><td><span class="tag"><i style="background:var(--camb)"></i>caixa</span></td><td>O veio corre de frente para trás</td></tr>
+        <tr><td>Travessa</td><td class="n">1</td><td class="n">55,4 × 5 × 2</td><td><span class="tag"><i style="background:var(--sup)"></i>suporte</span></td><td>Deitada, encostada na parede. 3 mm de folga de cada lado</td></tr>
+        <tr><td>Braço</td><td class="n">3</td><td class="n">12 × 5 × 2</td><td><span class="tag"><i style="background:var(--sup)"></i>suporte</span></td><td>O veio corre de frente para trás, como nas laterais</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card tbl">
+    <table>
+      <thead><tr><th>Outras medidas</th><th class="n">40 cm</th><th class="n">60 cm</th><th class="n">90 cm</th></tr></thead>
+      <tbody>
+        <tr><td>Tampo e fundo</td><td class="n">36 × 18</td><td class="n">56 × 18</td><td class="n">86 × 18</td></tr>
+        <tr><td>Frente</td><td class="n">40 × 6,1</td><td class="n">60 × 6,1</td><td class="n">90 × 6,1</td></tr>
+        <tr><td>Travessa</td><td class="n">35,4 × 5</td><td class="n">55,4 × 5</td><td class="n">85,4 × 5</td></tr>
+        <tr><td>Braços de 12 × 5</td><td class="n">3</td><td class="n">3</td><td class="n">4</td></tr>
+        <tr><td>Parafusos na parede</td><td class="n">2</td><td class="n">2</td><td class="n">3</td></tr>
+        <tr><td>Tábua por prateleira</td><td class="n">0,75 m</td><td class="n">1,15 m</td><td class="n">1,75 m</td></tr>
+        <tr><td>Peso</td><td class="n">~2,6 kg</td><td class="n">~3,8 kg</td><td class="n">~5,6 kg</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">As laterais (18 × 6,1) são iguais em todos os tamanhos. Os braços ficam a 7 cm das pontas e os outros, espaçados por igual no meio.</p>
+</section>
+
+<section>
+  <h2>Plano de corte</h2>
+  <p>Peça <b>1 tábua de cambará 30 × 2 com 2,40 m</b> para o par de 60. Corte 2 trechos de 1,15 e rasgue cada um em 3 faixas: <b>18</b> (tampo e fundo), <b>6,1</b> (frente e laterais) e <b>5</b> (travessa e braços). Dá exatamente 1 prateleira por trecho.</p>
+  <figure class="wide">
+    <figcaption>Tábua de 2,40 m · 2 prateleiras de 60</figcaption>
+    <svg viewBox="-2 -9 246 48" role="img" aria-label="Tábua de 240 por 30: dois trechos de 115, cada um rasgado em faixas de 18, 6,1 e 5, e 10 cm de sobra">
+      <g id="trecho">
+        <rect class="p-camb seg" x="0" y="0" width="56" height="18"/>
+        <rect class="p-camb seg" x="56" y="0" width="56" height="18"/>
+        <rect class="waste" x="112" y="0" width="3" height="18"/>
+        <rect class="p-camb seg" x="0" y="18.3" width="60" height="6.1"/>
+        <rect class="p-camb seg" x="60" y="18.3" width="18" height="6.1"/>
+        <rect class="p-camb seg" x="78" y="18.3" width="18" height="6.1"/>
+        <rect class="waste" x="96" y="18.3" width="19" height="6.1"/>
+        <rect class="p-sup seg" x="0" y="24.7" width="55.4" height="5"/>
+        <rect class="p-sup seg" x="55.4" y="24.7" width="12" height="5"/>
+        <rect class="p-sup seg" x="67.4" y="24.7" width="12" height="5"/>
+        <rect class="p-sup seg" x="79.4" y="24.7" width="12" height="5"/>
+        <rect class="waste" x="91.4" y="24.7" width="23.6" height="5"/>
+        <path class="rip" d="M0 18.15h115M0 24.55h115"/>
+        <text class="ct" x="28" y="10" text-anchor="middle">tampo 56</text>
+        <text class="ct" x="84" y="10" text-anchor="middle">fundo 56</text>
+        <text class="ct" x="30" y="22.6" text-anchor="middle">frente 60</text>
+        <text class="ct" x="69" y="22.6" text-anchor="middle">lat. 18</text>
+        <text class="ct" x="87" y="22.6" text-anchor="middle">lat. 18</text>
+        <text class="ct" x="27.7" y="28.4" text-anchor="middle">travessa 55,4</text>
+        <text class="ct" x="61.4" y="28.4" text-anchor="middle">12</text>
+        <text class="ct" x="73.4" y="28.4" text-anchor="middle">12</text>
+        <text class="ct" x="85.4" y="28.4" text-anchor="middle">12</text>
+      </g>
+      <use href="#trecho" x="115"/>
+      <rect class="waste" x="230" y="0" width="10" height="30"/>
+      <rect class="board" x="0" y="0" width="240" height="30"/>
+      <line x1="115" y1="0" x2="115" y2="30" style="stroke:var(--fg);stroke-width:.5"/>
+      <text class="cm" x="57.5" y="-2.5" text-anchor="middle">prateleira 1 · 115</text>
+      <text class="cm" x="172.5" y="-2.5" text-anchor="middle">prateleira 2 · 115</text>
+      <text class="cm" x="235" y="-2.5" text-anchor="middle">10</text>
+      <text class="cm" x="0" y="36.5">2,40 m × R$ 17,50 = R$ 42,00 · faixas: 18 + 6,1 + 5 e 2 serradas de 3 mm = 29,7</text>
+    </svg>
+    <p class="note">Rasgue primeiro a faixa de 18, depois a de 6,1. A de 5 é o que sobra: se a tábua vier com 29, ela sai com 4, e isso não tem problema. A sobra de 10 cm no fim cobre as pontas da tábua, que costumam vir rachadas.</p>
+  </figure>
+  <p class="callout">A medida que importa é <b>a altura da frente e das laterais: 6,1</b>, ou seja, 3 espessuras da tábua + 1 mm. Meça a tábua antes. Se ela vier com 1,9, por exemplo, faça a frente e as laterais com 5,8 (3 × 1,9 + 0,1).</p>
+</section>
+
+<section class="two">
+  <div class="card">
+    <h2>Compras · par de 60</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Item</th><th class="n">Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Tábua de cambará 30 × 2, 2,40 m</td><td class="n">R$ 42</td></tr>
+          <tr><td>Parafuso 5 × 100 + bucha 8, 4 un. (parede)</td><td class="n">≈ R$ 8</td></tr>
+          <tr><td>Parafuso 4,5 × 80 cabeça chata, 12 un. (braços)</td><td class="n">≈ R$ 8</td></tr>
+          <tr><td>Parafuso 3,5 × 30, 6 un. (por baixo)</td><td class="n">≈ R$ 3</td></tr>
+          <tr><td>Prego sem cabeça de 25 mm, pacote</td><td class="n">≈ R$ 5</td></tr>
+          <tr><td>Lixas 120 e 220</td><td class="n">≈ R$ 10</td></tr>
+          <tr><td>Cola PVA (a da escrivaninha serve)</td><td class="n">≈ R$ 30</td></tr>
+          <tr><td>Óleo ou verniz (o mesmo da escrivaninha)</td><td class="n">≈ R$ 50</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td>Aproveitando a cola e o acabamento</td><td class="n">≈ R$ 76</td></tr>
+          <tr><td>Comprando tudo</td><td class="n">≈ R$ 156</td></tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="note">O preço da tábua é o da Escore Bem (R$ 17,50/m, out/2026), cotado para a 30 × 2,5. A de 2 deve sair igual ou um pouco mais barata. O resto é estimativa de loja de ferragens.</p>
+  </div>
+
+  <div class="card">
+    <h2>Montagem na oficina</h2>
+    <ol class="steps">
+      <li>Corte os 2 trechos de 1,15, rasgue as faixas de 18, 6,1 e 5 e corte as peças no comprimento. Corte as 4 laterais juntas, com um batente, para saírem iguais.</li>
+      <li>Lixe com 120 as faces que vão ficar à vista antes de colar. Depois de montada, a parte de dentro não dá mais para lixar.</li>
+      <li><b>Caixa:</b> cole as laterais nas pontas do fundo e depois a frente na frente do fundo e das laterais. Prenda com grampos ou com pregos sem cabeça de 25 mm. Confira o esquadro.</li>
+      <li>Antes de colar o tampo, apoie ele no lugar, sem cola, e teste o encaixe com um braço: ele precisa entrar sem forçar. Se estiver justo, lixe o braço. Depois cole e pregue o tampo.</li>
+      <li><b>Suporte:</b> fure a travessa por trás, 2 furos por braço com broca de 3 mm, e escareie para a cabeça do parafuso ficar abaixo da madeira (ela encosta na parede). Cole cada braço e prenda com os 4,5 × 80. Confira os braços no esquadro com a travessa.</li>
+      <li>Fure a travessa de lado a lado, de frente para trás, nos pontos dos parafusos de parede (entre os braços). Use broca de 5,5, bem no meio da espessura de 2.</li>
+      <li>Tape os furos dos pregos com massa de madeira na cor do cambará, lixe com 220 e passe o acabamento só na caixa. O suporte não precisa.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="two">
+  <div class="card">
+    <h2>Instalação na parede</h2>
+    <ol class="steps">
+      <li>Marque a altura do <b>fundo</b> da prateleira e risque uma linha nivelada. A travessa fica 2 cm acima dessa linha, porque o fundo da caixa passa por baixo dela.</li>
+      <li>Apoie o suporte na linha, com os braços para a frente, e marque na parede os furos que passam pela travessa.</li>
+      <li>Fure a parede com broca de 8, coloque as buchas e parafuse o suporte com os 5 × 100. Confira o nível de novo antes do aperto final.</li>
+      <li>Empurre a caixa contra a parede: os braços entram pelo vão de trás até a caixa encostar na parede.</li>
+      <li>Por baixo, dê 1 parafuso de 3,5 × 30 em cada braço, a uns 9 cm da frente, com pré-furo de 2,5 no fundo. Ele trava a caixa no suporte.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>Cuidados</h3>
+    <ul class="plain">
+      <li>Não fure na linha vertical acima ou abaixo de tomadas e interruptores, porque é por ali que costuma passar o fio.</li>
+      <li>Em drywall, use bucha própria para gesso ou parafuse num montante. Nesse caso a carga cai para uns 5 kg.</li>
+      <li>Se a parede tiver barriga, a caixa não encosta bem. Calce a travessa com papelão, e não a caixa.</li>
+      <li>Para 2 prateleiras, uma em cima da outra, deixe 30 a 35 cm entre elas.</li>
+    </ul>
+    <h3>Se quiser mudar</h3>
+    <ul class="plain">
+      <li><b>Tábua de 2,5:</b> a prateleira fica com 7,6 de altura e o vão com 2,6. Os braços e a travessa também ficam com 2,5. Tampo e fundo continuam com 18.</li>
+      <li><b>Sem prego à vista:</b> só cola e grampos. Ficam mais limpos, mas você precisa de 4 a 6 grampos.</li>
+      <li><b>Mais funda (25):</b> não cabe na tábua de 30 com as 3 faixas. Precisa de uma tábua a mais só para a frente e as laterais.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>Mesmo modelo da Prateleira Flutuante Modern do catálogo (marcenaria-moraes, js/models/modern.mjs), com a madeira e a luz do motor 3D do site. Medidas em cm. Preço do cambará de out/2026, em Uberlândia.</footer>
+
+</div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// Madeira, luz e montagem copiadas do motor do site (marcenaria-moraes/js/engine.js). Tudo em cm.
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+function noise1(seed) { const r = rng(seed), g = Array.from({ length: 512 }, r); return x => { const i = Math.floor(x), f = x - i, a = g[i & 511], b = g[(i + 1) & 511]; const t = f * f * (3 - 2 * f); return a + (b - a) * t; }; }
+const FIN = {
+  cla: { base: '#BE9065', light: '#D3A97E', dark: '#8E6440', streak: '#A97C54' }, // cambará natural
+  sup: { base: '#8E6440', light: '#A27650', dark: '#5E3F24', streak: '#7D5634' }, // suporte: mais escuro para se distinguir
+};
+function woodCanvas(fin, seed, W = 1024) {
+  const H = W, k0 = W / 1024, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), r = rng(seed * 31 + 7), n1 = noise1(seed), n2 = noise1(seed + 5);
+  const F = FIN[fin];
+  x.fillStyle = F.base; x.fillRect(0, 0, W, H);
+  for (let i = 0; i < 26; i++) {
+    const y = r() * H, h = (20 + r() * 90) * k0; x.globalAlpha = 0.10 + r() * 0.16;
+    x.fillStyle = r() < 0.5 ? F.light : F.streak; x.fillRect(0, y, W, h);
+  }
+  for (let i = 0; i < 150; i++) {
+    const y0 = r() * H, amp = (3 + r() * 14) * k0, ph = r() * 50, k = 0.4 + r() * 1.4;
+    x.globalAlpha = 0.05 + Math.pow(r(), 2.2) * 0.38;
+    x.strokeStyle = r() < 0.85 ? F.dark : F.light; x.lineWidth = Math.max(0.5, (0.6 + Math.pow(r(), 3) * 3.2) * k0);
+    x.beginPath();
+    for (let u = -8; u <= W + 8; u += 8) {
+      const y = y0 + (n1(u / k0 / 260 * k + ph) - 0.5) * amp * 2 + (n2(u / k0 / 70 + ph) - 0.5) * 2.2 * k0;
+      u < 0 ? x.moveTo(u, y) : x.lineTo(u, y);
+    }
+    x.stroke();
+    x.save(); x.translate(0, y0 > H / 2 ? -H : H); x.stroke(); x.restore();
+  }
+  x.globalAlpha = 0.18; x.fillStyle = F.dark;
+  for (let i = 0; i < 2600 * k0 * k0; i++) x.fillRect(r() * W, r() * H, (2 + r() * 7) * k0, 0.8 * k0);
+  x.globalAlpha = 1;
+  return c;
+}
+const mats = {};
+function woodMat(fin, seed) {
+  const k = fin + seed; if (mats[k]) return mats[k];
+  const t = new THREE.CanvasTexture(woodCanvas(fin, seed));
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return (mats[k] = new THREE.MeshStandardMaterial({ map: t, bumpMap: t, bumpScale: 0.35, roughness: 0.46, metalness: 0 }));
+}
+const AX = { x: 0, y: 1, z: 2 }, GRAIN3 = { x: 'x', y: 'z', z: 'y' };
+function applyUV(geo, grain, off) {
+  const pos = geo.attributes.position, nor = geo.attributes.normal, uv = geo.attributes.uv, g = AX[grain];
+  for (let i = 0; i < pos.count; i++) {
+    const p = [pos.getX(i), pos.getY(i), pos.getZ(i)], n = [Math.abs(nor.getX(i)), Math.abs(nor.getY(i)), Math.abs(nor.getZ(i))];
+    const na = n.indexOf(Math.max(...n)), axes = [0, 1, 2].filter(a => a !== na);
+    const ua = axes.includes(g) ? g : axes[0], va = axes.find(a => a !== ua);
+    uv.setXY(i, p[ua] / 60 + off[0], p[va] / 18 + off[1]);
+  }
+  uv.needsUpdate = true;
+}
+
+// ---------- peças (iguais a prateleira(L) em modern.mjs): x = largura, y = profundidade (0 na frente, parede em y = D), z = altura ----------
+const D = 20, H = 6.1, T = 2, Z0 = 32;   // Z0: altura da prateleira na parede, só para a cena
+let L = 60;
+function parts(L) {
+  const P = [], S = [];
+  const add = (id, fin, b, o = {}) => P.push({ id, fin, b, grain: 'x', step: 0, ex: [0, -1, 0], ...o });
+  const n = L > 60 ? 4 : 3, xs = Array.from({ length: n }, (_, i) => 7 + i * (L - 14) / (n - 1));
+  add('trav', 'sup', [T + 0.3, D - 5, T, L - T - 0.3, D, 2 * T]);
+  xs.forEach(x => add('braco', 'sup', [x - 2.5, D - 17, T, x + 2.5, D - 5, 2 * T], { grain: 'y', step: 0.6 }));
+  const cx = { step: 1.6, box: 1 };
+  add('fundo', 'cla', [T, T, 0, L - T, D, T], cx);
+  add('tampo', 'cla', [T, T, H - T, L - T, D, H], cx);
+  add('lat', 'cla', [0, T, 0, T, D, H], { ...cx, grain: 'y' });
+  add('lat', 'cla', [L - T, T, 0, L, D, H], { ...cx, grain: 'y' });
+  add('frente', 'cla', [0, 0, 0, L, T, H], cx);
+  // parafusos: [a, b, raio, da caixa?]
+  xs.slice(1).forEach((x, i) => { const xm = (xs[i] + x) / 2; S.push([[xm, D - 4.6, 3], [xm, D + 5, 3], 0.25]); });
+  xs.forEach(x => { [x - 1.2, x + 1.2].forEach(xx => S.push([[xx, D - 0.1, 3], [xx, D - 8, 3], 0.2])); S.push([[x, 9, -0.05], [x, 9, 3], 0.18, 1]); });
+  return { P, S };
+}
+
+// ---------- cena ----------
+const stage = document.getElementById('stage'), msg = document.getElementById('msg'), hint = document.getElementById('hint');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+catch (e) { msg.textContent = 'Este navegador não abriu o 3D (WebGL desligado). As vistas abaixo mostram o mesmo projeto.'; throw e; }
+renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1)); renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.08;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.45;
+const camera = new THREE.PerspectiveCamera(28, 1, 5, 5000);
+const key = new THREE.SpotLight(0xfff1e0, 16000, 0, Math.PI / 3.6, 0.55, 1.6);
+key.position.set(-110, 380, 260); key.target.position.set(0, Z0, 0);
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.6; key.shadow.radius = 8;
+key.shadow.camera.near = 100; key.shadow.camera.far = 1000;
+scene.add(key, key.target);
+const rim = new THREE.DirectionalLight(0xdfe6ff, 0.6); rim.position.set(180, 160, -220); scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xfff4ea, 0x1d1c20, 0.3));
+const floor = new THREE.Mesh(new THREE.CircleGeometry(700, 96), new THREE.ShadowMaterial({ opacity: 0.32 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+// parede atrás da prateleira (y = D no projeto)
+const wall = new THREE.Mesh(new THREE.PlaneGeometry(1400, 600), new THREE.MeshStandardMaterial({ color: 0xe6e2dc, roughness: 0.95 }));
+wall.position.set(0, 300, -D / 2 - 0.02); wall.receiveShadow = true; scene.add(wall);
+
+const screwMat = new THREE.MeshStandardMaterial({ color: 0x9a9a9a, metalness: 0.7, roughness: 0.35 });
+let meshes = [];
+function build() {
+  meshes.forEach(m => { scene.remove(m); m.geometry.dispose(); });
+  const toV = (x, y, z) => new THREE.Vector3(x - L / 2, z + Z0, D / 2 - y);
+  const { P, S } = parts(L);
+  meshes = P.map((p, i) => {
+    const [x0, y0, z0, x1, y1, z1] = p.b;
+    const geo = new THREE.BoxGeometry(x1 - x0, z1 - z0, y1 - y0);
+    applyUV(geo, GRAIN3[p.grain], [((i * 37) % 13) / 13, ((i * 53) % 7) / 7]);
+    const m = new THREE.Mesh(geo, woodMat(p.fin, 1 + (i % 4)));
+    m.castShadow = true; m.receiveShadow = true;
+    const c = toV((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2); m.position.copy(c);
+    m.userData = { p, home: c.clone(), dir: new THREE.Vector3(p.ex[0], p.ex[2], -p.ex[1]).normalize() };
+    scene.add(m); return m;
+  });
+  S.forEach(([a, b, r, box]) => {
+    const A = toV(...a), B = toV(...b), len = A.distanceTo(B);
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 10), screwMat);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize());
+    const c = A.clone().add(B).multiplyScalar(0.5); m.position.copy(c);
+    m.userData = { p: { id: 'parafuso', step: box ? 1.6 : 0.8, box, screw: 1, ex: [0, -1, 0] }, home: c.clone(), dir: new THREE.Vector3(0, 0, 1) };
+    scene.add(m); meshes.push(m);
+  });
+}
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.08; controls.enablePan = false;
+controls.minPolarAngle = 0.15; controls.maxPolarAngle = Math.PI / 2 + 0.35;
+controls.minDistance = 40; controls.maxDistance = 900; controls.autoRotateSpeed = 0.9;
+controls.target.set(0, Z0 + 3, 0);
+
+// ---------- pose, câmera, animações ----------
+const ease = t => t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
+let semTampo = false, semParede = false, build_ = 3, buildAnim = null, camAnim = null, out = 0, outAnim = null, tirada = false;
+function pose() {
+  meshes.forEach(m => {
+    const p = m.userData.p, k = ease(build_ - p.step);
+    m.position.copy(m.userData.home).addScaledVector(m.userData.dir, 70 * (1 - k));
+    if (p.box) m.position.z += out * 28;
+    m.visible = k > 0.001 && !(semTampo && p.id === 'tampo') && !(p.screw && k < 0.9);
+  });
+}
+const VIEWS = { tres: [30, 12], frente: [0, 4], lado: [90, 3], tras: [150, 14] };
+function camPos([az, el]) {
+  const a = az * Math.PI / 180, e = el * Math.PI / 180, asp = camera.aspect || 1.6;
+  const dist = (L * 2.4 + 50) * Math.max(1, 1.5 / asp);
+  return new THREE.Vector3(dist * Math.sin(a) * Math.cos(e), Z0 + 3 + dist * Math.sin(e), dist * Math.cos(a) * Math.cos(e));
+}
+let curView = 'tres';
+function view(name, animate = true) {
+  curView = name;
+  const to = camPos(VIEWS[name]);
+  if (!animate || reduce) { camera.position.copy(to); controls.update(); pose(); return; }
+  camAnim = { from: camera.position.clone(), to, t0: performance.now(), ms: 700 };
+}
+function assemble() {
+  if (reduce) { build_ = 3; pose(); return; }
+  build_ = 0; pose(); buildAnim = { t0: performance.now(), ms: 1900 };
+}
+function resize() {
+  const w = stage.clientWidth || 1, h = stage.clientHeight || 1;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+build(); resize(); view('tres', false);
+new ResizeObserver(() => { resize(); if (!camAnim) view(curView, false); }).observe(stage);
+
+let first = true;
+renderer.setAnimationLoop(() => {
+  const now = performance.now();
+  if (buildAnim) { const t = Math.min(1, (now - buildAnim.t0) / buildAnim.ms); build_ = t * 3; pose(); if (t >= 1) buildAnim = null; }
+  if (outAnim) { const t = ease((now - outAnim.t0) / 700); out = outAnim.a + (outAnim.b - outAnim.a) * t; pose(); if (t >= 1) outAnim = null; }
+  if (camAnim) {
+    const t = ease((now - camAnim.t0) / camAnim.ms);
+    camera.position.lerpVectors(camAnim.from, camAnim.to, t);
+    if (t >= 1) camAnim = null;
+  }
+  controls.update();
+  wall.visible = !semParede && camera.position.z > -D / 2;   // olhando por trás, a parede some
+  renderer.render(scene, camera);
+  if (first) { first = false; msg.hidden = true; hint.hidden = false; }
+});
+assemble();
+
+// ---------- botões ----------
+for (const v of Object.keys(VIEWS)) document.getElementById('v-' + v).addEventListener('click', () => view(v));
+const sizes = [40, 60, 90];
+sizes.forEach(s => document.getElementById('o-' + s).addEventListener('click', () => {
+  L = s; sizes.forEach(z => document.getElementById('o-' + z).setAttribute('aria-pressed', z === s));
+  build(); view(curView); assemble();
+}));
+const bT = document.getElementById('t-tampo'), bG = document.getElementById('t-gira'), bP = document.getElementById('t-parede'), bX = document.getElementById('t-tira');
+bT.addEventListener('click', () => { semTampo = !semTampo; bT.setAttribute('aria-pressed', semTampo); pose(); });
+bP.addEventListener('click', () => { semParede = !semParede; bP.setAttribute('aria-pressed', semParede); pose(); });
+bG.addEventListener('click', () => { controls.autoRotate = !controls.autoRotate; bG.setAttribute('aria-pressed', controls.autoRotate); });
+bX.addEventListener('click', () => {
+  tirada = !tirada; bX.setAttribute('aria-pressed', tirada); bX.textContent = tirada ? 'Encaixar' : 'Tirar do suporte';
+  if (reduce) { out = tirada ? 1 : 0; pose(); } else outAnim = { t0: performance.now(), a: out, b: tirada ? 1 : 0 };
+});
+document.getElementById('t-monta').addEventListener('click', () => { tirada = false; out = 0; bX.setAttribute('aria-pressed', false); bX.textContent = 'Tirar do suporte'; assemble(); });
+controls.addEventListener('start', () => { hint.hidden = true; });
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-// Linha Modern: Escrivaninha Cerne, Mesa de Centro Modern e Aparador Modern. Todas as peças em cm.
+// Linha Modern: Escrivaninha Cerne, Mesa de Centro Modern, Aparador Modern e Prateleira Flutuante. Todas as peças em cm.
 // Eixos: x = largura (0 à esquerda, olhando de frente), y = profundidade (0 na frente), z = altura (0 no chão).
 // O que une a linha: pernas de painel (tábua inteira em pé), tampo com borda engrossada, nenhum parafuso
 // nem puxador à vista (gaveta com cava) e a opção "detalhes pretos" (base em preto fosco, tampo em madeira).
@@ -125,4 +125,25 @@ export function aparador() {
   return { key: 'ap', kind: 'ap', name: 'Aparador Modern', short: '120 × 35', L, D, H, DIM: { L, P: D, H, LT: L, PT: D }, ZG, CV, PARTS: P, SCREWS, DOORS: [], DRAWERS, PULLS: [], DOOR_PULLS: [], LATCHES: [], HINGES: [], hw: {}, stats: stats(P) };
 }
 
-export const MAKERS = { es: escrivaninha, mc: mesaCentro, ap: aparador };
+// ---------- Prateleira Flutuante Modern · L × 20 × 6,1, caixa oca sobre suporte escondido ----------
+// Tudo de tábua de cambará 30 × 2. O suporte em pente (travessa + braços) é parafusado na parede (y = D);
+// a caixa, aberta atrás, entra nele pela frente e leva 1 parafuso por baixo em cada braço.
+// O vão da caixa tem 2,1 de altura para o braço de 2 entrar sem forçar.
+export function prateleira(L) {
+  const D = 20, H = 6.1, T = 2, { P, add } = maker();
+  const n = L > 60 ? 4 : 3, xs = Array.from({ length: n }, (_, i) => 7 + i * (L - 14) / (n - 1));
+  add('trav', 'Travessa do suporte', 'suporte', [T + 0.3, D - 5, T, L - T - 0.3, D, 2 * T], { ex: [0, 1, 0], u: 'trav' });
+  xs.forEach((x, i) => add('braco' + i, 'Braço do suporte', 'suporte', [x - 2.5, D - 17, T, x + 2.5, D - 5, 2 * T], { grain: 'y', step: 0.6, ex: [0, -1, 0], u: 'braco' }));
+  const cx = { step: 2, ex: [0, -1, 0] };   // a caixa vem da frente, inteira, e encaixa no suporte
+  add('fundo', 'Fundo', 'caixa', [T, T, 0, L - T, D, T], { ...cx, u: 'tampo' });
+  add('tampo', 'Tampo', 'caixa', [T, T, H - T, L - T, D, H], { ...cx, u: 'tampo' });
+  add('latE', 'Lateral', 'caixa', [0, T, 0, T, D, H], { ...cx, grain: 'y', u: 'lat' });
+  add('latD', 'Lateral', 'caixa', [L - T, T, 0, L, D, H], { ...cx, grain: 'y', u: 'lat' });
+  add('frente', 'Frente', 'caixa', [0, 0, 0, L, T, H], { ...cx, u: 'frente' });
+  const { L: SCREWS, S } = SC();
+  xs.slice(1).forEach((x, i) => { const xm = (xs[i] + x) / 2; S([xm, D - 5, 3], [xm, D + 5, 3], 'm100'); });
+  xs.forEach(x => { [x - 1, x + 1].forEach(xx => S([xx, D, 3], [xx, D - 8, 3], 'm80')); S([x, 9, 0], [x, 9, 3], 'm30'); });
+  return { key: 'pf' + L, kind: 'pf', name: 'Prateleira Flutuante Modern', short: `${L} × ${D}`, L, D, H, DIM: { L, P: D, H, LT: L, PT: D }, PARTS: P, SCREWS, DOORS: [], DRAWERS: [], PULLS: [], DOOR_PULLS: [], LATCHES: [], HINGES: [], hw: {}, stats: stats(P) };
+}
+
+export const MAKERS = { es: escrivaninha, mc: mesaCentro, ap: aparador, pf40: () => prateleira(40), pf60: () => prateleira(60), pf90: () => prateleira(90) };

@@ -13,7 +13,7 @@ import { MAKERS as RA } from './models/raiz.mjs';
 const MAKE = {
   cr1: () => cr(1), cr2: () => cr(2), cr4: () => cr(4), gr2: () => gr(2), gr4: () => gr(4),
   rk180: () => rk(180), rk140: () => rk(140), bf150: () => bf(150), bf110: () => bf(110),
-  es: MO.es, mc: MO.mc, ap: MO.ap, mj: RA.mj, bc: RA.bc, bg: RA.bg,
+  es: MO.es, mc: MO.mc, ap: MO.ap, pf40: MO.pf40, pf60: MO.pf60, pf90: MO.pf90, mj: RA.mj, bc: RA.bc, bg: RA.bg,
 };
 const MS = {};
 export const getM = id => MS[id] || (MS[id] = MAKE[id]());

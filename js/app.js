@@ -119,7 +119,7 @@ const mq = ['Madeira maciça', 'Feito à mão', 'Nogueira', 'Jatobá', 'Sob enco
 $('#marquee').innerHTML = [...mq, ...mq].map(t => `<span>${t}</span>`).join('');
 
 // ---------- catálogo: todas as peças num grid, com filtro por linha e por ambiente ----------
-const AMB = { cr: 'Sala de jantar', bf: 'Sala de jantar', mj: 'Sala de jantar', bc: 'Sala de jantar', gr: 'Quarto', rk: 'Sala de estar', mc: 'Sala de estar', es: 'Escritório', ap: 'Hall e entrada', bg: 'Área gourmet' };
+const AMB = { cr: 'Sala de jantar', bf: 'Sala de jantar', mj: 'Sala de jantar', bc: 'Sala de jantar', gr: 'Quarto', rk: 'Sala de estar', mc: 'Sala de estar', es: 'Escritório', ap: 'Hall e entrada', pf: 'Sala de estar', bg: 'Área gourmet' };
 const AMBS = [...new Set(PRODUCTS.map(p => AMB[p.id]))];
 const grid = $('#grid'), tabs = $('#lineTabs'), ink = $('#tabInk'), rooms = $('#rooms'), banner = $('#lineBanner'), count = $('#count');
 const flt = { line: 'all', amb: 'all' };
@@ -210,7 +210,7 @@ function fillSheetVariant() {
   const p = prodById(shState.prod), v = p.variants[shState.vi];
   $('#shDims').innerHTML = dimsHTML(v.id);
   $('#shQuote').href = wa(quoteText({ prod: p.id, vid: v.id, wood: 'nog' }));
-  const media = [{ t: 'img', src: imgOf(v.id), main: 1 }, ...p.imgs.map(src => ({ t: 'img', src, photo: 1 })), { t: 'video', src: p.video, poster: imgOf(v.id) }];
+  const media = [{ t: 'img', src: imgOf(v.id), main: 1 }, ...p.imgs.map(src => ({ t: 'img', src, photo: 1 })), ...(p.video ? [{ t: 'video', src: p.video, poster: imgOf(v.id) }] : [])];
   const th = $('#shThumbs'); th.innerHTML = '';
   media.forEach((m, i) => { const b = h('button', { type: 'button', class: 'thumb' + (m.t === 'video' ? ' vid' : ''), 'aria-label': m.t === 'video' ? 'Vídeo' : `Imagem ${i + 1}`, 'aria-current': i === 0 }, `<img src="${m.poster || m.src}" alt="" loading="lazy">`); b.onclick = () => showMedia(m, b); th.appendChild(b); });
   showMedia(media[0], th.firstChild);
